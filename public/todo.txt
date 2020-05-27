@@ -1,0 +1,29 @@
+// Animation  - Pop in and Out Detail
+
+onclick: 
+	all.show)_
+	primary.add(scale-in-center)
+	background.remove(fade-out)
+	background.add(fade-in)
+
+on-offclick:
+	primary.add(scale-out-center)
+	background.add(fade-out)
+	background.remove(fade-in)	
+	setTimeout(350) 	-	primary.remove(scale-in-center) + all.hide
+
+
+
+TODO:
+
+- Fix Settings Menu
+
+- Rework Name Bar
+
+- Finish Members List
+
+Done: 
+
+- Reworked Name Bar
+
+- Reworked display griding

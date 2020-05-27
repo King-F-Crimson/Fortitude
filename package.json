@@ -1,0 +1,14 @@
+{
+  "name": "fortitude-0",
+  "version": "1.0.0",
+  "description": "Peer to Peer Comunication and Chat Application + Globility and Serveration",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "firebase-tools": "^7.16.1"
+  }
+}

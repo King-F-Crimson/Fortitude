@@ -1,0 +1,455 @@
+<html lang="en">
+  <head>
+    <!-- cd /d D:\One Drive\OneDrive - Saint Kentigern\Fortitude-0 -->
+      <meta charset="UTF-8">
+      <meta name="google-site-verification" content="y-wUa-o2Y3oRe0dNeH4ByDsfVvrT44Gk9if850vvcsY" />
+
+      <meta name="description" CONTENT="Foritude, the free, intuitive chat program currently in Pre-Alpha Phase." />
+      <meta name="google" content="nositelinkssearchbox" />
+
+      <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+      <script src="https://unpkg.com/cookie_js@1.2.2/cookie.min.js"></script>
+      <script src="https://kit.fontawesome.com/534d57974c.js" crossorigin="anonymous" SameSite="lax"></script>
+      <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <link href="css/main.css" type="text/css" rel="stylesheet">
+
+      <title>Fortitude</title>
+  </head>
+  
+  <body id="Body" onload="enableAnimation()">  <!-- oncontextmenu="return false" -->
+      <h4 id="version">Pre-Alpha 1.2412ea53</h4>
+      
+      <div id="patch_notes_black">
+        <div id="patch_notes">
+          <div>
+            <h1>Change Log:</h1>
+            <h4>Pre-Alpha 1.2412ea53 <strong>NEW</strong></h4>
+
+            <br>
+            <div>
+              <h2 style="color: #90ee90">Added:</h2>
+                <p>👍 Ability to Create Servers</p>
+                <p>👍 Server Verification </p>
+                <p>😍 Join Servers <strong>NEW</strong></p>
+                <p>😍 Roles <strong>NEW</strong></p>
+
+              <br>
+
+              <h2 style="color: #e8776d">Changed:</h2>
+                <p>😅 Server Loading Method </p>
+              
+              <br>
+
+              <h2 style="color: #6dd8e8">Next Update:</h2>
+                <p>🤯 Server Member Lists</p>
+                <p>🤯 User Icons</p>
+            </div>
+          </div>
+        </div>
+
+        <div id="patch_notes_entertainment">
+          <h1>Fortitude</h1>
+          <p>Performance is my name and victory is my game!</p>
+        </div>
+      </div>
+
+      <div id="auth" class="">
+        <svg class="wave-1hkxOo" version="1.1" transform="rotate(45) scale(1)" style="position: fixed; left: -15%; bottom: 0; margin-left: -50%;"  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 100" preserveAspectRatio="none"><path class="wavePath-haxJK1" d="M826.337463,25.5396311 C670.970254,58.655965 603.696181,68.7870267 447.802481,35.1443383 C293.342778,1.81111414 137.33377,1.81111414 0,1.81111414 L0,150 L1920,150 L1920,1.81111414 C1739.53523,-16.6853983 1679.86404,73.1607868 1389.7826,37.4859505 C1099.70117,1.81111414 981.704672,-7.57670281 826.337463,25.5396311 Z" fill="#8d9edc"></path></svg>
+        
+        <div id="login" class="">
+          <h1>Login</h1>
+          <p>We are soooo excited to see you again!</p>
+
+          <form id="login-form">
+              <div class="input-field">
+                <label for="login-email">Email address</label>
+                <input type="email" placeholder="Email Adress" id="login-email" required  name="login-email"/>
+                
+              </div>
+
+              <div class="spacer"></div>
+
+              <div class="input-field">
+                <label for="login-password">Password</label>
+                <input type="password" placeholder="Password" id="login-password" required  name="login-password" />
+                
+              </div>
+              <p class="error hidden"></p>
+
+              <div id="auth_buttons">
+                <button class="active_button">Login</button>
+                <button onclick="changeForm()" class="innactive_button">SignUp</button>
+              </div>
+            </form>
+        </div>
+
+        <div id="sign_up" class="hidden">
+            <h1>Sign Up</h1>
+
+            <form id="signup-form">
+                <div class="input-field">
+                  <label for="signup-username">User Name</label>
+                  <input type="user_name" placeholder="User Name" id="signup-username" name="signup-username" required />
+                  
+                </div>
+
+                <div class="spacer"></div>
+
+                <div class="input-field">
+                  <label for="signup-email">Email address</label>
+                  <input type="email" placeholder="Email Adress" id="signup-email" name="signup-email" required />
+                  
+                </div>
+
+
+                <div class="spacer"></div>
+
+
+                <div class="input-field">
+                  <label for="signup-password">Choose password</label>
+                  <input type="password" placeholder="Password" id="signup-password" required />
+                  
+                </div>
+                <p class="error hidden"></p>
+                <button class="active_button">Sign up</button>
+                <button onclick="changeForm()" class="innactive_button">Login</button>
+              </form>
+        </div>
+      </div>
+
+      <div id="create_server" class="">
+        <div class="sub_div">
+          <h1>Create Server</h1>
+
+          <br>
+
+          <a id="close_server_form">
+            <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="svg-inline--fa fa-times fa-w-10 fa-2x"><path fill="currentColor" d="M193.94 256L296.5 153.44l21.15-21.15c3.12-3.12 3.12-8.19 0-11.31l-22.63-22.63c-3.12-3.12-8.19-3.12-11.31 0L160 222.06 36.29 98.34c-3.12-3.12-8.19-3.12-11.31 0L2.34 120.97c-3.12 3.12-3.12 8.19 0 11.31L126.06 256 2.34 379.71c-3.12 3.12-3.12 8.19 0 11.31l22.63 22.63c3.12 3.12 8.19 3.12 11.31 0L160 289.94 262.56 392.5l21.15 21.15c3.12 3.12 8.19 3.12 11.31 0l22.63-22.63c3.12-3.12 3.12-8.19 0-11.31L193.94 256z" class=""></path></svg>
+          </a>
+            <form id="create_server_form">
+              <div class="input-field" style="margin-left: 8%; margin-top: 5%;">
+                <label for="s-name">Server Name</label>
+                <input type="text" autocomplete="off" placeholder="Server Name" id="s-name" required />  
+
+                <label for="s-name">Description</label>
+                <input type="text" autocomplete="off" placeholder="Description" id="create_server_description" required />  
+                <button type="submit" id="server_creator_form_submit">Create!</button>
+              </div>
+              <p class="error" id="error">Invalid Server Name char["/"]</p>
+            </form>
+
+            <h2>Go ahead! Make a server, or dont? ooOOooOooo</h2>
+          
+        </div>
+      </div>
+
+      <div id="join_server" class="">
+        <div class="sub_div">
+          <h1>Join Server</h1>
+
+          <br>
+
+          <a id="close_server_form2">
+            <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="svg-inline--fa fa-times fa-w-10 fa-2x"><path fill="currentColor" d="M193.94 256L296.5 153.44l21.15-21.15c3.12-3.12 3.12-8.19 0-11.31l-22.63-22.63c-3.12-3.12-8.19-3.12-11.31 0L160 222.06 36.29 98.34c-3.12-3.12-8.19-3.12-11.31 0L2.34 120.97c-3.12 3.12-3.12 8.19 0 11.31L126.06 256 2.34 379.71c-3.12 3.12-3.12 8.19 0 11.31l22.63 22.63c3.12 3.12 8.19 3.12 11.31 0L160 289.94 262.56 392.5l21.15 21.15c3.12 3.12 8.19 3.12 11.31 0l22.63-22.63c3.12-3.12 3.12-8.19 0-11.31L193.94 256z" class=""></path></svg>
+          </a>
+            <form id="join_server_form" style="width: 105%;">
+              <div class="input-field" style="margin-left: 8%; margin-top: 5%;">
+                <label for="s-name">Server Name</label>
+                <input type="text" autocomplete="off" placeholder="Server Name" id="join_server_name" required />  
+                <button type="submit" id="server_join_form_submit">Search!</button>
+              </div>
+              <p class="error" id="error2">Invalid Server Name  char["/"]</p>
+            </form>
+
+            <div class="results" id="server_search_results">
+              <!-- <div class="result"><h1>Hey</h1><p>Wazzzzup ma bois wana smash</p></div> -->
+            </div>
+        </div>
+      </div>
+
+      <div id="success_join" class="alert">
+        <h1 id="success_join_title">Sucessfully Joined <strong>{Server Name}</strong></h1>
+      </div>
+
+      <div id="success_add" class="alert">
+        <h1 id="success_add_title">Sucessfully Joined <strong>{Server Name}</strong></h1>
+      </div>
+
+      <div id="user_card" class="user_card_parent">
+      </div>
+
+      <div id="loader" class="">
+        <h1>Fortitude</h1>
+        <p></p>
+      </div>
+
+      <div id="settings" class="">
+        <div id="settings_left">
+          
+          <h4>USER SETTINGS</h4>
+          <a><p>My Account</p> </a>
+          <a><p>Privacy and Safety</p> </a>
+          <a><p>Authorised Apps</p> </a>
+          <a><p>Connections</p> </a>
+          <hr>
+          <h4>APP SETTINGS</h4>
+          <a><p>Chat Settings</p> </a>
+          <a><p>Nodifications</p> </a>
+          <a><p>Chat Settings</p> </a>
+          <a><p>Nodifications</p> </a>
+          <a><p>Keybinds</p> </a>
+          <a><p>Text & Images</p> </a>
+          <a><p>Appearance</p> </a>
+          <a><p>Language</p> </a>
+          <a><p>App Settings</p> </a>
+          <hr>
+          <a><p>Change Log</p> </a>
+          <hr>
+          <a id="leave_server_button"><p>Log Out</p> </a>
+
+        </div>
+        <div id="settings_right"> 
+          <div id="account">
+            <h1>My Account</h1>
+          </div>
+
+          <div id="privacy">
+            <h1>Privacy and Safety</h1>
+          </div>
+
+          <div id="authed_app">
+            <h1>Authorised Applications</h1>
+          </div>
+
+          <div id="connections">
+            <h1>Connections</h1>
+          </div>
+
+          <div id="chat_sett">
+            <h1>Chat Settings</h1>
+          </div>
+
+          <div id="nodifications">
+            <h1>Nodifications</h1>
+          </div>
+
+          <div id="keybinds">
+            <h1>Keybinds</h1>
+          </div>
+
+          <div id="text&images">
+            <h1>Text & Images</h1>
+          </div>
+
+          <div id="appearance">
+            <h1>Appearance</h1>
+            <button id="toggle-theme">Toggle Theme</button>
+          </div>
+
+          <div id="language">
+            <h1>Language</h1>
+          </div>
+
+          <div id="app_sett">
+            <h1>App Settings</h1>
+          </div>
+
+          <a id="close_settings" style="grid-column: 3;">
+            <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="times-circle" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-times-circle fa-w-16 fa-2x"><path fill="currentColor" d="M256 8C119 8 8 119 8 256s111 248 248 248 248-111 248-248S393 8 256 8zm0 464c-118.7 0-216-96.1-216-216 0-118.7 96.1-216 216-216 118.7 0 216 96.1 216 216 0 118.7-96.1 216-216 216zm94.8-285.3L281.5 256l69.3 69.3c4.7 4.7 4.7 12.3 0 17l-8.5 8.5c-4.7 4.7-12.3 4.7-17 0L256 281.5l-69.3 69.3c-4.7 4.7-12.3 4.7-17 0l-8.5-8.5c-4.7-4.7-4.7-12.3 0-17l69.3-69.3-69.3-69.3c-4.7-4.7-4.7-12.3 0-17l8.5-8.5c4.7-4.7 12.3-4.7 17 0l69.3 69.3 69.3-69.3c4.7-4.7 12.3-4.7 17 0l8.5 8.5c4.6 4.7 4.6 12.3 0 17z" class=""></path></svg>
+            
+            <p>ESC</p> 
+          </a>
+        </div>  
+      </div>
+
+      <div id="fortitude-app" style=" display: grid; grid-template-columns: 3.5% 1fr;width: 100%;height: 100%;">
+        <nav id="navigation">
+          <div class="list_item tooltip" name="server_item" id="lobby_link" style="margin-top: 10px;">
+            <div class="" aria-hidden="true"><span class="pill" id="0group" style="opacity: 1; transform: none;"></span></div>
+            <img class="list_item_image list_item_active" id="list_item_active" src="branding/concept_logo_small_active.png" style="border-radius:30%;">
+            <span class="tooltiptext">Home</span>
+          </div>
+
+          <hr style="width: 50%;margin-top: 0px;margin-bottom: 0px;opacity: 0.1;padding-top: 0px;padding-bottom: 0px;border: 1px solid transparent;border-radius: 10px;height: 0px;background-color: var(--background-color-tertiary);">
+          
+        </nav>
+        
+        <div id="content" style="grid-column: 2; display: grid; grid-template-columns: 12% 1fr 12%;">
+          <div id="member_manage_par">
+            <div id="member_manage"> 
+              <div id="member_manage_header">
+                <h2 id="show_invite">Invite Members</h2>
+                <h2 id="show_managment">Manage Members</h2>
+                <h2 id="show_requests">Requests</h2>
+
+                <a id="close_member_managment" style="margin: auto; margin-top: 5px;">
+                  <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="svg-inline--fa fa-times fa-w-10 fa-2x"><path fill="currentColor" d="M193.94 256L296.5 153.44l21.15-21.15c3.12-3.12 3.12-8.19 0-11.31l-22.63-22.63c-3.12-3.12-8.19-3.12-11.31 0L160 222.06 36.29 98.34c-3.12-3.12-8.19-3.12-11.31 0L2.34 120.97c-3.12 3.12-3.12 8.19 0 11.31L126.06 256 2.34 379.71c-3.12 3.12-3.12 8.19 0 11.31l22.63 22.63c3.12 3.12 8.19 3.12 11.31 0L160 289.94 262.56 392.5l21.15 21.15c3.12 3.12 8.19 3.12 11.31 0l22.63-22.63c3.12-3.12 3.12-8.19 0-11.31L193.94 256z" class=""></path></svg>
+                </a>
+              </div>
+
+              <div id="member_requests">
+                <!-- <div class="request"><h1>UnRealG</h1><p>Wazzzzup ma bois wana smash</p><button class="accept">Accept</button><button class="decline">Decline</button></div> -->
+              </div>
+
+              <div id="member_invite">
+              </div>
+
+              <div id="member_managment">
+              </div>
+            </div> 
+          </div>
+          
+          <div id="top_bar_2" class="hidden">
+            <h1 id="connected_channel">Friends</h1>
+            <p id="connected_channel_desc">A Place to chill, relax and have fun!</p>
+            <input type="text" placeholder="Search">
+            <a>Help</a>
+            <a id="toggle_members"><i class="fas fa-users"></i></a>
+          </div>
+
+          <div id="side_bar">
+            <div id="header" class="header_blur">
+              <a class="fas fa-plus hidden" id="invite"  title="Invite" onclick="generateURL()" style=" border-radius: 55px; font-size: 20px; left: 0; text-decoration: none;"></a>
+
+              
+              <p id="serverName"></p>
+              <p id="serverMoreInfo"><i class="fas fa-angle-down"></i></p>
+              <p id="serverMoreInfo_close" class="hidden"><i class="fas fa-times"></i></p>
+              <p id="serverCount" class="hidden"></p>
+
+
+              <!-- Non Responsive - Cannot Move elements to chose priorty.-->
+              <div class="server_pre_sett" id="serverMenu">
+                <a><p>Server Settings</p> <i class="fas fa-cog"></i></a>
+                <hr>
+                <a id="server_members_button"><p>Members</p> <i class="fas fa-user-friends"></i></a>
+                <a><p>Create Channel</p> <i class="fas fa-plus-circle"></i></a>
+                <a><p>Create Category</p> <i class="fas fa-folder-plus"></i></a>
+                <hr>
+                <a><p>Nodification Settings</p> <i class="fas fa-bell"></i></a>
+                <a><p>Privacy Settings</p> <i class="fas fa-shield-alt"></i></a>
+                <hr>
+                <a id="leave_server_button" ><p>Leave Server</p> <i class="fas fa-chevron-circle-left"></i></a>
+              </div>
+            </div>
+
+            <div id="channels">
+              <p><strong>#</strong> General</p>
+              <p><strong>#</strong> Chat</p>
+              <p><strong>#</strong> Private</p>
+            </div>
+
+            <div id="DM" class="">
+              <button>Friends</button>
+
+              <h4 style="font-size: 0.7em; color: var(--text-color-inactive);margin-left: 4%;">
+                DIRECT MESSAGES
+                </h4>
+            </div>
+
+            <div id="user">
+              <div class="member_icon hidden">
+                <img id="user_name_img" class="user_name_img" src="">
+                <div class="online"></div>
+              </div>
+              
+              <div>
+                <span id="user_status"></span>
+                <h4 id="user_name_view"></h4>
+                <!-- <h6 id="user_name_code_view">#9872</h6> -->
+              </div>
+
+              <div style="color: var(--text-color-inactive); font-size: 1em;">
+                <a id="user_settings"><i class="fas fa-cog"></i></a>
+                <a id="logout_button"><i class="fas fa-sign-out-alt"></i></a>
+                <a id="login-button"><i class="fas fa-sign-in-alt"></i></a>
+              </div>
+            </div>
+          </div>  
+
+          <div id="chat">
+            <div id="top_bar">
+            <h1 id="connected_channel"><strong>#</strong> General</h1>
+            <p id="connected_channel_desc">A Place to chill, relax and have fun!</p>
+            <input type="text" placeholder="Search">
+            <a>Help</a>
+            <a id="toggle_members"><i class="fas fa-users"></i></a>
+          </div>
+
+            <div id="message-div">  
+            
+            <div id="lobby">
+              <h1>Hello {user.id}, Welcome!</h1>
+
+              <div>
+                <h4>NEWS</h4>
+                <p>... Experimental Features not enabled</p>
+              </div>
+
+              <a class="lobby_create" id="add_server2">Create Server</a>
+              <a class="lobby_create" id="join_server3">Join Server</a>
+            </div>
+
+            <div id="friends">
+            </div>
+
+            <div id="message-container" class="chat " style="overflow-y: auto; height:80%;"></div> <!--   Message Container   -->
+        
+            <form id="send-container" autocomplete="off" class=""> <!--   Form   --> 
+                <p id="isTypingID" class="isTyping_hid">Is Typing</p> <!--   isTyping Popup   -->
+                <div id="form_input">
+                      <!-- <a id="add_items">+</a> -->
+                      <input type="text" id="message-input" placeholder="Message @General"> 
+                      <!-- <a class="form_other">GIF</a> -->
+                      <!-- <a id="emoticon"  class="form_other">😍</a> -->
+                </div>
+              </form>
+            </div>
+          </div>
+            
+          <div id="members" class="">
+            <br><br><br><br>
+            <h4>ONLINE</h4>
+
+            <div id="member_user"> <!-- onclick="openUser(uid)" -->
+              <div class="member_icon">
+                <img src="https://i.pinimg.com/originals/fc/68/f8/fc68f86873c9c661e84ad442cf8fb6cf.gif">
+                <div class="online"></div>
+              </div>
+              <div>
+                <h1>UnRealG</h1>
+                <h3>Yeeting</h4>
+              </div>
+            </div>
+
+            <div id="member_user"> <!-- onclick="openUser(uid)" -->
+              <div class="member_icon">
+                <img src="https://i.pinimg.com/originals/fc/68/f8/fc68f86873c9c661e84ad442cf8fb6cf.gif">
+                <div class="online"></div>
+              </div>
+              <div>
+                <h1>Sir_Bamboo</h1>
+                <h3>its corrona time!</h4>
+              </div>
+            </div>
+
+
+            <br><br><br>
+            <h4>OFFLINE</h4>
+          </div>
+        </div>
+      </div>
+  </body>
+  <div>
+    <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-functions.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
+    <script src="js/script.js"></script>
+  </div>
+</html>
