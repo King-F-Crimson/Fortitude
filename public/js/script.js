@@ -437,6 +437,8 @@ function loadDM(){
     document.getElementById("DM").removeChild( document.getElementById("DM").firstChild);
   }
 
+  
+
   $("#send-container").hide();
   $("#message-input").hide()
   $("#message-container").hide();
@@ -513,6 +515,8 @@ function loadDM(){
         //document.getElementById("DM").append(direct_message_about);
         document.getElementById("DM").append(direct_message_home);
         document.getElementById("DM").append(direct_message_message);
+
+        
 
         for(var i = 0; i < usernames.length; i++){
           var usersname = document.createElement("p");
@@ -623,6 +627,10 @@ function  showFriendsList() {
 function loadFriendsList(){
   var usernames = [];
   var userids = [];
+
+  while(document.getElementById("friends").firstChild){
+    document.getElementById("friends").removeChild(document.getElementById("friends").firstChild);
+  }
 
   db.collection("users/"+ user_id +"/friends").orderBy("latest_interaction", "desc").get()
     .then(querySnapshot => {
@@ -762,7 +770,7 @@ function loadFriendsList(){
         } */
     });   // LOAD ICON AND WITH DM BAR
 
-    loadDM();
+    //loadDM();
 }
 
 function createCORSRequest(method, url) {

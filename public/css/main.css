@@ -2509,6 +2509,9 @@ button:hover {
   margin-left: 4vw;
   margin-top: -3%;
   opacity: 0;
+  margin: 0;
+  margin-left: 3%;
+  margin-top: -2.2%;
 }
 
 .tooltip:hover .tooltiptext {
