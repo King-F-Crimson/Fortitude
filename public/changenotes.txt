@@ -5,31 +5,41 @@ All Changes from 20/05/2020 will be stored in this file.
 Fortitude @ 2020 MIT Licence
 Ben White 
 
+This folows the itterative/developer release channel. 
+A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
+
 ============ [Unreleased] ============
 
-## Pre-Alpha 1.2756 - [...]
+==={ Pre-Alpha 1.2756 - [Unconfirmed - Scheduled for 2 Weeks]
 ### Adding 
+!- Nodifications
 - Leave Servers
 - Custom User Icons
 - Custom Text Formating
 - Text-Integrated Math Functions
 - Server Icons
 - User Status (e.g. Online)
-- Role Sectioned Server Member Listing
+- Role Sectioned Server Member Listing and Messaging
 - User Icon Caching (Less Server Requests -> Faster Load Times)
-- Html Links (https://www.youtube.com) w/ underscore and blue test coloring + [openinnewtab]
+- Html Links (https://www.youtube.com) w/ underscore and blue test coloring + [openinnewtab] in Messages
+- Finish Members List
+- Role Popup and User Direct Messaging from Chat
 
+### Changing
+- Settings Menu (Revamp)
 
 ============= [Released] =============
 
-## Pre-Alpha 1.2572 - [28/05/2020] SECURITY PATCH
+==={ Pre-Alpha 1.2572 - [28/05/2020]  ~SECURITY PATCH~ 
 ### Security
 - Patched Server Loading bug:
     Users were able to access servers without authentication accedentially 
     by not checking if Old Accounts were appart of the server (Old Accounts Only) 
     and providing a valid response where none should have been provided.
+- Altered Old Account Formating and Updated Them
+}
 
-## Pre-Alpha 1.2412 - [< 27/05/2020]
+==={ Pre-Alpha 1.2412 - [< 27/05/2020]
 ### Added
 - Friends List
 - Direct Messaging 
@@ -61,3 +71,8 @@ Ben White
 - Dates on every request and interaction...
 - Is_Typing Feature
 - Message Formatting
+
+### Changed
+- Nothing (Only Additions (First Commit))
+
+}
