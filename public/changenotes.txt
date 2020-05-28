@@ -1,1 +1,63 @@
-2163 - Add Friend 
+============= [Changelog] =============
+All notable changes to this project will be documented in this file.
+All Changes from 20/05/2020 will be stored in this file.
+
+Fortitude @ 2020 MIT Licence
+Ben White 
+
+============ [Unreleased] ============
+
+## Pre-Alpha 1.2756 - [...]
+### Adding 
+- Leave Servers
+- Custom User Icons
+- Custom Text Formating
+- Text-Integrated Math Functions
+- Server Icons
+- User Status (e.g. Online)
+- Role Sectioned Server Member Listing
+- User Icon Caching (Less Server Requests -> Faster Load Times)
+- Html Links (https://www.youtube.com) w/ underscore and blue test coloring + [openinnewtab]
+
+
+============= [Released] =============
+
+## Pre-Alpha 1.2572 - [28/05/2020] SECURITY PATCH
+### Security
+- Patched Server Loading bug:
+    Users were able to access servers without authentication accedentially 
+    by not checking if Old Accounts were appart of the server (Old Accounts Only) 
+    and providing a valid response where none should have been provided.
+
+## Pre-Alpha 1.2412 - [< 27/05/2020]
+### Added
+- Friends List
+- Direct Messaging 
+- Servers
+- Joining Servers (And Accepting Requests)
+- Authentication
+- Login Screen
+- User Creatable Servers
+- Server Authentication
+- Server Settings
+- Client Settings
+- All Ui:
+    - Server UI
+    - Friends UI
+    - Login UI
+    - Popup Ui (Create and Join Servers + Changelog + Server Management)
+- Server Roles (Soft Impementaition)
+- Server Member List
+- Server Rendering and Loading
+- Home and Friends Tab in Lobby-Link
+- Loading for Information screen as app launches
+- Tooltip Text for server list 
+- Add Server Popup and Integreation
+- Join Server Popup and Intergration
+- Favicon 
+- Server Branding
+- Release Channels
+- Server Messaging
+- Dates on every request and interaction...
+- Is_Typing Feature
+- Message Formatting
