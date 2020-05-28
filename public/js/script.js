@@ -124,7 +124,7 @@ signupForm.addEventListener('submit', (e) => {
         }).then(function() {
             
         }).catch(function(error) {
-            console.log(error);
+            //console.log(error);
         });
         
         username = user.displayName;
@@ -216,20 +216,20 @@ function closeLoader(){
 
         docRef.get().then(function(doc) {
             if (doc.exists) {
-                console.log("Document data:", doc.data());
+                //console.log("Document data:", doc.data());
 
                 for(var i = 0; i < doc.data().servers.length; i++){
                   connectable_servers.push(doc.data().servers[i]);
                 }  
             } else {
                 // doc.data() will be undefined in this case
-                console.log("No such document!");
+                //console.log("No such document!");
             }
 
            createServerNav();
             
         }).catch(function(error) {
-            console.log("Error getting document:", error);
+            //console.log("Error getting document:", error);
         }); 
       }, 500);
   }, 100);
@@ -437,8 +437,6 @@ function loadDM(){
     document.getElementById("DM").removeChild( document.getElementById("DM").firstChild);
   }
 
-  
-
   $("#send-container").hide();
   $("#message-input").hide()
   $("#message-container").hide();
@@ -635,7 +633,7 @@ function loadFriendsList(){
   db.collection("users/"+ user_id +"/friends").orderBy("latest_interaction", "desc").get()
     .then(querySnapshot => {
         querySnapshot.forEach(doc => {
-          console.log(doc.data());
+          //console.log(doc.data());
           usernames.push(doc.data().name);
           userids.push(doc.id);
 
@@ -654,7 +652,7 @@ function loadFriendsList(){
 
           docRef.get().then(function(doc) {
             image_source = doc.data().icon;
-            console.log(this_users_name);
+            //console.log(this_users_name);
             
             var storageRef = firebase.storage().ref().child(image_source).getDownloadURL().then(function(url) {
               ur2 = url;
@@ -822,7 +820,7 @@ function loadLobby() {
 $("body").on("click",'div[name*="server_item"]',function(){  
     leaveRoom();
 
-    console.log("Attempting to connect to server: " + this.id);
+    //console.log("Attempting to connect to server: " + this.id);
 
     if(this.id === "lobby_link"){
       loadDM();
@@ -1011,7 +1009,7 @@ function serverList(serverName) {
               yours.push("0");
             }
 
-            console.log(doc.data().name);
+            //console.log(doc.data().name);
         });
 
       if(servers.length === icons.length){
@@ -1062,7 +1060,7 @@ function serverList(serverName) {
 
 function sendRequest(serverID, join_message, serverName){
   if(connectable_servers.includes(serverID)){
-    console.log("You are already a part of this server!");
+    //console.log("You are already a part of this server!");
     showUnsucessfullJoin(serverName);
   }else{
     var now = new Date();
@@ -1073,7 +1071,7 @@ function sendRequest(serverID, join_message, serverName){
         message: join_message,
         timestamp: now
     }).then(function() {
-        console.log("Server join request sent!");
+        //console.log("Server join request sent!");
         hideServerJoin();
         showSucessfullJoin(serverName);
     });
@@ -1123,7 +1121,7 @@ function createServer(serverName){
       name: serverName,
       desc: description
     }).then(function() {
-        console.log("Server " + serverName + " is beging created");
+        //console.log("Server " + serverName + " is beging created");
     });
 
     var now = new Date();
@@ -1134,10 +1132,10 @@ function createServer(serverName){
         message: "Welcome to <strong>" + serverName + "</strong>.",
         timestamp: now
     }).then(function() {
-        console.log("Server created!");
+        //console.log("Server created!");
 
         var user_servers = db.collection("users").doc(user_id);
-        console.log(user_servers.servers);
+        //console.log(user_servers.servers);
 
         //var docRef = db.collection("users").doc(user_id);
 
@@ -1153,7 +1151,7 @@ function createServer(serverName){
       userId: user_id,
       username: username
     }).then(function() {
-      console.log("Server's Users Set!");
+      //console.log("Server's Users Set!");
     });
 
     db.collection("groups/"+ autoID +"/roles").doc("owner").set({
@@ -1167,7 +1165,7 @@ function createServer(serverName){
       colour_rgb: "null",
       perm_lvl: 0
     }).then(function() {
-      console.log("Server's Roles Setup!");
+      //console.log("Server's Roles Setup!");
 
       var user_roles = db.collection("groups/" + autoID + "/members").doc(user_id);
 
@@ -1244,8 +1242,26 @@ function loadServerID(room_id_element){
 }
 
 function joinServer(room_id_element){
-    $("#serverMoreInfo").show();
+    var appart = false;
 
+    db.collection("groups/"+ room_id_element +"/members").get()
+    .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+            serverMembers.push(doc.data().username);
+            if(doc.data().username == username){
+              appart = true;
+            }
+        });
+
+        if(!appart){
+          return;
+        }
+    });
+
+    
+
+    $("#serverMoreInfo").show();
+    
     rmid = room_id_element;
     var servername;
     var serverRef = db.collection("groups").doc(rmid);
@@ -1328,12 +1344,7 @@ function joinServer(room_id_element){
         });
 
 
-        db.collection("groups/"+ rmid +"/members").get()
-        .then(querySnapshot => {
-            querySnapshot.forEach(doc => {
-                serverMembers.push(doc.data().username);
-            });
-        });
+        
 
         db.collection("groups/"+ rmid +"/roles").get()
         .then(querySnapshot => {
@@ -1770,7 +1781,7 @@ function openForm(){
 const toggleTheme = document.querySelector("#toggle-theme");
 
 toggleTheme.addEventListener('click', e => {
-  console.log("Switching theme");
+  //console.log("Switching theme");
   if(document.documentElement.hasAttribute('theme')){
     document.documentElement.removeAttribute('theme');
   }
@@ -1840,7 +1851,7 @@ function hideServerMenu(){
 
 $('body').click(function(event) {
   if(serverMenu_hid == false){
-    console.log("HEY!");
+    //console.log("HEY!");
 
     if(!$(event.target).is('#serverMenu')){
       hideServerMenu();
@@ -1848,7 +1859,7 @@ $('body').click(function(event) {
 
   }else if($(event.target).is("#header") && room !== "lobby_link"){
     toggleServerMenu();
-    console.log($(event.target));
+    //console.log($(event.target));
   }
 });
 
@@ -2020,7 +2031,7 @@ function acceptMember(user_id, user_name){
 
 function declineMember(user_id, user_name) {
   db.collection("groups/"+ rmid +"/requests").doc(user_id).delete().then(function() {
-    console.log("Document successfully deleted!");
+    //console.log("Document successfully deleted!");
   }).catch(function(error) {
       console.error("Error removing document: ", error);
   });
@@ -2158,14 +2169,14 @@ function userInfo(users_id) {
         users_servers.push(doc.data().servers);
         users_id_ = doc.id
 
-        console.log(doc.data());
+        //console.log(doc.data());
 
         renderUserInfo(users_name, user_time, users_servers, users_id_);
     } else {
-        console.log("No such document!");
+        //console.log("No such document!");
     }
   }).catch(function(error) {
-      console.log("Error getting document:", error);
+      //console.log("Error getting document:", error);
   }); 
 }
 
@@ -2210,7 +2221,7 @@ function renderUserInfo(users_name, user_time, users_servers, users_id_){
 
   
   loadFriendsList();
-  console.log(friends_user_ids, users_id_);
+  //console.log(friends_user_ids, users_id_);
 
   if(friends_user_ids.includes(users_id_)){
     message_friend.innerHTML = "Send Message"; 
