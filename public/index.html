@@ -268,7 +268,7 @@
         </div>  
       </div>
 
-      <div id="fortitude-app" style=" display: grid; grid-template-columns: 3.5% 1fr;width: 100%;height: 100%;">
+      <div id="fortitude-app" style=" display: flex; flex-direction: row;width: 100%;height: 100%;">
         <nav id="navigation">
           <div class="list_item tooltip" name="server_item" id="lobby_link" style="margin-top: 10px;">
             <div class="" aria-hidden="true"><span class="pill" id="0group" style="opacity: 1; transform: none;"></span></div>
@@ -280,11 +280,11 @@
           
         </nav>
         
-        <div id="content" style="grid-column: 2; display: grid; grid-template-columns: 12% 1fr 12%;">
-          <div id="member_manage_par">
-            <div id="member_manage"> 
+        <div id="content" style="grid-column: 2; display: grid; grid-template-columns: 12% 1fr 12%; width: 100%">
+          <div id="member_manage_par" class="fade-in">
+            <div id="member_manage" class="scale-up-center" style="opacity: 1"> 
               <div id="member_manage_header">
-                <h2 id="show_invite">Invite Members</h2>
+                <h2 id="show_invite">Roles</h2>
                 <h2 id="show_managment">Manage Members</h2>
                 <h2 id="show_requests">Requests</h2>
 
@@ -402,46 +402,24 @@
             <div id="message-container" class="chat " style="overflow-y: auto; height:80%;"></div> <!--   Message Container   -->
         
             <form id="send-container" autocomplete="off" class=""> <!--   Form   --> 
-                <p id="isTypingID" class="isTyping_hid">Is Typing</p> <!--   isTyping Popup   -->
+                
+
+                
                 <div id="form_input">
-                      <!-- <a id="add_items">+</a> -->
-                      <input type="text" id="message-input" placeholder="Message @General"> 
-                      <!-- <a class="form_other">GIF</a> -->
-                      <!-- <a id="emoticon"  class="form_other">😍</a> -->
+                  <p id="isTypingID" class="isTyping_hid slide-in-bottom">Is Typing</p> <!--   isTyping Popup   -->
+                      <div id="ping_users" class="hidden">@...</div>
+                      <div id="form_field">
+                        <!-- <a id="add_items">+</a> -->
+                        <input type="text" id="message-input" placeholder="Message @General"> 
+                        <!-- <a class="form_other">GIF</a> -->
+                        <!-- <a id="emoticon"  class="form_other">😍</a> -->
+                      </div>
                 </div>
               </form>
             </div>
           </div>
             
           <div id="members" class="">
-            <br><br><br><br>
-            <h4>ONLINE</h4>
-
-            <div id="member_user"> <!-- onclick="openUser(uid)" -->
-              <div class="member_icon">
-                <img src="https://i.pinimg.com/originals/fc/68/f8/fc68f86873c9c661e84ad442cf8fb6cf.gif">
-                <div class="online"></div>
-              </div>
-              <div>
-                <h1>UnRealG</h1>
-                <h3>Yeeting</h4>
-              </div>
-            </div>
-
-            <div id="member_user"> <!-- onclick="openUser(uid)" -->
-              <div class="member_icon">
-                <img src="https://i.pinimg.com/originals/fc/68/f8/fc68f86873c9c661e84ad442cf8fb6cf.gif">
-                <div class="online"></div>
-              </div>
-              <div>
-                <h1>Sir_Bamboo</h1>
-                <h3>its corrona time!</h4>
-              </div>
-            </div>
-
-
-            <br><br><br>
-            <h4>OFFLINE</h4>
           </div>
         </div>
       </div>

@@ -10,8 +10,8 @@ A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
 
 ============ [Unreleased] ============
 
-==={ Pre-Alpha 1.2756 - [Unconfirmed - Scheduled for 2 Weeks]
-### Adding 
+==={ Pre-Alpha 1.2756 - [Unconfirmed - Scheduled 20/06/2020]
+### Queued 
 !- Nodifications
 - Leave Servers
 - Custom User Icons
@@ -22,8 +22,13 @@ A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
 - Role Sectioned Server Member Listing and Messaging
 - User Icon Caching (Less Server Requests -> Faster Load Times)
 - Html Links (https://www.youtube.com) w/ underscore and blue test coloring + [openinnewtab] in Messages
-- Finish Members List
+
+### Working On
+- Finishing Members View List (i.e RolesSort)
 - Role Popup and User Direct Messaging from Chat
+- Manage Members Popup (Requests, Role Managment and Invites)
+
+### Completed
 
 ### Changing
 - Settings Menu (Revamp)

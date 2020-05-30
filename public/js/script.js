@@ -7,10 +7,14 @@ var user_img = "https://i.pinimg.com/originals/fc/68/f8/fc68f86873c9c661e84ad442
 var connectable_servers = [];
 var serverMembers = [];
 var roles = [];
+var role_names = [];
 var rolecolours = [];
 
 var friends_user_names = [];
 var friends_user_ids = [];
+var server_members = [];
+var nav = false;
+var loadingFriends = false;
 
 var dm_users_id = "";
 
@@ -277,14 +281,11 @@ function createServerNav(){
       total_div.appendChild(tooltip);
 
       document.getElementById("navigation").appendChild(total_div);
-    }).catch(function(error) {
-        setTimeout(completeNav, 500);
-        console.log("Error getting document:", error);
-    }); 
 
-    if(i == connectable_servers.length - 1){
-      setTimeout(completeNav, 500);
-    }
+      if(i === connectable_servers.length){
+        setTimeout(completeNav, 500);
+      }
+    });
   }
 
   if(connectable_servers.length == 0){
@@ -293,69 +294,73 @@ function createServerNav(){
 }
 
 function completeNav() {
-  for(var i = 0; i < 1; i++){
-    var total_div = document.createElement("div");
-      total_div.classList.add("list_item");
-      total_div.classList.add("add_list_item");
-      total_div.classList.add("tooltip");
-      total_div.id = "add_server";
-      total_div.onclick = showServerCreator;
+  if(!nav){
+    for(var i = 0; i < 1; i++){
+      var total_div = document.createElement("div");
+        total_div.classList.add("list_item");
+        total_div.classList.add("add_list_item");
+        total_div.classList.add("tooltip");
+        total_div.id = "add_server";
+        total_div.onclick = showServerCreator;
 
-    var small_div = document.createElement("div");
+      var small_div = document.createElement("div");
 
-    var pill_span = document.createElement("span");
-        pill_span.classList.add("pill_hidden");
-        pill_span.id = i + "group";
-        pill_span.style = "opacity: 1; transform: none;";
+      var pill_span = document.createElement("span");
+          pill_span.classList.add("pill_hidden");
+          pill_span.id = i + "group";
+          pill_span.style = "opacity: 1; transform: none;";
 
-    var image = document.createElement("img");
-        image.src = "branding/new_server_inactive.png";
-        image.classList.add("list_item_image");
+      var image = document.createElement("img");
+          image.src = "branding/new_server_inactive.png";
+          image.classList.add("list_item_image");
 
-    var tooltip = document.createElement("span");
-        tooltip.classList.add("tooltiptext");
-        tooltip.innerHTML = "Add Server";
+      var tooltip = document.createElement("span");
+          tooltip.classList.add("tooltiptext");
+          tooltip.innerHTML = "Add Server";
 
 
-    small_div.appendChild(pill_span);
-    total_div.appendChild(small_div);    
+      small_div.appendChild(pill_span);
+      total_div.appendChild(small_div);    
 
-    total_div.appendChild(image);
-    total_div.appendChild(tooltip);
+      total_div.appendChild(image);
+      total_div.appendChild(tooltip);
 
-    document.getElementById("navigation").appendChild(total_div);
-  }
+      document.getElementById("navigation").appendChild(total_div);
+    }
 
-  for(var i = 0; i < 1; i++){
-    var total_div = document.createElement("div");
-      total_div.classList.add("list_item");
-      total_div.classList.add("search_for_list_items");
-      total_div.classList.add("tooltip");
-      total_div.id = "join_server2";
-      total_div.setAttribute('onclick', "showServerJoin()")
+    for(var i = 0; i < 1; i++){
+      var total_div = document.createElement("div");
+        total_div.classList.add("list_item");
+        total_div.classList.add("search_for_list_items");
+        total_div.classList.add("tooltip");
+        total_div.id = "join_server2";
+        total_div.setAttribute('onclick', "showServerJoin()")
 
-    var small_div = document.createElement("div");
+      var small_div = document.createElement("div");
 
-    var pill_span = document.createElement("span");
-        pill_span.classList.add("pill_hidden");
-        pill_span.id = i + "group";
-        pill_span.style = "opacity: 1; transform: none;";
+      var pill_span = document.createElement("span");
+          pill_span.classList.add("pill_hidden");
+          pill_span.id = i + "group";
+          pill_span.style = "opacity: 1; transform: none;";
 
-    var image = document.createElement("img");
-        image.src = "branding/search_server_inactive.png";
-        image.classList.add("list_item_image");
+      var image = document.createElement("img");
+          image.src = "branding/search_server_inactive.png";
+          image.classList.add("list_item_image");
 
-    var tooltip = document.createElement("span");
-        tooltip.classList.add("tooltiptext");
-        tooltip.innerHTML = "Server Search";
+      var tooltip = document.createElement("span");
+          tooltip.classList.add("tooltiptext");
+          tooltip.innerHTML = "Server Search";
 
-    small_div.appendChild(pill_span);
-    total_div.appendChild(small_div);    
+      small_div.appendChild(pill_span);
+      total_div.appendChild(small_div);    
 
-    total_div.appendChild(image);
-    total_div.appendChild(tooltip);
+      total_div.appendChild(image);
+      total_div.appendChild(tooltip);
 
-    document.getElementById("navigation").appendChild(total_div);
+      document.getElementById("navigation").appendChild(total_div);
+    }
+
+    nav = true;
   }
 }
 
@@ -370,12 +375,9 @@ function enableAnimation() {
     hideSettings();
     hideMembers();
     hideSucessfullAdd();
+    loadDM();
     
     $("#user_card").hide();
-
-    setTimeout(function(){
-        loadDM();
-      }, 500);
 
     setTimeout(function(){
       $("#loader").addClass("hidden");
@@ -533,8 +535,11 @@ function loadDM(){
 }
 
 function loadConvo(usersid, usersname_dm) {
+    if(room !== "lobby_link"){
+      loadDM(); 
+    }
+
     room = "lobby_link";
-    loadDM();
     dm_users_id = usersid;
 
     while(document.getElementById("message-container").firstChild){
@@ -550,6 +555,8 @@ function loadConvo(usersid, usersname_dm) {
       roles.pop();
       rolecolours.pop();
     }
+
+    $(".dm_element_active").removeClass("dm_element_active");
 
     //alert("Begining Conversation with " + usersid + " from " + objectid);
     if($(`#${usersid}`).length){
@@ -626,6 +633,8 @@ function loadFriendsList(){
   var usernames = [];
   var userids = [];
 
+  loadingFriends = false;
+
   while(document.getElementById("friends").firstChild){
     document.getElementById("friends").removeChild(document.getElementById("friends").firstChild);
   }
@@ -648,16 +657,20 @@ function loadFriendsList(){
           var image_source;
           var ur2 = "";
 
-          
-
           docRef.get().then(function(doc) {
             image_source = doc.data().icon;
             //console.log(this_users_name);
             
-            var storageRef = firebase.storage().ref().child(image_source).getDownloadURL().then(function(url) {
+            var storageRef = firebase.storage().ref("userIcons/").child(image_source).getDownloadURL().then(function(url) {
               ur2 = url;
               
-              var usersname = document.createElement("h1");
+              var index = server_members.findIndex(element => element.uid == doc.id);
+
+              if(index < 0){
+                server_members.push({name: doc.data().username, info: [], uid: doc.id, icon: ur2});
+              }
+
+              var usersname = document.createElement("h1"); 
                   usersname.innerHTML = this_users_name;
 
               var userscode = document.createElement("h4");
@@ -678,97 +691,12 @@ function loadFriendsList(){
               parent_div.append(user_icon);
               parent_div.append(userstext);
               document.getElementById("friends").append(parent_div);
+              
             });                 
           });
-
-          
+          setTimeout(loadingFriends = true, 1000);
         });
-/*
-        for(var i = 0; i < usernames.length; i++){
-          var image_source = "";
-          var usersname__ = "";
-          var usersid__ = "";
-
-          var docRef = db.collection("users").doc(userids[i]);
-
-          docRef.get().then(function(doc) {
-            if (doc.exists) {
-                image_source = doc.data().icon;
-                usersname__ = doc.data().username;
-                usersid__ = doc.id;
-            } else {
-                console.log("No such document!");
-            }
-
-            var storageRef = firebase.storage().ref();
-            var spaceRef = storageRef.child(image_source);
-            //var path = spaceRef.fullPath;
-            //console.log(spaceRef);
-            
-            spaceRef.getDownloadURL().then(function(url) {
-              
-              var xhr = new XMLHttpRequest();
-              xhr.responseType = 'blob';
-
-              xhr.onload = function(event) {
-                var blob = xhr.response;
-                blob.set({ 'Access-Control-Allow-Origin': 'true' }).sendStatus(200);
-                //console.log(blob);
-              };
-              
-              if("withCredentials" in xhr){
-                xhr.open('GET', url);
-                xhr.withCredentials = true;
-                //xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
-                //xhr.setRequestHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:5500/');
-
-                xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-                
-                //xhr.setRequestHeader("Access-Control-Allow-Credentials", "true");
-                xhr.setRequestHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-                xhr.setRequestHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Access-Control-Allow-Origin, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
-                xhr.send();
-              }else {
-                console.log("Ooop, your computer no supporty");
-              }
-
-
-              //$.ajax({type: 'GET', murl: url, contentType: 'image',xhrFields: {withCredentials: false},headers: {}, success: function() {},error: function() {}});
-          
-              //response.set('Access-Control-Allow-Origin', '*');
-              
-
-              var usersname = document.createElement("h1");
-                  usersname.innerHTML = friends_user_names[i];
-
-              var userscode = document.createElement("h4");
-                  userscode.innerHTML = "#4444";
-
-              var userstext = document.createElement("div");
-                  userstext.append(usersname);
-                  userstext.append(userscode);
-            
-              var user_icon = document.createElement("img");
-                  user_icon.src = url;
-        
-              var parent_div = document.createElement("div");
-                  parent_div.setAttribute('onclick', 'loadConvo("' + usersid__ + '", "'+ 'dm' + i +'", "'+ usersname__ +'")');
-                  parent_div.setAttribute('id', 'dm' + i);
-                  parent_div.classList.add("friend");
-              
-              parent_div.append(user_icon);
-              parent_div.append(userstext);
-              document.getElementById("friends").append(parent_div);
-
-              
-            }).catch(function(error) {
-              console.log(error);
-            });        
-          }); 
-        } */
-    });   // LOAD ICON AND WITH DM BAR
-
-    //loadDM();
+    });   
 }
 
 function createCORSRequest(method, url) {
@@ -864,6 +792,7 @@ $("#create_server").click(function(event){
     hideServerCreator();
   }
 });
+
 
 $('#add_server').click(function() {
     showServerCreator();
@@ -1156,13 +1085,13 @@ function createServer(serverName){
 
     db.collection("groups/"+ autoID +"/roles").doc("owner").set({
       colour: "gold",
-      colour_rgb: "rgb(255,215,0)",
+      colour_rgb: "#ffd700",
       perm_lvl: 10
     })
     
     db.collection("groups/"+ autoID +"/roles").doc("all").set({
       colour: "ping",
-      colour_rgb: "null",
+      colour_rgb: "#faa61a",
       perm_lvl: 0
     }).then(function() {
       //console.log("Server's Roles Setup!");
@@ -1343,20 +1272,18 @@ function joinServer(room_id_element){
             renderMessages();
         });
 
-
-        
-
         db.collection("groups/"+ rmid +"/roles").get()
         .then(querySnapshot => {
             querySnapshot.forEach(doc => {
-                //console.log(doc.data());
-                roles.push(doc.id);
-                rolecolours.push(doc.data().colour);
+                var dep_role = {name: doc.id, color: doc.data().colour, rgb: doc.data().colour_rgb, perm_level: doc.data().perm_lvl};
+                roles.push(dep_role);
+                role_names.push(doc.id)
             });
+
+            renderMembersList();
         });
 
-        renderMembersList();
-      
+        
     }
 
     if(room_id_element){
@@ -1411,26 +1338,13 @@ function renderMessages(){
         var res = str.split("@", 2);
         var result = res[1].split(" ", 2);
         var k = str.search(" ");
-        //console.log(result[0]);
 
-        //var resulti = res[0] + "<b>@" + result[0] + "</b>";
-        
-        /*
-        if(result.length == 1){
-
-        }else{
-          for(var i = 0; i <= result.length; i++){
-            resulti += result[i];
-          }
-        }
-        */
-        
-        p = roles.indexOf(result[0]);
+        p = roles.findIndex(i => i.name === result[0]);
         //console.log(resulti);
         //console.log(result.length);
 
         if(p != -1){
-          highlight_color = rolecolours[p];
+          highlight_color = roles[p].color;
         }else{
           highlight_color = "deafult";
         }
@@ -1889,6 +1803,12 @@ $("#close_member_managment").click(function(){
   hideMembers();
 });
 
+$("#member_manage_par").click(function(event){
+  if($(event.target).is("#member_manage_par")){
+    hideMembers();
+  }
+});
+
 $("#show_requests").click(function(){
   $("#member_requests").show();
   $("#member_managment").hide();
@@ -2060,28 +1980,173 @@ function hideSucessfullAdd(){
   }, 2000);
 }
 
-function renderMemberList(){
-
-}
-
 function renderInvite(){
 
 }
 
+function hexToRgbA(hex, opacity){
+  var c;
+  if(/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)){
+      c= hex.substring(1).split('');
+      if(c.length== 3){
+          c= [c[0], c[0], c[1], c[1], c[2], c[2]];
+      }
+      c= '0x'+c.join('');
+      return 'rgba('+[(c>>16)&255, (c>>8)&255, c&255].join(',')+','+ opacity + ')';
+  }
+  throw new Error('Bad Hex');
+}
 
 function showMembers() {
   $("#member_manage_par").show();
 
+
   $("#member_requests").hide();
   $("#member_managment").hide();
   $("#member_invite").show();
+//nmew
+  $("#member_manage_par").addClass("fade-in");
+  $("#member_manage_par").removeClass("fade-out");
+
+  $("#member_manage_par #member_manage").removeClass("scale-out-center");
+  $("#member_manage_par #member_manage").addClass("scale-up-center");
 }
 
 function hideMembers() {
-  $("#member_manage_par").hide();
+  $("#member_manage_par #member_manage").removeClass("scale-up-center");
+  $("#member_manage_par #member_manage").addClass("scale-out-center");
+
+  $("#member_manage_par").addClass("fade-out");
+  $("#member_manage_par").removeClass("fade-in");
+
+  setTimeout(function(){
+    $("#member_manage_par #member_manage").removeClass("scale-out-center");
+    $("#member_manage_par").hide();
+  }, 350);
+}
+
+function renderMemberList() {
+  while(document.getElementById("member_managment").firstChild){
+    document.getElementById("member_managment").removeChild(document.getElementById("member_managment").firstChild);
+  }
+
+  db.collection("groups/"+ rmid +"/members").get()
+  .then(querySnapshot => {
+    querySnapshot.forEach(doc => {
+      var parent_div_ = document.createElement("div");
+      var role_div = document.createElement("div");
+
+      var users_name_div = document.createElement("div");
+          users_name_div.style.overflowX = "auto";
+          users_name_div.style.width = "100%";
+
+      var users_name = document.createElement("h1");
+          users_name.innerHTML = doc.data().username;
+
+      users_name_div.appendChild(users_name);
+      parent_div_.appendChild(users_name_div);
+
+
+      var index = server_members.findIndex(element => element.uid == doc.data().userId);
+      var room_index = server_members[index].info.findIndex(x => x.server === room);
+
+      server_members[index].info[room_index].roles.forEach((element) => {
+        //console.log(element);
+        
+        var temp = document.createElement("div");
+        
+        //console.log(element, index);
+        var temp_text = document.createElement("p");
+            temp_text.innerHTML = element.name;
+            temp_text.style.margin = "0";
+            temp_text.style.paddingLeft = "5px";
+            temp_text.style.paddingRight = "5px";
+
+        var role_colour = "#8d9edc";
+  
+        temp.appendChild(temp_text);
+        temp.style.borderColor = hexToRgbA(role_colour, "1");
+        temp.style.borderWidth = "2px";
+        temp.style.borderStyle = "solid";
+        temp.style.backgroundColor = hexToRgbA(role_colour, "0.6");
+        role_div.appendChild(temp);
+        role_div.style.display = "flex";
+      });
+
+      parent_div_.appendChild(role_div);
+
+      document.getElementById("member_managment").appendChild(parent_div_);
+    });
+  });
 }
 
 function renderMembersList() {
+  if(!loadingFriends){
+    setTimeout(renderMembersList, 700);
+    return;
+  }
+
+  var parent = document.getElementById("members");
+
+  while(parent.firstChild){
+    parent.removeChild( parent.firstChild);
+  }
+  
+  db.collection("groups/"+ rmid +"/members").get()
+  .then(querySnapshot => {
+    querySnapshot.forEach(doc => {
+        var users_roles = [];
+        var user_role = doc.data().roles;
+
+        for(var i = 0; i < user_role.length; i++){
+          var p = role_names.indexOf(user_role[i]);
+          users_roles.push(roles[p]);
+          
+        }
+
+        user_role.sort((a, b) => (a.perm_lvl > b.perm_lvl) ? 1 : -1)
+        //console.log(users_roles);
+        
+        var temp_loc = server_members.findIndex(element => element.uid == doc.data().userId);
+        var server_info = {server: room, roles: users_roles};
+
+        console.log(doc.data().userId, server_members.filter(server_members => server_members.uid === doc.data().userId));
+
+        if(temp_loc >= 0){
+          var server_loc = server_members[temp_loc].info.findIndex(element => element.server == room);
+
+          if(server_loc < 0){
+            server_members[temp_loc].info.push(server_info);
+            // Not Loading On Load of First Server Then it overloads!!!
+          }else{
+            console.log("exists");
+          }
+        }else{
+          var docRef = db.collection("users").doc(doc.data().userId);
+          var image_source = "";
+          var ur2 = "";
+          docRef.get().then(function(doca) {
+              image_source = doca.data().icon;
+
+              var storageRef = firebase.storage().ref("userIcons/").child(image_source).getDownloadURL().then(function(url) {
+                ur2 = url;
+                server_members.push({name: doc.data().username, info: [{server: room, roles: users_roles}], uid: doc.data().userId, icon: url});
+              });
+          });
+        }
+
+        //server_members.push({name: doc.data().username, roles: users_roles, uid: doc.data().userId});
+    });
+
+    //server_members.sort((a, b) => (a.color > b.color) ? 1 : -1)
+
+    console.log(server_members);
+
+    setTimeout(renderMemberList2, 500);
+  });
+}
+
+function renderMemberList2(){
   var parent = document.getElementById("members");
 
   while(parent.firstChild){
@@ -2099,35 +2164,19 @@ function renderMembersList() {
   parent.append(breaker3);
   parent.append(breaker4);
 
-/*
-  var groups = document.createElement("h4");
+  for(var i = 0; i < server_members.length; i++){
+    var location = server_members[i].info.findIndex(element => element.server == room);
 
-  for(var i = 0; i < roles.length; i++){
-    groups.innerHTML = roles[i];
-    parent.append(groups);
-  }
-*/
-
-  var members = [];
-  var membersId = [];
-
-  db.collection("groups/"+ rmid +"/members").get()
-  .then(querySnapshot => {
-    querySnapshot.forEach(doc => {
-        members.push(doc.data().username);
-        membersId.push(doc.data().userId);
-    });
-
-    for(var i = 0; i < members.length; i++){
+    if(location >= 0){
       var member_user = document.createElement("div");
           member_user.classList.add("member_user");
-          member_user.setAttribute("onclick", "userInfo('" + membersId[i] + "')");
+          member_user.setAttribute("onclick", "userInfo('" + server_members[i].uid + "')");
 
       var member_icon = document.createElement("div");
           member_icon.classList.add("member_icon");
 
       var image = document.createElement("img");
-          image.src = "https://i.pinimg.com/originals/fc/68/f8/fc68f86873c9c661e84ad442cf8fb6cf.gif";
+          image.src = server_members[i].icon;
           image.classList.add("user_name_img");
       
       var status = document.createElement("div");
@@ -2139,20 +2188,20 @@ function renderMembersList() {
       var user_info = document.createElement("div");
       
       var users_name_member = document.createElement("h1");
-          users_name_member.innerHTML = members[i];
+          users_name_member.innerHTML = server_members[i].name;
       
-      var users_documented_status = document.createElement("h3");
-          users_documented_status.innerHTML = "TEMPLATE";
+      //var users_documented_status = document.createElement("h3");
+      //    users_documented_status.innerHTML = "";
 
       user_info.append(users_name_member);
-      user_info.append(users_documented_status);
+      //user_info.append(users_documented_status);
 
 
       member_user.append(member_icon);
       member_user.append(user_info);
       parent.append(member_user);
     }
-  });
+  }
 }
 
 function userInfo(users_id) {
@@ -2181,6 +2230,10 @@ function userInfo(users_id) {
 }
 
 function renderUserInfo(users_name, user_time, users_servers, users_id_){
+  var index = server_members.findIndex(x => x.uid === users_id_);
+  //console.log(server_members[index]);
+  var room_index = server_members[index].info.findIndex(x => x.server === room);
+
   $("#user_card").show();
   $("#user_card").removeClass("fade-out");
   $("#user_card").addClass("fade-in");
@@ -2196,11 +2249,19 @@ function renderUserInfo(users_name, user_time, users_servers, users_id_){
 
   // Top Half
 
+  var users_icon = document.createElement("div");
+  var icon__ = document.createElement("img");
+      icon__.src = server_members[index].icon;
+      users_icon.append(icon__);
+      users_icon.id = "users_icon_popup";
+
   var top_patition = document.createElement("div");
       top_patition.classList.add("user_name_card_top_patition");
 
   var smaller_div = document.createElement("div");
       smaller_div.classList.add("user_card_naming");
+
+  var smol_dov = document.createElement("div");
 
   var users_name_popup = document.createElement("h2");
       users_name_popup.id = "user_name_card";
@@ -2213,6 +2274,28 @@ function renderUserInfo(users_name, user_time, users_servers, users_id_){
 
   var hash = document.createElement("p");
       hash.innerHTML = "#... TBD";
+
+      smol_dov.appendChild(users_name_popup);
+      smol_dov.appendChild(hash);
+
+  //console.log(server_members);
+  var users_roles_ = document.createElement("div");
+
+    server_members[index].info[room_index].roles.forEach((element) => {
+      //console.log(element);
+      
+      var temp = document.createElement("div");
+      
+      var temp_text = document.createElement("p");
+          temp_text.innerHTML = element.name;
+
+      temp.appendChild(temp_text);
+      temp.style.borderColor = "#8d9edc";
+      temp.style.borderWidth = "2px";
+      temp.style.borderStyle = "solid";
+      temp.style.backgroundColor = hexToRgbA("#8d9edc", 0.6);
+      users_roles_.appendChild(temp);
+    });
 
   var message_friend = document.createElement("button");
       message_friend.classList.add("message_friend");
@@ -2266,8 +2349,9 @@ function renderUserInfo(users_name, user_time, users_servers, users_id_){
   bottom_partition.append(info);
   
   more_options.append(icon_more_options);
-  smaller_div.append(users_name_popup);
-  smaller_div.append(hash);
+  smaller_div.append(smol_dov);
+  smaller_div.append(users_roles_);
+  top_patition.append(users_icon);
   top_patition.append(smaller_div)
   top_patition.append(message_friend);
   top_patition.append(more_options);
@@ -2370,3 +2454,12 @@ function nodification(body, title, img){
     });
   }
 };
+
+$('#message-input').bind('keydown',function(evt){
+  var key = String.fromCharCode(evt.keyCode);
+
+  if(evt.keyCode == 50){
+    $("#ping_users").removeClass("hidden");
+    // cont...
+  }
+}); 
