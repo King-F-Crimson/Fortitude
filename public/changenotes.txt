@@ -14,7 +14,6 @@ A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
 ### Queued 
 !- Nodifications
 - Leave Servers
-- Custom User Icons
 - Custom Text Formating
 - Text-Integrated Math Functions
 - Server Icons
@@ -22,16 +21,40 @@ A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
 - Role Sectioned Server Member Listing and Messaging
 - User Icon Caching (Less Server Requests -> Faster Load Times)
 - Html Links (https://www.youtube.com) w/ underscore and blue test coloring + [openinnewtab] in Messages
+- Channels
+- VOIP
 
 ### Working On
 - Finishing Members View List (i.e RolesSort)
 - Role Popup and User Direct Messaging from Chat
 - Manage Members Popup (Requests, Role Managment and Invites)
+- Custom User Icons (Stored as "uid.png/.jpg...")
 
 ### Completed
+- User Data Caching
 
 ### Changing
 - Settings Menu (Revamp)
+
+============= [Releasing] =============
+
+=== { Pre-Alpha 1.2981 - [31/05/2020] ~Shiny Roles Update~
+### Added
+- Finishing Members View List (i.e RolesSort)
+- Role Popup and User Direct Messaging from Chat
+- Manage Members Popup (Requests, Role Managment and Invites)
+- Custom User Icons (Stored as "uid.png/.jpg...")
+
+### Changed
+- User Data Caching for Improved Performance and Less Requests
+- Ui Optimisation (Grid -> Flexbox)
+- Settings Menu (Revamp)
+- Member Magment Ui Change - Functionality Queued.
+- Typing Ui
+
+### Removed
+- Old Code Cull and Optimisation
+}
 
 ============= [Released] =============
 
@@ -44,7 +67,7 @@ A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
 - Altered Old Account Formating and Updated Them
 }
 
-==={ Pre-Alpha 1.2412 - [< 27/05/2020]
+==={ Pre-Alpha 1.2412 - [< 27/05/2020] ~The Workers Update~
 ### Added
 - Friends List
 - Direct Messaging 

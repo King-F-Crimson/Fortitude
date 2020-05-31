@@ -519,17 +519,30 @@ function loadDM(){
         
 
         for(var i = 0; i < usernames.length; i++){
-          var usersname = document.createElement("p");
+          var index = server_members.findIndex(element => element.uid == userids[i]);
+
+          if(userids[i] !== user_id){
+            
+            var usersname = document.createElement("p");
+            var users_icon = document.createElement("img");
+                users_icon.setAttribute("src", server_members[index].icon)
+
+            if(usernames[i].length > 10){
+              usersname.innerHTML = usernames[i].substr(0,10) + "...";
+            }else{
               usersname.innerHTML = usernames[i];
-      
-          var parent_div = document.createElement("div");
-              parent_div.setAttribute('name', 'user_dm_able');
-              parent_div.setAttribute('onclick', `loadConvo("${userids[i]}", "${usernames[i]}")`);
-              parent_div.setAttribute('id', userids[i]);
-              parent_div.classList.add("dm_element");
-      
-          parent_div.append(usersname);
-          document.getElementById("DM").append(parent_div);
+            }
+        
+            var parent_div = document.createElement("div");
+                parent_div.setAttribute('name', 'user_dm_able');
+                parent_div.setAttribute('onclick', `loadConvo("${userids[i]}", "${usernames[i]}")`);
+                parent_div.setAttribute('id', userids[i]);
+                parent_div.classList.add("dm_element");
+            
+            parent_div.append(users_icon);
+            parent_div.append(usersname);
+            document.getElementById("DM").append(parent_div);
+          }
         }
     });
 }
@@ -1086,13 +1099,31 @@ function createServer(serverName){
     db.collection("groups/"+ autoID +"/roles").doc("owner").set({
       colour: "gold",
       colour_rgb: "#ffd700",
-      perm_lvl: 10
+      perm_lvl: 10,
+      name: "owner",
+      admin: true,
+      audit: true,
+      manage_server: true,
+      manage_roles: true,
+      manage_channels: true,
+      pingable: true,
+      deletable: false,
+      deafult: false,
     })
     
     db.collection("groups/"+ autoID +"/roles").doc("all").set({
       colour: "ping",
       colour_rgb: "#faa61a",
-      perm_lvl: 0
+      perm_lvl: 0,
+      name: "all",
+      admin: false,
+      audit: false,
+      manage_server: false,
+      manage_roles: false,
+      manage_channels: false,
+      pingable: false,
+      deafult: true,
+      deletable: false,
     }).then(function() {
       //console.log("Server's Roles Setup!");
 
@@ -1275,10 +1306,12 @@ function joinServer(room_id_element){
         db.collection("groups/"+ rmid +"/roles").get()
         .then(querySnapshot => {
             querySnapshot.forEach(doc => {
-                var dep_role = {name: doc.id, color: doc.data().colour, rgb: doc.data().colour_rgb, perm_level: doc.data().perm_lvl};
+                var dep_role = {name: doc.id, color: doc.data().colour, rgb: doc.data().colour_rgb, perm_level: doc.data().perm_lvl, admin: doc.data().admin, audit: doc.data().audit, manage_server: doc.data().manage_server, manage_roles: doc.data().manage_roles, manage_channels: doc.data().manage_channels, pingable: doc.data().pingable, deletable: doc.data().deletable, deafult: doc.data().deafult };
                 roles.push(dep_role);
                 role_names.push(doc.id)
             });
+
+            roles.sort((a, b) => (a.perm_level > b.perm_level) ? -1 : 1)
 
             renderMembersList();
         });
@@ -1340,11 +1373,22 @@ function renderMessages(){
         var k = str.search(" ");
 
         p = roles.findIndex(i => i.name === result[0]);
-        //console.log(resulti);
-        //console.log(result.length);
+        
+        var users_photo = server_members.findIndex(i => i.uid == userId_message[i])
+        console.log(userId_message[i], users_photo);
 
-        if(p != -1){
+        var role_called = res[1].split(" ");
+        //console.log(role_called[0]);
+
+        var end_result;
+        var role_color;
+        var pingable = false;
+        //console.log(end_result);
+
+        if(p != -1 && roles[p].pingable){
           highlight_color = roles[p].color;
+          role_color = roles[p].rgb;
+          end_result = messages[i].replace(`@${role_called[0]}`, `<div class="role_call"><p style="color: ${role_color}">@${role_called[0]}</p></div>`);
         }else{
           highlight_color = "deafult";
         }
@@ -1356,8 +1400,9 @@ function renderMessages(){
       if($("#message-container").children().length > 0){
         if(highlight_color !== "deafult"){
           if(authors[i - 1] === authors[i] && samecount < 10){
+                divider.classList.add("special_message");
                 var message = document.createElement("p");
-                    message.innerHTML = messages[i];
+                    message.innerHTML = end_result;
                 
                 if(highlight_color == "ping"){
                   divider.classList.add("mentioned"); 
@@ -1398,7 +1443,6 @@ function renderMessages(){
                 }
 
                 samecount = 0;
-                
             }
         }else{
           if(authors[i - 1] === authors[i] && samecount < 10){
@@ -1787,8 +1831,20 @@ $("#user_settings").click(function() {
 
 function showSettings() {
   $("#settings").show();
-  $("settings_right *").hide();
-  $("account").show();
+  $(".settings_pannel").hide();
+  loadAccountSettings();
+}
+
+function loadAccountSettings() {
+  $(".settings_pannel").hide();
+  $("#account").show();
+
+  var index = server_members.findIndex(element => element.uid == user_id);
+  console.log(server_members[index]);
+
+  $("#settings_username").text(username);
+  $("#settings_email").text(user_email);
+  $("#settings_icon").attr("src", server_members[index].icon);
 }
 
 function hideSettings() {
@@ -1867,6 +1923,14 @@ function getRequests() {
           have++;
       });
 
+      var server_member_manage_top = document.createElement("div");
+      var server_member_manage_title = document.createElement("h4");
+          server_member_manage_title.innerHTML = "REQUESTS - " + have;
+
+          server_member_manage_top.append(server_member_manage_title);
+
+      document.getElementById("member_requests").appendChild(server_member_manage_top);
+
       for(var i = 0; i < requests_names.length; i++){
         var request_div = document.createElement("div");
             request_div.classList.add("request");
@@ -1893,14 +1957,14 @@ function getRequests() {
         request_div.append(decline_button);
         document.getElementById("member_requests").append(request_div);
       }
-  });
 
-  if(have == 0){
-    var fail_to_create = document.createElement("h1");
-        fail_to_create.innerHTML = "No Requests :(";
-    
-    document.getElementById("member_requests").append(fail_to_create);
-  }
+      if(have == 0){
+        var fail_to_create = document.createElement("h1");
+            fail_to_create.innerHTML = "No Requests :(";
+        
+        document.getElementById("member_requests").append(fail_to_create);
+      }
+  });
 }
 
 function serverInviteAccept(user_id, server_id, server_name) {
@@ -1981,8 +2045,203 @@ function hideSucessfullAdd(){
 }
 
 function renderInvite(){
+  $("#member_requests").hide();
+  $("#member_managment").hide();
+  $("#member_invite").show();
 
+  $("#show_requests").removeClass("active_member_manage");
+  $("#show_managment").removeClass("active_member_manage");
+  $("#show_invite").addClass("active_member_manage");
+
+  while(document.getElementById("member_invite").firstChild){
+    document.getElementById("member_invite").removeChild(document.getElementById("member_invite").firstChild);
+  }
+  var parent_div__ = document.createElement("div");
+      parent_div__.classList.add("role_parent");
+      parent_div__.id = "role_sett_div";
+
+  var left_pannel = document.createElement("div");
+      var title_ = document.createElement("h4");
+          title_.innerHTML = "ROLES";
+
+      left_pannel.appendChild(title_);
+      left_pannel.classList.add("roles_left_pannel");
+      roles.sort((a, b) => (a.perm_level > b.perm_level) ? -1 : 1) 
+      parent_div__.appendChild(left_pannel);
+
+  var deafult_role;
+  document.getElementById("member_invite").appendChild(parent_div__);
+
+  roles.forEach((element, index) => {
+    if(element.deafult){
+      deafult_role = element;
+      openSettingsRoles(index, 1);
+    }
+
+    var role__ = document.createElement("div");
+        role__.classList.add("role_div");
+        role__.id = "role_" + index;
+        role__.setAttribute("onclick", `openSettingsRoles(${index}, 0)`);
+
+    var role_text = document.createElement("p");
+        role_text.innerHTML = element.name;
+        role__.style.color = element.rgb;
+        role__.append(role_text);
+
+
+        left_pannel.appendChild(role__);
+  });  
 }
+
+function openSettingsRoles(index, k){
+  if(k == 0){
+    document.getElementById("role_sett_div").removeChild(document.getElementById("roles_right_pannel"));
+  }
+  
+  $(".role_div").removeClass("active");
+  $("#role_" + index).addClass("active");
+
+  $(".role_div").css("background-color", "inherit");
+
+  var slides = document.getElementsByClassName("role_div");
+  for (var i = 0; i < slides.length; i++) {
+    $("#role_" + i).css("color", roles[i].rgb);
+  }
+
+  $("#role_" + index).css("background-color", roles[index].rgb);
+  $("#role_" + index).css("color", "white");
+
+  console.log(roles[index]);
+  var deafult_role = roles[index];
+
+  var right_pannel = document.createElement("div");
+      right_pannel.classList.add("roles_right_pannel");
+      right_pannel.id = "roles_right_pannel";
+
+      // Role Name
+      var right_pannel_first_section = document.createElement("div");
+      var right_title_1 = document.createElement("h4");
+          right_title_1.innerHTML = "ROLE NAME";
+
+      var name_div = document.createElement("input");
+          name_div.classList.add("role_name_settings");
+          name_div.value = deafult_role.name; 
+          name_div.style.color = deafult_role.rgb; 
+
+      // Role Colour
+      var right_pannel_seccond_section = document.createElement("div");
+      var right_title_2 = document.createElement("h4");
+          right_title_2.innerHTML = "ROLE COLOUR";
+      
+      var color_selector = document.createElement("input");
+          color_selector.setAttribute("type", "color");
+      
+      // Permissions
+      var button__ = document.createElement("label");
+          button__.classList.add("switch");
+          var button_input = document.createElement("input");
+              button_input.setAttribute("type", "checkbox");
+          
+          var button_span = document.createElement("span");
+              button_span.classList.add("slider");
+              button_span.classList.add("round");
+
+          button__.append(button_input);
+          button__.append(button_span);
+
+      var right_pannel_third_section = document.createElement("div");
+      var right_title_3 = document.createElement("h4");
+          right_title_3.innerHTML = "ROLE PERMISSIONS";
+      
+      var pingable = document.createElement("div");
+          pingable.classList.add("role_setting_");
+
+          var pingable_text = document.createElement("div");
+          
+          var pingable_header = document.createElement("h1");
+              pingable_header.innerHTML = "Allow this role to be @mentioned.";
+
+          var pingable_paragraph = document.createElement("p");
+              pingable_paragraph.innerHTML = "Enabling this allows <strong>anyone</strong> to @ this role";
+
+          var pingable_button = document.createElement("div");
+              pingable_button.style.alignSelf = "center";
+              pingable_button.setAttribute("onclick", `changeRole("${10}", "${deafult_role.name}")`);
+              pingable_button.append(button__);
+
+          pingable_text.append(pingable_header);
+          pingable_text.append(pingable_paragraph);
+
+          pingable.append(pingable_text);
+          pingable.append(pingable_button);
+      
+      var administrator_access = document.createElement("div");
+          administrator_access.classList.add("role_setting_");
+
+          var administrator_text = document.createElement("div");
+          
+          var administrator_header = document.createElement("h1");
+              administrator_header.innerHTML = "Give this role administrator permissions";
+
+          var administrator_paragraph = document.createElement("p");
+              administrator_paragraph.innerHTML = "Enabling this allows <strong>the user</strong> access any of the below features and shoud only be given to trustworthy individuals";
+
+          var admin_button = document.createElement("div");
+              admin_button.style.alignSelf = "center";
+              admin_button.setAttribute("onclick", `changeRole("${10}", "${deafult_role.name}")`);
+              admin_button.append(button__.cloneNode(true));
+
+          administrator_text.append(administrator_header);
+          administrator_text.append(administrator_paragraph);
+
+          administrator_access.append(administrator_text);
+          administrator_access.append(admin_button);
+      
+          // continue eeeeee
+      var audit_access = document.createElement("div");
+          //...
+
+      var manage_roles = document.createElement("div");
+          //...
+
+      var manage_channels = document.createElement("div");
+          //...
+
+      var manage_server = document.createElement("div");
+          //...
+      
+      
+      right_pannel_first_section.append(right_title_1);
+      right_pannel_first_section.append(name_div);
+
+      right_pannel_seccond_section.append(right_title_2);
+      right_pannel_seccond_section.append(color_selector);
+
+      right_pannel_third_section.append(right_title_3);
+      right_pannel_third_section.append(pingable);
+      right_pannel_third_section.append(administrator_access)
+
+      right_pannel.appendChild(right_pannel_first_section);
+      right_pannel.appendChild(right_pannel_seccond_section);
+      right_pannel.appendChild(right_pannel_third_section);
+      
+
+  document.getElementById("role_sett_div").appendChild(right_pannel);
+}
+
+$('#member_invite').on('mouseover', '.role_div', function() {
+  if(!$(this).hasClass("active")){
+    var color = this.id;
+    color = color.replace("role_", "");
+    this.style.backgroundColor = hexToRgbA(roles[color].rgb, "0.1");
+  }
+});
+
+$('#member_invite').on("mouseleave", ".role_div", function() {
+  if(!$(this).hasClass("active")){
+    this.style.backgroundColor = "inherit";
+  }
+});
 
 function hexToRgbA(hex, opacity){
   var c;
@@ -1999,7 +2258,7 @@ function hexToRgbA(hex, opacity){
 
 function showMembers() {
   $("#member_manage_par").show();
-
+  renderInvite();
 
   $("#member_requests").hide();
   $("#member_managment").hide();
@@ -2030,6 +2289,8 @@ function renderMemberList() {
     document.getElementById("member_managment").removeChild(document.getElementById("member_managment").firstChild);
   }
 
+  var server_count = 0;
+
   db.collection("groups/"+ rmid +"/members").get()
   .then(querySnapshot => {
     querySnapshot.forEach(doc => {
@@ -2054,6 +2315,7 @@ function renderMemberList() {
         //console.log(element);
         
         var temp = document.createElement("div");
+        var role_colour = element.rgb;
         
         //console.log(element, index);
         var temp_text = document.createElement("p");
@@ -2061,37 +2323,45 @@ function renderMemberList() {
             temp_text.style.margin = "0";
             temp_text.style.paddingLeft = "5px";
             temp_text.style.paddingRight = "5px";
-
-        var role_colour = "#8d9edc";
+            temp_text.style.color = role_colour;
   
         temp.appendChild(temp_text);
         temp.style.borderColor = hexToRgbA(role_colour, "1");
-        temp.style.borderWidth = "2px";
+        temp.style.borderWidth = "1px";
         temp.style.borderStyle = "solid";
-        temp.style.backgroundColor = hexToRgbA(role_colour, "0.6");
+        temp.style.backgroundColor = hexToRgbA(role_colour, "0.1");
         role_div.appendChild(temp);
         role_div.style.display = "flex";
+        
       });
 
-      parent_div_.appendChild(role_div);
+      server_count++;
 
+      var server_member_manage_top = document.createElement("div");
+      var server_member_manage_title = document.createElement("h4");
+          server_member_manage_title.innerHTML = "SERVER MEMBERS - " + server_count;
+
+          server_member_manage_top.append(server_member_manage_title);
+
+      parent_div_.appendChild(role_div);
+      document.getElementById("member_managment").appendChild(server_member_manage_top);
       document.getElementById("member_managment").appendChild(parent_div_);
     });
   });
 }
 
 function renderMembersList() {
-  if(!loadingFriends){
-    setTimeout(renderMembersList, 700);
-    return;
-  }
-
   var parent = document.getElementById("members");
 
   while(parent.firstChild){
     parent.removeChild( parent.firstChild);
   }
-  
+
+  if(!loadingFriends){
+    setTimeout(renderMembersList, 700);
+    return;
+  }
+
   db.collection("groups/"+ rmid +"/members").get()
   .then(querySnapshot => {
     querySnapshot.forEach(doc => {
@@ -2104,24 +2374,13 @@ function renderMembersList() {
           
         }
 
-        user_role.sort((a, b) => (a.perm_lvl > b.perm_lvl) ? 1 : -1)
+        users_roles.sort((a, b) => (a.perm_lvl > b.perm_lvl) ? 1 : -1)
         //console.log(users_roles);
         
         var temp_loc = server_members.findIndex(element => element.uid == doc.data().userId);
         var server_info = {server: room, roles: users_roles};
 
-        console.log(doc.data().userId, server_members.filter(server_members => server_members.uid === doc.data().userId));
-
-        if(temp_loc >= 0){
-          var server_loc = server_members[temp_loc].info.findIndex(element => element.server == room);
-
-          if(server_loc < 0){
-            server_members[temp_loc].info.push(server_info);
-            // Not Loading On Load of First Server Then it overloads!!!
-          }else{
-            console.log("exists");
-          }
-        }else{
+        if(temp_loc == -1){
           var docRef = db.collection("users").doc(doc.data().userId);
           var image_source = "";
           var ur2 = "";
@@ -2132,17 +2391,28 @@ function renderMembersList() {
                 ur2 = url;
                 server_members.push({name: doc.data().username, info: [{server: room, roles: users_roles}], uid: doc.data().userId, icon: url});
               });
-          });
-        }
 
-        //server_members.push({name: doc.data().username, roles: users_roles, uid: doc.data().userId});
+              setTimeout(renderMemberList2, 500);
+          });
+        }else{
+          if(server_members.filter(server_members => server_members.uid === doc.data().userId)){
+            console.log(temp_loc); 
+            var server_loc = server_members[temp_loc].info.findIndex(element => element.server == room);
+  
+            if(server_loc < 0){
+              server_members[temp_loc].info.push(server_info);
+              setTimeout(renderMemberList2, 500);
+              // Not Loading On Load of First Server Then it overloads!!!
+            }else{
+              //console.log("exists");
+              setTimeout(renderMemberList2, 500);
+            }
+          }else{
+            setTimeout(renderMemberList2, 500);
+          }
+        }
     });
 
-    //server_members.sort((a, b) => (a.color > b.color) ? 1 : -1)
-
-    console.log(server_members);
-
-    setTimeout(renderMemberList2, 500);
   });
 }
 
@@ -2157,17 +2427,51 @@ function renderMemberList2(){
   var breaker = document.createElement("br");
   var breaker2 = document.createElement("br");
   var breaker3 = document.createElement("br");
-  var breaker4 = document.createElement("br");
 
   parent.append(breaker);
   parent.append(breaker2);
   parent.append(breaker3);
-  parent.append(breaker4);
+
+  // roles array[]
 
   for(var i = 0; i < server_members.length; i++){
     var location = server_members[i].info.findIndex(element => element.server == room);
 
     if(location >= 0){
+      var high = 0;
+      var high_role;
+      var itterator = 0;
+
+      //console.log(server_members[i].info[location].roles);
+      server_members[i].info[location].roles.forEach((element, i) =>{
+        //console.log(element);
+
+        if(element.perm_level >= high){
+          high = element.perm_level;
+          high_role = element;
+          itterator = i;
+        }
+      });
+
+      //console.log(high_role);
+
+      // check if it exists, if not create a new div (id="rolename_category")
+      // append the user to the div after creating thier thingy
+
+      var category__ = !!document.getElementById(high_role.name + "_category");
+
+      if(!category__){
+        var new_category = document.createElement("div");
+            new_category.id = high_role.name + "_category";
+        
+        var text_child = document.createElement("p");
+            text_child.innerHTML = high_role.name;
+            text_child.classList.add("user_category")
+            new_category.appendChild(text_child);
+
+        parent.append(new_category);
+      }
+
       var member_user = document.createElement("div");
           member_user.classList.add("member_user");
           member_user.setAttribute("onclick", "userInfo('" + server_members[i].uid + "')");
@@ -2189,6 +2493,8 @@ function renderMemberList2(){
       
       var users_name_member = document.createElement("h1");
           users_name_member.innerHTML = server_members[i].name;
+          console.log(server_members[i]);
+          users_name_member.style.color = server_members[i].info[location].roles[itterator].rgb;
       
       //var users_documented_status = document.createElement("h3");
       //    users_documented_status.innerHTML = "";
@@ -2273,7 +2579,7 @@ function renderUserInfo(users_name, user_time, users_servers, users_id_){
       }
 
   var hash = document.createElement("p");
-      hash.innerHTML = "#... TBD";
+      //hash.innerHTML = "#";
 
       smol_dov.appendChild(users_name_popup);
       smol_dov.appendChild(hash);
@@ -2290,10 +2596,10 @@ function renderUserInfo(users_name, user_time, users_servers, users_id_){
           temp_text.innerHTML = element.name;
 
       temp.appendChild(temp_text);
-      temp.style.borderColor = "#8d9edc";
-      temp.style.borderWidth = "2px";
+      temp.style.borderColor = element.rgb;
+      temp.style.borderWidth = "1px";
       temp.style.borderStyle = "solid";
-      temp.style.backgroundColor = hexToRgbA("#8d9edc", 0.6);
+      temp.style.backgroundColor = hexToRgbA(element.rgb, 0.1);
       users_roles_.appendChild(temp);
     });
 
@@ -2302,10 +2608,6 @@ function renderUserInfo(users_name, user_time, users_servers, users_id_){
       message_friend.id = "user_card_message_friend";
       message_friend.classList.remove("user_card_message_friend_activated");
 
-  
-  loadFriendsList();
-  //console.log(friends_user_ids, users_id_);
-
   if(friends_user_ids.includes(users_id_)){
     message_friend.innerHTML = "Send Message"; 
     message_friend.setAttribute('onclick', `loadConvo("${users_id_}", "${users_name}")`);
@@ -2313,6 +2615,8 @@ function renderUserInfo(users_name, user_time, users_servers, users_id_){
     message_friend.innerHTML = "Add Friend"; 
     message_friend.setAttribute('onclick', `addFriend("${users_id_}", "${users_name}")`);
   }
+
+  
 
   var more_options = document.createElement("a");
 
@@ -2352,8 +2656,12 @@ function renderUserInfo(users_name, user_time, users_servers, users_id_){
   smaller_div.append(smol_dov);
   smaller_div.append(users_roles_);
   top_patition.append(users_icon);
-  top_patition.append(smaller_div)
-  top_patition.append(message_friend);
+  top_patition.append(smaller_div);
+
+  if(users_id_ !== user_id){
+    top_patition.append(message_friend);
+  }
+  
   top_patition.append(more_options);
 
   parent.append(top_patition);
@@ -2455,11 +2763,64 @@ function nodification(body, title, img){
   }
 };
 
-$('#message-input').bind('keydown',function(evt){
+$('#message-input').bind('keyup',function(evt){
   var key = String.fromCharCode(evt.keyCode);
 
-  if(evt.keyCode == 50){
+  if(evt.keyCode === 50){
     $("#ping_users").removeClass("hidden");
-    // cont...
+
+    while(document.getElementById("ping_users").firstChild){
+      document.getElementById("ping_users").removeChild(document.getElementById("ping_users").firstChild);
+    }
+
+    for(var i = 0; i < server_members.length; i++){
+      var location = server_members[i].info.findIndex(element => element.server == room);
+
+      if(location >= 0){
+        var role___ = document.createElement("div");
+            role___.classList.add("pingable_role");
+
+        var role_name = document.createElement("h3");
+            role_name.innerHTML = server_members[i].name; // Change to Nickname When Introducing
+            role_name.style.color = "white";
+
+        var role_desc = document.createElement("p");
+            role_desc.innerHTML = server_members[i].name;
+            role_desc.style.opacity = "0.2";
+            
+        role___.appendChild(role_name);
+        role___.appendChild(role_desc);
+        document.getElementById("ping_users").appendChild(role___);
+      }
+    }
+
+    var separator = document.createElement("hr");
+    document.getElementById("ping_users").appendChild(separator);
+
+    roles.forEach((element, index) => {
+      if(element.pingable){
+        var role___ = document.createElement("div");
+            role___.classList.add("pingable_role");
+
+        var role_name = document.createElement("h3");
+            role_name.innerHTML = "@" + element.name;
+            role_name.style.color = element.rgb;
+
+        var role_desc = document.createElement("p");
+            role_desc.innerHTML = "Nodify users who have this role";
+            role_desc.style.opacity = "0.2";
+            
+        role___.appendChild(role_name);
+        role___.appendChild(role_desc);
+        document.getElementById("ping_users").appendChild(role___);
+      }
+    }) 
   }
-}); 
+})
+
+$('#message-input').bind('keyup',function(evt){
+    console.log(evt.keyCode);
+    if(!$('#message-input').val().includes("@")){
+      $("#ping_users").addClass("hidden");
+    }
+})

@@ -3,6 +3,7 @@
   --background-color-seccondary: #2f3136;
   --background-color-tertiary: #ffffff;
   --background-color-quaternary: #202225;
+  --background-color-compliement: rgba(32, 34, 37, 0.6);
   --background-dark: #292b2f;
   --background-true-dark: #2f3035;
   --background-near-black: #000000;
@@ -632,15 +633,24 @@ input:focus {
   border-radius: 50%;
 }
 
+.user_category {
+  text-transform: uppercase;
+  opacity: 0.6;
+  font-weight: 100;
+  font-family: "DeafultUi";
+  font-size: 0.8em;
+  margin: 0;
+}
+
 .member_user {
   border-radius: 5px;
   padding: 1px;
   display: grid;
-  grid-template-columns: 25% 1fr;
+  grid-template-columns: 35% 1fr;
   grid-template-rows: 1fr;
   justify-items: left;
   align-items: center;
-  grid-gap: 15px;
+  grid-gap: 5px;
   padding-left: 15px;
   margin-bottom: 5px;
   padding-top: 5px;
@@ -666,12 +676,17 @@ input:focus {
 .member_icon div {
   position: absolute;
   bottom: -10%;
-    right: 3%;
+  right: 3%;
   height: 12px;
   width: 12px;
-  border: 3px solid var(--background-color-primary);
+  border: 3px solid var(--background-color-seccondary);
   border-radius: 50%;
   background-color: var(--online);
+}
+
+.member_icon div h1 {
+  font-weight: 100;
+  font-family: "DeafultUi";
 }
 
 #inviteURL {
@@ -1150,7 +1165,7 @@ height: 100% !important;
 
   display: grid;
   grid-template-columns: 20% 1fr;
-  grid-gap: 10px;
+  grid-gap: 15px;
 }
 
 .dm_element {
@@ -1306,7 +1321,7 @@ height: 100% !important;
   right: 25%;
   height: 12px;
   width: 12px;
-  border: 3px solid var(--background-color-primary);
+  border: 3px solid var(--background-color-seccondary);
   border-radius: 50%;
   background-color: var(--online);
 }
@@ -1976,7 +1991,8 @@ p strong {
   grid-row: 2;
   border-radius: 5px;
   background-color: var(--background-color-seccondary);
-  border-top-left-radius: 0px;
+  /* border-top-left-radius: 0px; */
+  height: 95%;
 }
 
 #member_requests {
@@ -1991,16 +2007,49 @@ p strong {
   border-radius: 5px;
   background-color: var(--background-color-seccondary);
   border-top-left-radius: 0px;
-  overflow-y: auto;
+  overflow-y: auto; 
 }
 
-#member_managment > div {
-  background-color: var(--background-color-primary);
-  margin: 10px;
-  padding: 5px;
-  border-radius: 5px;
+
+#member_managment * {
+  transition: 0s all;
+}
+
+#member_managment > div:not(:first-child) {
+  /* background-color: var(--background-color-primary); */
+  margin: 15px;
+  padding: 15px;
+  /* border-radius: 5px; */
   display: grid;
   grid-template-columns: 15% 50% 1fr;
+  border: 1px solid transparent;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+#member_managment > div > div * {
+  font-family: "DeafultUi";
+  font-weight: 100;
+}
+
+#member_managment > div > div h1 {
+  font-size: 1em;
+}
+
+#member_managment > div > div p {
+  font-size: 0.9em;
+  text-transform: capitalize;
+
+}
+
+#member_managment > div:not(:first-child):hover {
+  background-color: var(--background-color-compliement);
+  border: 1px solid var(--background-black);
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+#member_managment > div:first-child {
+  margin: 15px;
 }
 
 #member_managment > div > div {
@@ -2236,6 +2285,10 @@ p strong {
   justify-items: center;
 }
 
+.user_name_card_top_patition a {
+  grid-column: 5;
+}
+
 .user_card h2 {
   white-space: nowrap;
   font-size: 1em;
@@ -2262,11 +2315,14 @@ p strong {
   grid-gap: 0px;
   justify-content: center;
   align-items: center;
+  justify-self: flex-start;
+  margin-left: 25px;
 }
 
 .user_card_naming div {
   display: flex;
   flex-direction: row;
+  text-transform: capitalize;
 }
 
 .user_card_naming div:not(:first-child) {
@@ -2316,6 +2372,309 @@ p strong {
 
 .message_friend {
   grid-column: 4;
+}
+
+.role_parent {
+  display: grid;
+  grid-template-columns: 0.4fr 1fr;
+  height: 40vh;
+  margin: 15px;
+  grid-gap: 15px;
+}
+
+.role_name_settings {
+  background-color: var(--background-color-seccondary);
+  border: none;
+  border-radius: 5px;
+  width: 95%;
+  background-color: var(--background-color-compliement);
+  border-radius: 5px;
+  border: 1px solid var(--background-color-quaternary);
+  font-weight: 100;
+  font-family: "DeafultUi";
+}
+
+.role_name_settings:focus {
+  background-color: var(--background-color-seccondary);
+  border: none;
+  border-radius: 5px;
+  width: 95%;
+  background-color: var(--background-color-compliement);
+  border-radius: 5px;
+  border: 1px solid var(--background-color-primary);
+}
+
+.role_div {
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5;
+}
+
+.role_div:hover {
+  background-color: var(--background-color-compliement);
+  cursor: pointer;
+}
+
+.role_div .active {
+  
+}
+
+.roles_left_pannel {
+  height: 100%;
+}
+
+.roles_left_pannel p {
+  font-weight: 100;
+  font-family: "DeafultUi";
+}
+
+.roles_left_pannel h4 {
+  margin: 5px;
+  margin-left: 10px;
+  font-size: 0.7em;
+  opacity: 0.6;
+}
+
+.role_div p{
+  margin: 0;
+  text-transform: capitalize;
+  margin-left: 2%;
+}
+
+
+#account > div {
+  background-color: var(--background-color-compliement);
+  border-radius: 5px;
+  border: 1px solid var(--background-color-quaternary);
+}
+
+#account h3 {
+  font-size: 0.7em;
+  font-weight: 300;
+  opacity: 0.4;
+  font-family: "DeafultUi";
+  margin: 0;
+}
+
+#account > div > div > div {
+  margin: 15px;
+}
+
+#account h4 {
+  font-size: 0.9em;
+  font-weight: 100;
+  opacity: 0.7;
+  font-family: "DeafultUi";
+  margin: 0;
+}
+
+#account img {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+  justify-self: center;
+  align-self: center;
+  margin-left: 3%;
+}
+
+#account > div {
+  display: flex;
+  height: 140px;
+}
+
+#account > div > div {
+  align-self: center;
+}
+
+#member_manage h4 {
+  margin: 5px;
+  font-size: 0.7em;
+  opacity: 0.6;
+}
+
+.role_setting_ {
+  margin-left: 15px;
+  display: flex;
+  width: 90%;
+  justify-content: space-between;
+  border-bottom: 0.5px solid grey;
+  padding-bottom: 15px;
+  padding-top: 15px;
+}
+
+.pingable_role {
+  margin: 1%;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+}
+
+#ping_users .active {
+  background-color: var(--background-color-primary);
+  border-radius: 5px;
+  padding: 5px;
+}
+
+#ping_users {
+  background-color: var(--background-color-seccondary) !important;
+  border: 1px solid var(--background-color-compliement);
+}
+
+#ping_users hr {
+  opacity: 0.1;
+  width: 98%;
+  border-radius: 5px;
+  border: 0.1px solid #f4f4f4;
+}
+
+.pingable_role {
+  padding: 1px;
+  transition: 0s all ease;
+}
+
+.role_call {
+  width: fit-content;
+  border-radius: 5px;
+  background-color: var(--background-color-compliement);
+
+  padding-left: 2px !important;
+  padding-right: 2px !important;
+}
+
+#member_requests > div:first-child {
+  margin: 15px;
+}
+
+.special_message {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.message *{
+  margin: 0;
+  padding: 0px;
+}
+
+.special_message p {
+  padding-top: 0px !important;
+  margin-block-start: 0em !important;
+  margin-top: 0px;
+}
+
+.pingable_role *{
+  font-family: "DeafultUi";
+  font-weight: 100;
+  margin: 0;
+  font-size: 1em;
+  border-radius: 5px;
+  padding: 5px;
+  transition: 0s all ease;
+}
+
+.pingable_role h3 {
+  color: rgb(255, 215, 0);
+  border-radius: 5px;
+  /* margin-right: 2%; */
+  padding: 5px;
+}
+
+.pingable_role:hover {
+  background-color: var(--background-color-primary);
+  border-radius: 3px;
+  padding: 1px;
+}
+
+.role_setting_ div h1{
+  font-size: 0.9em;
+}
+
+.role_setting_ div p {
+  font-size: 0.7em;
+  font-family: "DeafultUi";
+  font-weight: 100;
+  opacity: 0.6;
+}
+
+.role_setting_ button {
+  height: fit-content;
+}
+
+/*START*/
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 17px;
+}
+
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--background-color-compliement);
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 13px;
+  width: 13px;
+  left: 3px;
+  bottom: 2px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #7c90d9;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(11px);
+  -ms-transform: translateX(11px);
+  transform: translateX(11px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+
+/*END*/
+
+.roles_right_pannel {
+  overflow: auto;
+}
+
+.roles_right_pannel > div {
+  margin-bottom: 25px;
+}
+
+.roles_right_pannel h4 {
+  margin: 5px;
+  margin-left: 10px;
+  font-size: 0.7em;
+  opacity: 0.6;
 }
 
 .results {
@@ -2650,14 +3009,14 @@ button:hover {
   background-color: var(--background-color-seccondary);
 
   display: grid;
-  grid-template-columns: 40% 1fr;
+  grid-template-columns: 30% 1fr;
 }
 
 #settings_left {
   background-color: var(--background-color-seccondary);
 
   display: grid;
-  grid-template-columns: 1fr 20%;
+  grid-template-columns: 1fr 30%;
 
   align-content: center;
   justify-content: right;
@@ -2708,11 +3067,12 @@ button:hover {
 
   display: grid;
   grid-template-rows: 11% 1fr;
-  grid-template-columns: 5% 40% 1fr;
+  grid-template-columns: 2% 60% 1fr;
 
   justify-content: right;
   align-content: start;
   row-gap: 1px;
+  column-gap: 25px;
 }
 
 .active_member_manage {

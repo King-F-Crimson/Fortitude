@@ -27,35 +27,34 @@
         <div id="patch_notes">
           <div>
             <h1>Change Log:</h1>
-            <h4>Pre-Alpha 1.2572 <strong>NEW</strong></h4>
+            <h4>Pre-Alpha 1.2981 <strong>ROLES UPDATE</strong></h4>
 
             <br>
             <div>
               <h2 style="color: #90ee90">Added:</h2>
-                <p>👍 Ability to Create Servers</p>
-                <p>👍 Server Verification </p>
-                <p>😍 Join Servers <strong>NEW</strong></p>
-                <p>😍 Roles <strong>NEW</strong></p>
+                <p>👍 Role Sorted Member List</p>
+                <p>👍 Role Pinging </p>
+                <p>😍 Manage Members and Roles</p>
+                <p>😍 Custom User Icons <strong>NEW</strong></p>
 
               <br>
 
               <h2 style="color: #e8776d">Changed:</h2>
-                <p>😅 Server Loading Method </p>
-              
+                <p>😅 User Data Caching </p>
+                <p>😅 Security and Ui Optimisation </p>
               <br>
 
               <h2 style="color: #6dd8e8">Next Update:</h2>
-                <p>🤯 Server Member Lists</p>
-                <p>🤯 User Icons</p>
+                <p>🤯 User Status (i.e Online)</p>
+                <p>🤯 Nodifications</p>
             </div>
           </div>
         </div>
 
         <div id="patch_notes_entertainment">
           <h1>Fortitude</h1>
-          <p>This is the ittertive release channel.</p>
-          <h6>Developer Release Channel - Comming Soon</h6>
-          <h6>Stable Release Channel - Comming Soon</h6>
+          <p>This is the ittertive release channel. <br> So please be patient</p>
+          <h6>Report bugs here: benwhite2413@gmail.com</h6>
         </div>
       </div>
 
@@ -215,48 +214,64 @@
 
         </div>
         <div id="settings_right"> 
-          <div id="account">
+          <div id="account" class="settings_pannel">
             <h1>My Account</h1>
+
+            <div>
+              <img id="settings_icon">
+
+              <div>
+                <div>
+                  <h3>USERNAME</h3>
+                  <h4 id="settings_username">UnRealG #3281</h4>
+                </div>
+
+                <div>
+                  <h3>EMAIL</h3>
+                  <h4 id="settings_email">benwhite2413@gmail.com</h4>
+                </div>
+              </div>
+            </div>
           </div>
 
-          <div id="privacy">
+          <div id="privacy" class="settings_pannel">
             <h1>Privacy and Safety</h1>
           </div>
 
-          <div id="authed_app">
+          <div id="authed_app" class="settings_pannel">
             <h1>Authorised Applications</h1>
           </div>
 
-          <div id="connections">
+          <div id="connections" class="settings_pannel">
             <h1>Connections</h1>
           </div>
 
-          <div id="chat_sett">
+          <div id="chat_sett" class="settings_pannel">
             <h1>Chat Settings</h1>
           </div>
 
-          <div id="nodifications">
+          <div id="nodifications" class="settings_pannel"> 
             <h1>Nodifications</h1>
           </div>
 
-          <div id="keybinds">
+          <div id="keybinds" class="settings_pannel">
             <h1>Keybinds</h1>
           </div>
 
-          <div id="text&images">
+          <div id="text&images" class="settings_pannel">
             <h1>Text & Images</h1>
           </div>
 
-          <div id="appearance">
+          <div id="appearance" class="settings_pannel">
             <h1>Appearance</h1>
             <button id="toggle-theme">Toggle Theme</button>
           </div>
 
-          <div id="language">
+          <div id="language" class="settings_pannel">
             <h1>Language</h1>
           </div>
 
-          <div id="app_sett">
+          <div id="app_sett" class="settings_pannel">
             <h1>App Settings</h1>
           </div>
 
@@ -407,7 +422,9 @@
                 
                 <div id="form_input">
                   <p id="isTypingID" class="isTyping_hid slide-in-bottom">Is Typing</p> <!--   isTyping Popup   -->
-                      <div id="ping_users" class="hidden">@...</div>
+                      <div id="ping_users" class="hidden">
+                        
+                      </div>
                       <div id="form_field">
                         <!-- <a id="add_items">+</a> -->
                         <input type="text" id="message-input" placeholder="Message @General"> 
