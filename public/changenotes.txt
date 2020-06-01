@@ -38,7 +38,7 @@ A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
 
 ============= [Releasing] =============
 
-=== { Pre-Alpha 1.2981 - [31/05/2020] ~Shiny Roles Update~
+=== { Pre-Alpha 1.2981 - [31/05/2020 & 3/06/2020] ~Shiny Roles Update~
 ### Added
 - Finishing Members View List (i.e RolesSort)
 - Role Popup and User Direct Messaging from Chat

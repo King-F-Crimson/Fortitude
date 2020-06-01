@@ -1,5 +1,6 @@
 {
   "projects": {
-    "fortitude": "fortitude-0"
+    "fortitude": "fortitude-0",
+    "default": "fortitude-0"
   }
 }

@@ -646,11 +646,11 @@ input:focus {
   border-radius: 5px;
   padding: 1px;
   display: grid;
-  grid-template-columns: 35% 1fr;
+  grid-template-columns: 40px 1fr;
   grid-template-rows: 1fr;
   justify-items: left;
   align-items: center;
-  grid-gap: 5px;
+  grid-gap: 10px;
   padding-left: 15px;
   margin-bottom: 5px;
   padding-top: 5px;
@@ -1220,7 +1220,7 @@ height: 100% !important;
 
 .friend {
   transition: 0s all linear;
-  border-radius: 10px;
+  
   margin: 0.5%;
   margin-left: 5%;
 
@@ -1228,11 +1228,19 @@ height: 100% !important;
 
   display: grid;
   grid-template-columns: 5% 1fr 5% 5%;
+  border: 1px solid transparent;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.friend:first-child {
+  border-top: 1px solid transparent;
 }
 
 .friend:hover {
-  background-color: var(--text-field);
-  border: none;
+  border-radius: 5px;
+  background-color: var(--background-color-compliement);
+  border: 1px solid var(--background-black);
+  border-radius: 5px;
   cursor: pointer;
 }
 
@@ -1999,14 +2007,12 @@ p strong {
   grid-row: 2;
   border-radius: 5px;
   background-color: var(--background-color-seccondary);
-  border-top-left-radius: 0px;
 }
 
 #member_managment {
   grid-row: 2;
   border-radius: 5px;
   background-color: var(--background-color-seccondary);
-  border-top-left-radius: 0px;
   overflow-y: auto; 
 }
 

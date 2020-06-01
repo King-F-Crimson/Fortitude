@@ -92,6 +92,18 @@ auth.onAuthStateChanged(user => {
         icon = user.photoURL;
         user_id = user.uid;
 
+        var docRef = db.collection("users").doc(user_id);
+        var image_source = "";
+        var ur2 = "";
+        docRef.get().then(function(doca) {
+            image_source = doca.data().icon;
+
+            var storageRef = firebase.storage().ref("userIcons/").child(image_source).getDownloadURL().then(function(url) {
+              ur2 = url;
+              server_members.push({name: username, info: [], uid: user_id, icon: url});
+            });
+        });
+
         loadUserInfo(user);
     } else {
         //console.log('user logged out');
@@ -2396,7 +2408,7 @@ function renderMembersList() {
           });
         }else{
           if(server_members.filter(server_members => server_members.uid === doc.data().userId)){
-            console.log(temp_loc); 
+            //console.log(temp_loc); 
             var server_loc = server_members[temp_loc].info.findIndex(element => element.server == room);
   
             if(server_loc < 0){
@@ -2493,7 +2505,7 @@ function renderMemberList2(){
       
       var users_name_member = document.createElement("h1");
           users_name_member.innerHTML = server_members[i].name;
-          console.log(server_members[i]);
+          //console.log(server_members[i]);
           users_name_member.style.color = server_members[i].info[location].roles[itterator].rgb;
       
       //var users_documented_status = document.createElement("h3");
@@ -2735,6 +2747,29 @@ function hideUserCard() {
   $("#user_card_non_bg").removeClass("scale-out-center");
 }
 
+const messaging = firebase.messaging();
+
+messaging.onMessage((payload) => {
+  console.log('Message received. ', payload);
+  // ...
+});
+
+/*
+exports.useMultipleWildcards = functions.firestore
+    .document('groups/{serverId}/messages/{messageId}')
+    .onWrite((change, context) => {
+      // If we set `/users/marie/incoming_messages/134` to {body: "Hello"} then
+      // context.params.userId == "marie";
+      // context.params.messageCollectionId == "incoming_messages";
+      // context.params.messageId == "134";
+      // ... and ...
+      // change.after.data() == {body: "Hello"}
+
+      console.log(change);
+      console.log(context);
+    });
+*/
+
 window.addEventListener('load', function () {
   if (window.Notification && Notification.permission !== "granted") {
     Notification.requestPermission(function (status) {
@@ -2819,7 +2854,7 @@ $('#message-input').bind('keyup',function(evt){
 })
 
 $('#message-input').bind('keyup',function(evt){
-    console.log(evt.keyCode);
+    //console.log(evt.keyCode);
     if(!$('#message-input').val().includes("@")){
       $("#ping_users").addClass("hidden");
     }
