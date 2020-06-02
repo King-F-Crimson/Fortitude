@@ -2401,7 +2401,6 @@ function renderMembersList() {
           //var k = roles.indexOf(user_role[i]);
           var k = findWithAttr(roles, user_role[i])
           users_roles.push(roles[k]);
-          console.log("Added Role ", roles[k], "Suppos", user_role[i]);
           
         }
 
@@ -2463,7 +2462,22 @@ function renderMemberList2(){
   parent.append(breaker2);
   parent.append(breaker3);
 
-  // roles array[]
+  // Create All Categories First IN ORDER!!!
+  for(var i = 0; i < roles.length; i++){
+    var category__ = !!document.getElementById(roles[i].name + "_category");
+    if(!category__){
+      var new_category = document.createElement("div");
+          new_category.id = roles[i].name + "_category";
+      
+      var text_child = document.createElement("p");
+          text_child.innerHTML = roles[i].name;
+          text_child.classList.add("user_category")
+          new_category.appendChild(text_child);
+
+      parent.append(new_category);
+    }
+  }
+  
 
   for(var i = 0; i < server_members.length; i++){
     var location = server_members[i].info.findIndex(element => element.server == room);
@@ -2483,25 +2497,6 @@ function renderMemberList2(){
           itterator = i;
         }
       });
-
-      //console.log(high_role);
-
-      // check if it exists, if not create a new div (id="rolename_category")
-      // append the user to the div after creating thier thingy
-
-      var category__ = !!document.getElementById(high_role.name + "_category");
-
-      if(!category__){
-        var new_category = document.createElement("div");
-            new_category.id = high_role.name + "_category";
-        
-        var text_child = document.createElement("p");
-            text_child.innerHTML = high_role.name;
-            text_child.classList.add("user_category")
-            new_category.appendChild(text_child);
-
-        parent.append(new_category);
-      }
 
       var category__1 = document.getElementById(high_role.name + "_category");
 
@@ -2539,6 +2534,13 @@ function renderMemberList2(){
       member_user.append(member_icon);
       member_user.append(user_info);
       category__1.append(member_user);
+    }
+  }
+
+  for(var i = 0; i < roles.length; i++){
+    var category__ = document.getElementById(roles[i].name + "_category");
+    if($("#" + roles[i].name + "_category").find('.member_user').length == 0){
+      document.getElementById("members").removeChild(document.getElementById(roles[i].name + "_category"));
     }
   }
 }
