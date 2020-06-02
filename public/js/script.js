@@ -1230,6 +1230,10 @@ function joinServer(room_id_element){
         }
     });
 
+    while(role_names.length > 1){
+      role_names.pop();
+    }
+
     
 
     $("#serverMoreInfo").show();
@@ -2303,6 +2307,13 @@ function renderMemberList() {
 
   var server_count = 0;
 
+  var server_member_manage_top = document.createElement("div");
+  var server_member_manage_title = document.createElement("h4");
+      server_member_manage_title.id = "server_members_count";
+          
+  server_member_manage_top.append(server_member_manage_title);
+  document.getElementById("member_managment").appendChild(server_member_manage_top);
+
   db.collection("groups/"+ rmid +"/members").get()
   .then(querySnapshot => {
     querySnapshot.forEach(doc => {
@@ -2322,6 +2333,8 @@ function renderMemberList() {
 
       var index = server_members.findIndex(element => element.uid == doc.data().userId);
       var room_index = server_members[index].info.findIndex(x => x.server === room);
+
+      
 
       server_members[index].info[room_index].roles.forEach((element) => {
         //console.log(element);
@@ -2349,17 +2362,20 @@ function renderMemberList() {
 
       server_count++;
 
-      var server_member_manage_top = document.createElement("div");
-      var server_member_manage_title = document.createElement("h4");
-          server_member_manage_title.innerHTML = "SERVER MEMBERS - " + server_count;
-
-          server_member_manage_top.append(server_member_manage_title);
-
       parent_div_.appendChild(role_div);
-      document.getElementById("member_managment").appendChild(server_member_manage_top);
       document.getElementById("member_managment").appendChild(parent_div_);
+      $("#server_members_count").text("SERVER MEMBERS - " + server_count);
     });
   });
+}
+
+function findWithAttr(array, value) {
+  for(var i = 0; i < array.length; i += 1) {
+      if(array[i].name === value) {
+          return i;
+      }
+  }
+  return -1;
 }
 
 function renderMembersList() {
@@ -2382,7 +2398,10 @@ function renderMembersList() {
 
         for(var i = 0; i < user_role.length; i++){
           var p = role_names.indexOf(user_role[i]);
-          users_roles.push(roles[p]);
+          //var k = roles.indexOf(user_role[i]);
+          var k = findWithAttr(roles, user_role[i])
+          users_roles.push(roles[k]);
+          console.log("Added Role ", roles[k], "Suppos", user_role[i]);
           
         }
 
@@ -2484,6 +2503,8 @@ function renderMemberList2(){
         parent.append(new_category);
       }
 
+      var category__1 = document.getElementById(high_role.name + "_category");
+
       var member_user = document.createElement("div");
           member_user.classList.add("member_user");
           member_user.setAttribute("onclick", "userInfo('" + server_members[i].uid + "')");
@@ -2517,7 +2538,7 @@ function renderMemberList2(){
 
       member_user.append(member_icon);
       member_user.append(user_info);
-      parent.append(member_user);
+      category__1.append(member_user);
     }
   }
 }
@@ -2747,27 +2768,47 @@ function hideUserCard() {
   $("#user_card_non_bg").removeClass("scale-out-center");
 }
 
+/*
 const messaging = firebase.messaging();
+messaging.usePublicVapidKey("BJKm3rJ6LyCsCZW3DAtOF-7f1WPy68gR5nd81koJFVphgQrPNJR8rFmvcX9odNz8k6YvFfm_kE1tbWpldy9Q7io");
+
+messaging.getToken().then((currentToken) => {
+  if (currentToken) {
+    sendTokenToServer(currentToken);
+    updateUIForPushEnabled(currentToken);
+  } else {
+    // Show permission request.
+    console.log('No Instance ID token available. Request permission to generate one.');
+    // Show permission UI.
+    updateUIForPushPermissionRequired();
+    setTokenSentToServer(false);
+  }
+}).catch((err) => {
+  console.log('An error occurred while retrieving token. ', err);
+  showToken('Error retrieving Instance ID token. ', err);
+  setTokenSentToServer(false);
+});
+
+messaging.onTokenRefresh(() => {
+  messaging.getToken().then((refreshedToken) => {
+    console.log('Token refreshed.');
+    // Indicate that the new Instance ID token has not yet been sent to the
+    // app server.
+    setTokenSentToServer(false);
+    // Send Instance ID token to app server.
+    sendTokenToServer(refreshedToken);
+    // ...
+  }).catch((err) => {
+    console.log('Unable to retrieve refreshed token ', err);
+    showToken('Unable to retrieve refreshed token ', err);
+  });
+});
+
 
 messaging.onMessage((payload) => {
   console.log('Message received. ', payload);
   // ...
 });
-
-/*
-exports.useMultipleWildcards = functions.firestore
-    .document('groups/{serverId}/messages/{messageId}')
-    .onWrite((change, context) => {
-      // If we set `/users/marie/incoming_messages/134` to {body: "Hello"} then
-      // context.params.userId == "marie";
-      // context.params.messageCollectionId == "incoming_messages";
-      // context.params.messageId == "134";
-      // ... and ...
-      // change.after.data() == {body: "Hello"}
-
-      console.log(change);
-      console.log(context);
-    });
 */
 
 window.addEventListener('load', function () {

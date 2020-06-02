@@ -2030,6 +2030,8 @@ p strong {
   grid-template-columns: 15% 50% 1fr;
   border: 1px solid transparent;
   border-top: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 2px;
+  margin-top: 2px;
 }
 
 #member_managment > div > div * {
