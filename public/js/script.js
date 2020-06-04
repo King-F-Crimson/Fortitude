@@ -13,6 +13,7 @@ var rolecolours = [];
 var friends_user_names = [];
 var friends_user_ids = [];
 var server_members = [];
+
 var nav = false;
 var loadingFriends = false;
 
@@ -25,21 +26,6 @@ userId_message = [];
 typing_local = [];
 empty = [];
 
-/*
-var server_messages = new Array(2); 
-
-called as:
-
-stored_messages[0 = server, 1 = DM, 2 = Group//][serverId][messageNumber e.g. msg 1, 2, 3...] = "Hey Stop that..."
-
-var stored_messages = new Array(2);
-var stored_authors = new Array(2);
-var stored_dates = new Array(2);
-var stored_userId = new Array(2);
-
-stored_messages[0][0] = "Hey Rebelious Scum!"; 
-*/
-
 if(room === ""){
   room = "deafult";
   human_room = "Deafult";
@@ -51,6 +37,16 @@ function changeForm() {
 
     loginForm.reset();
     signupForm.reset();  
+}
+
+function getItem(key){
+  console.log("Retriving Cache");
+  try{
+      return JSON.parse(localStorage.getItem(key));
+  }
+  catch(e){
+      return localStorage.getItem(key);
+  }
 }
 
 var firebaseConfig = {
@@ -101,6 +97,11 @@ auth.onAuthStateChanged(user => {
             var storageRef = firebase.storage().ref("userIcons/").child(image_source).getDownloadURL().then(function(url) {
               ur2 = url;
               server_members.push({name: username, info: [], uid: user_id, icon: url});
+              server_members = server_members.filter(function(item, pos) {
+                  return server_members.indexOf(item.uid) == pos;
+              });
+
+              localStorage.setItem("1", JSON.stringify(server_members));
             });
         });
 
@@ -388,6 +389,12 @@ function enableAnimation() {
     hideMembers();
     hideSucessfullAdd();
     loadDM();
+
+    server_members = getItem(1);
+
+    server_members = server_members.filter(function(item, pos) {
+      return server_members.indexOf(item.uid) == pos;
+    });
     
     $("#user_card").hide();
 
@@ -424,6 +431,17 @@ function sendMessage() {
         let autoID = db.collection("users/"+ user_id +"/direct_messages/" + dm_users_id + "/messages").doc().id;
 
         db.collection("users/"+ user_id +"/direct_messages/" + dm_users_id + "/messages").doc(autoID).set({
+          sender: username,
+          senderId: user_id,
+          message: msg,
+          timestamp: now
+        }).then(function() {
+            //console.log("Message created");
+        });
+
+        let autoID2 = db.collection("users/"+ dm_users_id +"/direct_messages/" + user_id + "/messages").doc().id;
+
+        db.collection("users/"+ dm_users_id +"/direct_messages/" + user_id + "/messages").doc(autoID2).set({
           sender: username,
           senderId: user_id,
           message: msg,
@@ -693,6 +711,7 @@ function loadFriendsList(){
 
               if(index < 0){
                 server_members.push({name: doc.data().username, info: [], uid: doc.id, icon: ur2});
+                localStorage.setItem("1", JSON.stringify(server_members));
               }
 
               var usersname = document.createElement("h1"); 
@@ -1255,9 +1274,6 @@ function joinServer(room_id_element){
 
     hideServerMenu();
     $("#lobby").hide();
-    //console.log("3,2,1 LIFTING OFF WITH ID OF " + rmid);
-    //updateTyping();
-
 
     var sender = "";
     var msge = "";
@@ -1268,45 +1284,15 @@ function joinServer(room_id_element){
         db.collection("groups/"+ rmid +"/messages").orderBy("timestamp", "desc").limit(100).get()
         .then(querySnapshot => {
             querySnapshot.forEach(doc => {
-                //console.log("Hey");
-                //console.log(doc.id, " => ", doc.data());
                 sender = doc.data().sender;
                 authors.push(doc.data().sender);
-                //console.log(sender);
                 senderIdentification = doc.data().senderId;
                 userId_message.push(doc.data().senderId);
-                //console.log(senderIdentification);
                 msge = doc.data().message;
                 messages.push(doc.data().message);
-                //console.log(msge);
                 time = formatDate(doc.data().timestamp.toDate());
                 dates.push(formatDate(doc.data().timestamp.toDate()));
-                //console.log(time);
-
-                //console.log("printing - " + ammount);
                 var someElementsItems = document.querySelectorAll(".user_refrence");
-              /*
-                if($("#message-container").children().length > 0){
-                    if(someElementsItems[someElementsItems.length - 1].innerHTML === sender){
-                        $("#message-container").append($('<p>').text(msge));
-                    }else{
-                        $("#message-container").append($('<br>'));
-                        $("#message-container").append($('<hr>'));
-                        $("#message-container").append($('<br>'));
-                        //$("#message-container").append($('<img src="public/'+ user +'.jpg">'));
-                        // $("#message-container").append($('<img src="' + user_img +'">'));  GET SENDERS PROFILE PIC
-                        $("#message-container").append($('<h2 class="user_refrence">').text(sender));
-                        $("#message-container").append($('<h3>').text(time));
-                        $("#message-container").append($('<p>').text(msge));
-                    }
-                }else{
-                        $("#message-container").append($('<br>'));
-                        //$("#message-container").append($('<img src="' + user_img +'">'));
-                        $("#message-container").append($('<h2 class="user_refrence">').text(sender));
-                        $("#message-container").append($('<h3>').text(time));
-                        $("#message-container").append($('<p>').text(msge));
-                }
-                */
             });
 
             authors.reverse();
@@ -1339,7 +1325,6 @@ function joinServer(room_id_element){
         $("#" + room_id_element).find("span").removeClass("pill_hidden");
         $("#" + room_id_element).find("div span").addClass("pill");
         $("#" + room_id_element).find("img").addClass("list_item_active");
-        //console.log("Added 'PILL' to " + room_id_element);
     }
 
     var image_src = $("#" + room_id_element).find("img").attr('src');
@@ -1347,31 +1332,9 @@ function joinServer(room_id_element){
 }
 
 function renderMessages(){
-    if(messages.length < 2){
-    }else{
-      /* Remove the first element from all arrays due to M2SC Bug
-      messages.splice(0,1);
-      authors.splice(0,1);
-      dates.splice(0,1);
-      userId_message.splice(0,1);
-      typing_local.splice(0,1);
-      empty.splice(0,1);*/
-    }
-
     while(document.getElementById("message-container").firstChild){
       document.getElementById("message-container").removeChild( document.getElementById("message-container").firstChild);
     }
-
-    /* Remove the first element from all arrays due to M2SC Bug
-      messages.splice(0,1);
-      authors.splice(0,1);
-      dates.splice(0,1);
-      userId_message.splice(0,1);
-      typing_local.splice(0,1);
-      empty.splice(0,1);
-    */
-
-    //console.log("Rendering!");
     var someElementsItems = document.querySelectorAll(".user_refrence");
     var samecount = 0;
 
@@ -1557,34 +1520,8 @@ $("body").on("mouseenter",".list_item",function(){
     }
 });
 
-/*
-$(".list_item").mouseenter(function () {
-    $this = $(this);
-    $this.find("span").addClass("pill_hover");
-    
-    if($this.find("img").hasClass("list_item_active")){
-        //console.log("Has Class Already");
-    }else{
-        $this.find("img").addClass("list_item_active");
-    }
-        
-}).mouseleave(function (){
-    $this = $(this);
-    $this.find("img").removeClass("list_item_active");
-    $this.find("span").removeClass("pill_hover");
-
-    if(this.id === room){
-        $this.find("img").addClass("list_item_active");
-    }else{
-        //console.log("Hey", this.id, ". You just got hovered but werent active :("); 
-    }
-});
-*/
 
 $("#message-input").on('focus', function () {
-  //let autoID = db.collection("groups/"+ rmid +"/typing").doc().id;
-
-
   if(room !== "lobby_link"){
     db.collection("groups/"+ rmid +"/typing").doc(user_id).set({
       userId: user_id,
@@ -1593,8 +1530,6 @@ $("#message-input").on('focus', function () {
         //console.log("Typing created");
     });
   }
-  
-  //updateTyping();
 });
 
 $("#message-input").on('focusout', function () {
@@ -2420,6 +2355,7 @@ function renderMembersList() {
               var storageRef = firebase.storage().ref("userIcons/").child(image_source).getDownloadURL().then(function(url) {
                 ur2 = url;
                 server_members.push({name: doc.data().username, info: [{server: room, roles: users_roles}], uid: doc.data().userId, icon: url});
+                localStorage.setItem("1", JSON.stringify(server_members));
               });
 
               setTimeout(renderMemberList2, 500);
