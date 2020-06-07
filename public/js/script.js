@@ -390,8 +390,6 @@ function enableAnimation() {
     hideSucessfullAdd();
     loadDM();
 
-    server_members = getItem(1);
-
     server_members = server_members.filter(function(item, pos) {
       return server_members.indexOf(item.uid) == pos;
     });
@@ -1053,7 +1051,7 @@ function sendRequest(serverID, join_message, serverName){
 
 function showSucessfullJoin(serverName) {
   $("#success_join").css('opacity', '0');
-  $("#success_join_title").html("Sucessfully sent request to server  '<strong> " + serverName +"</strong>'");
+  $("#success_join_title").html("Sucessfully sent request to server  <strong>" + serverName +"</strong>");
   $("#success_join").show();
 
   setTimeout(function(){
@@ -1065,12 +1063,14 @@ function showSucessfullJoin(serverName) {
 }
 
 function showUnsucessfullJoin(serverName) {
-  $("#success_join").css('opacity', '0');
-  $("#success_join_title").html("You are already appart of  '<strong> " + serverName +"</strong>'");
+  //$("#success_join").css('opacity', '0');
+  $("#success_join_title").html("You are already appart of  <strong>" + serverName +"</strong>");
   $("#success_join").show();
+  $("#success_join").removeClass("slide-out-top");
 
   setTimeout(function(){
-    $("#success_join").css('opacity', '1');
+    //$("#success_join").css('opacity', '1');
+    $("#success_join").addClass("slide-in-top");
     
   }, 100);
 
@@ -1078,7 +1078,9 @@ function showUnsucessfullJoin(serverName) {
 }
 
 function hideSucessfullJoin(){
-  $("#success_join").css('opacity', '0');
+  //$("#success_join").css('opacity', '0');
+  $("#success_join").removeClass("slide-in-top");
+  $("#success_join").addClass("slide-out-top");
 
   setTimeout(function(){
     $("#success_join").hide();
@@ -1144,7 +1146,7 @@ function createServer(serverName){
     
     db.collection("groups/"+ autoID +"/roles").doc("all").set({
       colour: "ping",
-      colour_rgb: "#faa61a",
+      colour_rgb: "#909090",
       perm_lvl: 0,
       name: "all",
       admin: false,
