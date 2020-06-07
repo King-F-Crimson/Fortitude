@@ -120,6 +120,12 @@ auth.onAuthStateChanged(user => {
     
 })
 
+function removeDuplicates() {
+  server_members = Array.from(new Set(server_members.map(a => a.uid)))
+  .map(id => {
+    return server_members.find(a => a.uid === id)
+  })
+}
 
 // Signup
 const signupForm = document.querySelector('#signup-form');
@@ -1235,6 +1241,10 @@ function loadServerID(room_id_element){
 }
 
 function joinServer(room_id_element){
+    removeDuplicates();
+    $("#deafult_ui_loading_category_").show();
+    $("#members_2").hide();
+
     var appart = false;
 
     db.collection("groups/"+ room_id_element +"/members").get()
@@ -1249,7 +1259,7 @@ function joinServer(room_id_element){
         if(!appart){
           return;
         }
-    });
+    
 
     while(role_names.length > 1){
       role_names.pop();
@@ -1331,6 +1341,7 @@ function joinServer(room_id_element){
 
     var image_src = $("#" + room_id_element).find("img").attr('src');
     document.getElementById("header").style.backgroundImage = "linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0)), url('" + image_src + "')";
+  });
 }
 
 function renderMessages(){
@@ -2316,7 +2327,8 @@ function findWithAttr(array, value) {
 }
 
 function renderMembersList() {
-  var parent = document.getElementById("members");
+  removeDuplicates();
+  var parent = document.getElementById("members_2");
 
   while(parent.firstChild){
     parent.removeChild( parent.firstChild);
@@ -2385,20 +2397,14 @@ function renderMembersList() {
 }
 
 function renderMemberList2(){
-  var parent = document.getElementById("members");
+  var parent = document.getElementById("members_2");
 
   while(parent.firstChild){
     parent.removeChild( parent.firstChild);
   }
 
-  // Pre-Breaker
-  var breaker = document.createElement("br");
-  var breaker2 = document.createElement("br");
-  var breaker3 = document.createElement("br");
-
-  parent.append(breaker);
-  parent.append(breaker2);
-  parent.append(breaker3);
+  $("#deafult_ui_loading_category_").hide();
+  $("#members_2").show();
 
   // Create All Categories First IN ORDER!!!
   for(var i = 0; i < roles.length; i++){
@@ -2478,7 +2484,7 @@ function renderMemberList2(){
   for(var i = 0; i < roles.length; i++){
     var category__ = document.getElementById(roles[i].name + "_category");
     if($("#" + roles[i].name + "_category").find('.member_user').length == 0){
-      document.getElementById("members").removeChild(document.getElementById(roles[i].name + "_category"));
+      document.getElementById("members_2").removeChild(document.getElementById(roles[i].name + "_category"));
     }
   }
 }
