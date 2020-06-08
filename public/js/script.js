@@ -401,6 +401,7 @@ function enableAnimation() {
     hideMembers();
     hideSucessfullAdd();
     loadDM();
+    loadNews();
 
     removeDuplicates();
     
@@ -582,6 +583,8 @@ function loadDM(){
             document.getElementById("DM").append(parent_div);
           }
         }
+
+
     });
 }
 
@@ -2855,6 +2858,7 @@ $('#message-input').bind('keyup',function(evt){
 $(".settings_icon_container").on('click', function() {
   //$("#user_image_upload").removeClass("hidden");
   $('#upload_field_').trigger('click');
+  
 
   var docRef = db.collection("users").doc(user_id);
 
@@ -2868,7 +2872,7 @@ $(".settings_icon_container").on('click', function() {
       var storageRef = firebase.storage().ref();
       var imageRefrence = storageRef.child(`userIcons/${image_url}`);
       var storRef = storageRef.child(`userIcons/${user_id}.${extension.toLowerCase()}`);
-
+      showNotitfication("", "Uploading...");
 
       console.log(file);
 
@@ -2879,12 +2883,15 @@ $(".settings_icon_container").on('click', function() {
       if(image_url !== "deafultUserIcon.jpg"){
         imageRefrence.delete().then(function() {
           storRef.put(file, newMetadata).then(function(snapshot) {
+            showNotitfication("", "Applying Changes");
             var storageRef = firebase.storage().ref().child(`userIcons/${user_id}.${extension.toLowerCase()}`).getDownloadURL().then(function(url) {
               var user_loc = server_members.findIndex(obj => obj.uid === user_id);
               server_members[user_loc].icon = url;
   
               var user_servers = db.collection("users").doc(user_id);
-              $(".settings_icon_container").src = server_members[user_loc].icon = url;
+              $(".settings_icon_container").src = server_members[user_loc].icon;
+              showNotitfication("", "Applied Changes");
+              console.log("Appling User Icon...", server_members[user_loc].icon);
             
               return user_servers.update({
                 icon: `${user_id}.${extension.toLowerCase()}`
@@ -2896,13 +2903,16 @@ $(".settings_icon_container").on('click', function() {
         });
       }else{
         storRef.put(file, newMetadata).then(function(snapshot) {
+          showNotitfication("", "Applying Changes");
           var storageRef = firebase.storage().ref().child(`userIcons/${user_id}.${extension.toLowerCase()}`).getDownloadURL().then(function(url) {
             var user_loc = server_members.findIndex(obj => obj.uid === user_id);
             server_members[user_loc].icon = url;
 
             var user_servers = db.collection("users").doc(user_id);
-            $(".settings_icon_container").src = server_members[user_loc].icon = url;
-          
+            $(".settings_icon_container").src = server_members[user_loc].icon;
+            console.log("Appling User Icon...", server_members[user_loc].icon);
+            showNotitfication(server_members[user_loc].icon = url, "Applied Changes");
+
             return user_servers.update({
               icon: `${user_id}.${extension.toLowerCase()}`
             })
@@ -2916,3 +2926,32 @@ $(".settings_icon_container").on('click', function() {
 
   
 })
+
+function showNotitfication(image, content) {
+  //$("#success_join").css('opacity', '0');
+  $("#notification_alert_title").html(content);
+  $("#notification_alert").show();
+  $("#notification_alert").removeClass("slide-out-top");
+
+  setTimeout(function(){
+    //$("#success_join").css('opacity', '1');
+    $("#notification_alert").addClass("slide-in-top");
+    
+  }, 100);
+
+  setTimeout(hideNotitfication, 5000);
+}
+
+function hideNotitfication(){
+  //$("#success_join").css('opacity', '0');
+  $("#notification_alert").removeClass("slide-in-top");
+  $("#notification_alert").addClass("slide-out-top");
+
+  setTimeout(function(){
+    $("#notification_alert").hide();
+  }, 2000);
+}
+
+function loadNews() {
+
+}

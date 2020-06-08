@@ -9,6 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "firebase-tools": "^7.16.1"
+    "firebase-tools": "^7.16.2"
   }
 }
