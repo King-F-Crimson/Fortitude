@@ -180,6 +180,15 @@
         <h1 id="success_add_title">Sucessfully Joined <strong>{Server Name}</strong></h1>
       </div>
 
+      <div id="user_image_upload" class="hidden">
+        <div class="sub_div">
+          <div>
+            <h1>Click Below to upload files</h1>
+            <input id="upload_field_" type="file" class="upload_field" accept="image/png, image/jpeg, image/gif">
+          </div>
+        </div>
+      </div>
+
       <div id="user_card" class="user_card_parent">
       </div>
 
@@ -217,8 +226,11 @@
           <div id="account" class="settings_pannel">
             <h1>My Account</h1>
 
-            <div>
-              <img id="settings_icon">
+            <div id="user_info_settings">
+              <div class="settings_icon_container">
+                <img id="settings_icon">
+                <div class="settings_icon_overlay">CHANGE <br> AVATAR</div>
+              </div>
 
               <div>
                 <div>

@@ -63,12 +63,19 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 firebase.analytics();
 
+firebase.firestore().settings({
+  cacheSizeBytes: firebase.firestore.CACHE_SIZE_UNLIMITED
+});
+
+firebase.firestore().enablePersistence()
+
 $("#loader").find("p").text("Connecting");
 
 const auth = firebase.auth();
 const db = firebase.firestore();
 const functions = firebase.functions();
 var storage = firebase.storage();
+
 
 // Checking if user is logged in or not
 auth.onAuthStateChanged(user => {
@@ -97,9 +104,8 @@ auth.onAuthStateChanged(user => {
             var storageRef = firebase.storage().ref("userIcons/").child(image_source).getDownloadURL().then(function(url) {
               ur2 = url;
               server_members.push({name: username, info: [], uid: user_id, icon: url});
-              server_members = server_members.filter(function(item, pos) {
-                  return server_members.indexOf(item.uid) == pos;
-              });
+
+              removeDuplicates();
 
               localStorage.setItem("1", JSON.stringify(server_members));
             });
@@ -396,9 +402,7 @@ function enableAnimation() {
     hideSucessfullAdd();
     loadDM();
 
-    server_members = server_members.filter(function(item, pos) {
-      return server_members.indexOf(item.uid) == pos;
-    });
+    removeDuplicates();
     
     $("#user_card").hide();
 
@@ -2845,4 +2849,70 @@ $('#message-input').bind('keyup',function(evt){
     if(!$('#message-input').val().includes("@")){
       $("#ping_users").addClass("hidden");
     }
+})
+
+
+$(".settings_icon_container").on('click', function() {
+  //$("#user_image_upload").removeClass("hidden");
+  $('#upload_field_').trigger('click');
+
+  var docRef = db.collection("users").doc(user_id);
+
+  docRef.get().then(function(doc) {
+    $('#upload_field_').change(function(e){ 
+      var image_url = doc.data().icon;
+
+      var file = $("#upload_field_")[0].files[0];
+      var extension = file.name.replace(/^.*\./, '');
+
+      var storageRef = firebase.storage().ref();
+      var imageRefrence = storageRef.child(`userIcons/${image_url}`);
+      var storRef = storageRef.child(`userIcons/${user_id}.${extension.toLowerCase()}`);
+
+
+      console.log(file);
+
+      var newMetadata = {
+        cacheControl: 'public,max-age=69000'
+      }
+
+      if(image_url !== "deafultUserIcon.jpg"){
+        imageRefrence.delete().then(function() {
+          storRef.put(file, newMetadata).then(function(snapshot) {
+            var storageRef = firebase.storage().ref().child(`userIcons/${user_id}.${extension.toLowerCase()}`).getDownloadURL().then(function(url) {
+              var user_loc = server_members.findIndex(obj => obj.uid === user_id);
+              server_members[user_loc].icon = url;
+  
+              var user_servers = db.collection("users").doc(user_id);
+              $(".settings_icon_container").src = server_members[user_loc].icon = url;
+            
+              return user_servers.update({
+                icon: `${user_id}.${extension.toLowerCase()}`
+              })
+            });
+          });
+        }).catch(function(error) {
+          console.log(error)
+        });
+      }else{
+        storRef.put(file, newMetadata).then(function(snapshot) {
+          var storageRef = firebase.storage().ref().child(`userIcons/${user_id}.${extension.toLowerCase()}`).getDownloadURL().then(function(url) {
+            var user_loc = server_members.findIndex(obj => obj.uid === user_id);
+            server_members[user_loc].icon = url;
+
+            var user_servers = db.collection("users").doc(user_id);
+            $(".settings_icon_container").src = server_members[user_loc].icon = url;
+          
+            return user_servers.update({
+              icon: `${user_id}.${extension.toLowerCase()}`
+            })
+          });
+        });
+      }
+    });   
+  }).catch(function(error) {
+      console.log("Error getting document:", error);
+  });
+
+  
 })
