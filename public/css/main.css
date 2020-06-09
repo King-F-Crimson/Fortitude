@@ -17,6 +17,9 @@
   --text-color-inactive: #8e9297;
   --text-field: #40444b;
 
+  --button-color: rgb(141, 158, 220);
+  --button-color-hover: #7D8DC6;
+
   --background-message-hover: rgba(4,4,5,0.07);
   --background-message-highlight: rgba(142, 159, 221, 0.2);
   --background-message-highlight-hover: rgba(142, 159, 221, 0.4);
@@ -105,6 +108,10 @@
   animation-name: bloopIt;
   animation-duration: 0.55s;
   animation-delay: 0s;
+}
+
+img {
+  object-fit: cover !important;
 }
 
 @keyframes bloopIt {
@@ -2053,7 +2060,10 @@ p strong {
 }
 
 #user_icon_change_status {
-  opacity: 0.8;font-weight: 100;font-family: DeafultUi;color: var(--background-message-highlight-strong);
+  opacity: 0.8;
+  font-weight: 100;
+  font-family: DeafultUi;
+  color: var(--button-color);
 }
 
 #user_image_upload {
@@ -2520,9 +2530,33 @@ p strong {
   margin: 2px;
 }
 
+#account_edit {
+  height: 100%;
+  justify-self: flex-end;
+  align-self: flex-start;
+  width: 100%;
+}
+
+#account_edit h4 {
+  float: right;
+  margin-top: 6% !important;
+  margin-right: 6% !important;
+
+  padding: 8px;
+  background-color: var(--button-color);
+  border-radius: 5px;
+  padding-left: 12px;
+  padding-right: 12px;
+}
+
+#account_edit h4:hover {
+  cursor: pointer;
+  background-color: var(--button-color-hover);
+}
+
 #users_icon_popup img{
-  height: 50px;
-  width: 50px;
+  height: 65px;
+  width: 65px;
   border-radius: 50%;
 }
 
@@ -3050,12 +3084,16 @@ button {
   padding: 10px;
   border-radius: 5px;
   color: white;
-  background-color: var(--background-message-highlight-strong);
+  background-color: var(--button-color);
   border: none;
   margin: 10px;
   margin-left: 12px;
   width: 10%;
   white-space: nowrap;
+}
+
+button:hover {
+  background-color: var(--button-color-hover);
 }
 
 .innactive_button {

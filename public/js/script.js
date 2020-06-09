@@ -2718,7 +2718,7 @@ $("#user_card").click(function(event){
 
 function hideUserCard() {
   $("#user_card").hide();
-  $("#user_card_non_bg").removeClass("scale-out-center");
+    $("#user_card_non_bg").removeClass("scale-out-center");
 }
 
 /*
@@ -2889,7 +2889,7 @@ $(".settings_icon_container").on('click', function() {
               server_members[user_loc].icon = url;
   
               var user_servers = db.collection("users").doc(user_id);
-              $(".settings_icon_container").src = server_members[user_loc].icon;
+              $("#settings_icon").attr("src", server_members[user_loc].icon);
               showNotitfication("", "Applied Changes");
               console.log("Appling User Icon...", server_members[user_loc].icon);
             
@@ -2909,7 +2909,7 @@ $(".settings_icon_container").on('click', function() {
             server_members[user_loc].icon = url;
 
             var user_servers = db.collection("users").doc(user_id);
-            $(".settings_icon_container").src = server_members[user_loc].icon;
+            $("#settings_icon").attr("src", server_members[user_loc].icon);
             console.log("Appling User Icon...", server_members[user_loc].icon);
             showNotitfication(server_members[user_loc].icon = url, "Applied Changes");
 
