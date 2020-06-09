@@ -3273,13 +3273,26 @@ button:hover {
   color: var(--text-color);
 
   display: grid;
-  grid-template-rows: 11% 1fr;
+  grid-template-rows: 7% 1fr;
   grid-template-columns: 2% 60% 1fr;
 
   justify-content: right;
   align-content: start;
   row-gap: 1px;
   column-gap: 25px;
+}
+
+#account input {
+  padding: 5px;
+  border: 1px solid var(--button-color);
+  width: 100%;
+}
+
+#account input:focus {
+  border: 1px solid var(--button-color);
+
+  color: white !important;
+  background-color: var(--background-black) !important;
 }
 
 .active_member_manage {

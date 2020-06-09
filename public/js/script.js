@@ -2855,6 +2855,19 @@ $('#message-input').bind('keyup',function(evt){
 })
 
 
+$("#account_edit h4").on('click', function() {
+  $("#settings_username").addClass("hidden");
+  $("#settings_email").addClass("hidden");
+
+  $("#settings_username_input").val(username);
+  $("#settings_email_input").val(user_email); 
+
+  $("#settings_username_input").removeClass("hidden");
+  $("#settings_email_input").removeClass("hidden")
+
+
+});
+
 $(".settings_icon_container").on('click', function() {
   //$("#user_image_upload").removeClass("hidden");
   $('#upload_field_').trigger('click');
