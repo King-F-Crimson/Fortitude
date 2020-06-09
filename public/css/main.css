@@ -17,7 +17,7 @@
   --text-color-inactive: #8e9297;
   --text-field: #40444b;
 
-  --button-color: rgb(141, 158, 220);
+  --button-color: #7289DA;
   --button-color-hover: #7D8DC6;
 
   --background-message-hover: rgba(4,4,5,0.07);
@@ -2555,8 +2555,8 @@ p strong {
 }
 
 #users_icon_popup img{
-  height: 65px;
-  width: 65px;
+  height: 8vh;
+  width: 8vh;
   border-radius: 50%;
 }
 
@@ -2672,7 +2672,6 @@ p strong {
 #account h4 {
   font-size: 0.9em;
   font-weight: 100;
-  opacity: 0.7;
   font-family: "DeafultUi";
   margin: 0;
 }
@@ -3092,10 +3091,6 @@ button {
   white-space: nowrap;
 }
 
-button:hover {
-  background-color: var(--button-color-hover);
-}
-
 .innactive_button {
   background-color: var(--background-true-dark);
   width: 20%;
@@ -3106,7 +3101,7 @@ button:hover {
 }
 
 button:hover {
-  background-color: var(--background-dark);
+  background-color: var(--button-color-hover);
   cursor: pointer;
 }
 
