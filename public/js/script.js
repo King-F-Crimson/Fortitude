@@ -2347,8 +2347,6 @@ function renderMemberList() {
       var index = server_members.findIndex(element => element.uid == doc.data().userId);
       var room_index = server_members[index].info.findIndex(x => x.server === room);
 
-      
-
       server_members[index].info[room_index].roles.forEach((element) => {
         //console.log(element);
         
@@ -2373,11 +2371,15 @@ function renderMemberList() {
         
       });
 
+      var add_role_div = document.createElement("div");
+          add_role_div.classList.add("add_role_div");
+
       var add_role = document.createElement("i");
           add_role.classList.add("fa");
           add_role.classList.add("fa-plus");
           
-      role_div.appendChild(add_role);
+      add_role_div.appendChild(add_role);
+      role_div.appendChild(add_role_div);
       server_count++;
 
       parent_div_.appendChild(role_div);
