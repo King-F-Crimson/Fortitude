@@ -23,6 +23,13 @@ exports.messageNotification = functions.firestore
         var adress = `groups/${context.params.serverId}/messages/${context.params.messageId}`;
         console.log(adress);
 
-        const payload = adress;
+        const payload = {
+            notification: {
+              title: 'Notification!',
+              body: `${follower.displayName} is now following you.`,
+              icon: follower.photoURL
+            }
+          };
+
         return admin.messaging().send(payload);
     });

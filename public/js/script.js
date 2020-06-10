@@ -2015,6 +2015,54 @@ function hideSucessfullAdd(){
   }, 2000);
 }
 
+function createRole() {
+  showNotitfication("","Creating Role...");
+
+  var new_roles_num = 0;
+
+  roles.forEach((element) => {
+    if(element.name === "New Role"){
+      new_roles_num++;
+    }else if(element.name == `New Role (${new_roles_num})`){
+      new_roles_num++;
+    }
+  });
+  //let autoID = db.collection("groups/"+ rmid +"/messages").doc().id;
+
+  db.collection("groups/"+ rmid +"/roles").doc(`New Role (${new_roles_num})`).set({
+    colour: `custom`,
+    colour_rgb: "#f4f4f4",
+    perm_lvl: 0,
+    name: `New Role (${new_roles_num})`,
+    admin: false,
+    audit: false,
+    manage_server: false,
+    manage_roles: false,
+    manage_channels: false,
+    pingable: true,
+    deletable: true,
+    deafult: false,
+  }).then(() => {
+    while(roles.length > 0){
+      roles.pop();
+    }
+
+    db.collection("groups/"+ rmid +"/roles").get()
+    .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+            var dep_role = {name: doc.id, color: doc.data().colour, rgb: doc.data().colour_rgb, perm_level: doc.data().perm_lvl, admin: doc.data().admin, audit: doc.data().audit, manage_server: doc.data().manage_server, manage_roles: doc.data().manage_roles, manage_channels: doc.data().manage_channels, pingable: doc.data().pingable, deletable: doc.data().deletable, deafult: doc.data().deafult };
+            roles.push(dep_role);
+            role_names.push(doc.id)
+        });
+
+        roles.sort((a, b) => (a.perm_level > b.perm_level) ? -1 : 1)
+
+        showNotitfication("","Created");
+        renderInvite();
+    });
+  });
+}
+
 function renderInvite(){
   $("#member_requests").hide();
   $("#member_managment").hide();
@@ -2032,10 +2080,20 @@ function renderInvite(){
       parent_div__.id = "role_sett_div";
 
   var left_pannel = document.createElement("div");
+      var left_pannel_title_area = document.createElement("div");
+          left_pannel_title_area.classList.add("roles_title_area");
+
       var title_ = document.createElement("h4");
           title_.innerHTML = "ROLES";
+      
+      var add_button = document.createElement("i");
+          add_button.classList.add("fa");
+          add_button.classList.add("fa-plus");
+          add_button.setAttribute("onclick", "createRole()");
 
-      left_pannel.appendChild(title_);
+      left_pannel_title_area.appendChild(title_);
+      left_pannel_title_area.appendChild(add_button);
+      left_pannel.appendChild(left_pannel_title_area);
       left_pannel.classList.add("roles_left_pannel");
       roles.sort((a, b) => (a.perm_level > b.perm_level) ? -1 : 1) 
       parent_div__.appendChild(left_pannel);
@@ -2315,6 +2373,11 @@ function renderMemberList() {
         
       });
 
+      var add_role = document.createElement("i");
+          add_role.classList.add("fa");
+          add_role.classList.add("fa-plus");
+          
+      role_div.appendChild(add_role);
       server_count++;
 
       parent_div_.appendChild(role_div);
@@ -2415,10 +2478,10 @@ function renderMemberList2(){
 
   // Create All Categories First IN ORDER!!!
   for(var i = 0; i < roles.length; i++){
-    var category__ = !!document.getElementById(roles[i].name + "_category");
+    var category__ = !!document.getElementById(roles[i].name.replace(/ /g,"_") + "_category");
     if(!category__){
       var new_category = document.createElement("div");
-          new_category.id = roles[i].name + "_category";
+          new_category.id = roles[i].name.replace(/ /g,"_") + "_category";
       
       var text_child = document.createElement("p");
           text_child.innerHTML = roles[i].name;
@@ -2449,7 +2512,7 @@ function renderMemberList2(){
         }
       });
 
-      var category__1 = document.getElementById(high_role.name + "_category");
+      var category__1 = document.getElementById(high_role.name.replace(/ /g,"_") + "_category");
 
       var member_user = document.createElement("div");
           member_user.classList.add("member_user");
@@ -2490,10 +2553,16 @@ function renderMemberList2(){
 
   for(var i = 0; i < roles.length; i++){
     var category__ = document.getElementById(roles[i].name + "_category");
-    if($("#" + roles[i].name + "_category").find('.member_user').length == 0){
-      document.getElementById("members_2").removeChild(document.getElementById(roles[i].name + "_category"));
+    if($('*[id="' + roles[i].name.replace(/ /g,"_") + '_category"]').find('.member_user').length == 0){
+      document.getElementById("members_2").removeChild(document.getElementById(roles[i].name.replace(/ /g,"_") + "_category"));
     }
   }
+}
+
+function jq( myid ) {
+ 
+  return "#" + myid.replace( /(:|\.|\[|\]|,|=|@)/g, "\\$1" );
+
 }
 
 function userInfo(users_id) {
@@ -2856,16 +2925,16 @@ $('#message-input').bind('keyup',function(evt){
 
 
 $("#account_edit h4").on('click', function() {
-  $("#settings_username").addClass("hidden");
-  $("#settings_email").addClass("hidden");
+  $("#settings_username").toggleClass("hidden");
+  $("#settings_email").toggleClass("hidden");
 
   $("#settings_username_input").val(username);
   $("#settings_email_input").val(user_email); 
 
-  $("#settings_username_input").removeClass("hidden");
-  $("#settings_email_input").removeClass("hidden")
+  $("#settings_username_input").toggleClass("hidden");
+  $("#settings_email_input").toggleClass("hidden");
 
-
+  $("#account_edit").toggleClass("hidden");
 });
 
 $(".settings_icon_container").on('click', function() {

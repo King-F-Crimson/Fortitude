@@ -1786,20 +1786,7 @@ p strong {
   text-align: center;
   color: var(--text-color-inactive);
   font-size: 10px;
-  /*
-  animation: turnLogo 4s infinite ease;
-  transform-origin: center center;
-  */
 }
-
-
-/*
-  @keyframes turnLogo {
-    0%   {transform: rotate(0deg) scale(1)}
-    50%  {transform: rotate(360deg) scale(1.5)}
-    100% {transform: rotate(720deg) scale(1)}
-  }
-*/
 
 #create_server a {
   color: var(--harsh);
@@ -1820,7 +1807,7 @@ p strong {
 }
 
 .alert {
-  z-index: 998;
+  z-index: 999;
   position: absolute;
   border-radius: 7px;
   background-color: var(--background-dark);
@@ -1836,7 +1823,7 @@ p strong {
   padding-right: 20px;
   width: fit-content;
 
-  transform: translateY(-1000px);
+  transform: translateY(-500px);
 }
 
 .slide-in-top {
@@ -3286,6 +3273,22 @@ button:hover {
   padding: 5px;
   border: 1px solid var(--button-color);
   width: 100%;
+}
+
+.fa-plus {
+  opacity: 0.5;
+  font-size: 10px;
+}
+
+.fa-plus:hover {
+  opacity: 1;
+  cursor: pointer;
+}
+
+.roles_title_area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 #account input:focus {

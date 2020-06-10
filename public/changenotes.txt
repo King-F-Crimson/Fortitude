@@ -40,7 +40,8 @@ A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
 - Ability to Create Roles
 - Ability to Assign Roles to Users
 - Role Permissions
-!- Nodifications
+
+!- Nodifications (Delayed)
 }
 
 ============= [Released] =============
