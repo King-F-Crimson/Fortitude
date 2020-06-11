@@ -2331,6 +2331,7 @@ function renderMemberList() {
   .then(querySnapshot => {
     querySnapshot.forEach(doc => {
       var parent_div_ = document.createElement("div");
+          parent_div_.id = `roler_${doc.data().userId}`;
       var role_div = document.createElement("div");
 
       var users_name_div = document.createElement("div");
@@ -2355,11 +2356,18 @@ function renderMemberList() {
         
         //console.log(element, index);
         var temp_text = document.createElement("p");
-            temp_text.innerHTML = element.name;
+
+            if(element.name.length > 3){
+              temp_text.innerHTML =  element.name.substr(0,4).trim() + "...";
+            }else{
+              temp_text.innerHTML = element.name;
+            }
+
             temp_text.style.margin = "0";
             temp_text.style.paddingLeft = "5px";
             temp_text.style.paddingRight = "5px";
             temp_text.style.color = role_colour;
+            temp_text.style.whiteSpace = "no-wrap"; 
   
         temp.appendChild(temp_text);
         temp.style.borderColor = hexToRgbA(role_colour, "1");
@@ -2377,6 +2385,7 @@ function renderMemberList() {
       var add_role = document.createElement("i");
           add_role.classList.add("fa");
           add_role.classList.add("fa-plus");
+          add_role.setAttribute("onclick", `openAddRoleToUser("${doc.data().userId}")`);
           
       add_role_div.appendChild(add_role);
       role_div.appendChild(add_role_div);
@@ -2389,8 +2398,71 @@ function renderMemberList() {
   });
 }
 
+function openAddRoleToUser(users_id_to_open){
+  //var parent_div = document.getElementById(`roler_${users_id_to_open}`);
+  var parent_div = $('*[id="roler_' + users_id_to_open + '"]');
+
+  var role_div_ = document.createElement("div");
+      role_div_.classList.add("add_roles_div");
+
+  var top_patition_ = document.createElement("div");
+      top_patition_.classList.add("add_role_div_top")
+  
+  var top_patition_text = document.createElement("h3");
+      top_patition_text.innerHTML = "<strong>ADD:</strong>";
+  
+  var top_patition_input = document.createElement("input");
+      top_patition_input.setAttribute("placeholder", "Role");
+      top_patition_input.setAttribute("type", "text");
+
+  top_patition_.appendChild(top_patition_text);
+  top_patition_.appendChild(top_patition_input);
+
+  var role_div_list = document.createElement("div");
+      role_div_list.id = "add_roles_div_list";
+
+  var this_user = server_members.findIndex(element => element.uid == users_id_to_open);
+  var users_index = server_members[this_user].info.findIndex(element => element.server == room);;
+
+  roles.forEach((element) => {
+    //console.log(element, server_members[this_user].info[users_index].roles);
+    if(server_members[this_user].info[users_index].roles.includes(element)){
+      console.log("it includes" + element.name);
+    }else{
+      var new_role = document.createElement("div");
+          new_role.setAttribute("onclick", `addRoleToUser("${users_id_to_open}", "${element.name}")`);
+
+      var new_role_text = document.createElement("h5");
+          new_role_text.innerHTML = toUpper(element.name);
+          new_role_text.style.color = element.rgb;
+          
+
+      new_role.appendChild(new_role_text);
+      role_div_list.appendChild(new_role);
+    }
+  });
+
+  role_div_.appendChild(top_patition_);
+  role_div_.appendChild(role_div_list);
+  parent_div.append(role_div_);
+}
+
+function addRoleToUser(user_id__, role) {
+  showNotitfication("", "Assigning Role");
+
+  //... set document/{server_id}/members/{user_id}/roles = prev + role
+  var users_servers = db.collection("groups/"+ rmid +"/members/").doc(user_id__);
+
+  return users_servers.update({
+    roles: firebase.firestore.FieldValue.arrayUnion(role)
+  }).then(() => {
+    showNotitfication("", "Assigned");
+  });
+}
+
 function findWithAttr(array, value) {
   for(var i = 0; i < array.length; i += 1) {
+      console.log(array[i].name, value);
       if(array[i].name === value) {
           return i;
       }
@@ -2420,9 +2492,10 @@ function renderMembersList() {
         for(var i = 0; i < user_role.length; i++){
           var p = role_names.indexOf(user_role[i]);
           //var k = roles.indexOf(user_role[i]);
-          var k = findWithAttr(roles, user_role[i])
-          users_roles.push(roles[k]);
           
+          var k = findWithAttr(roles, user_role[i]);
+          console.log(user_role[i], k);
+          users_roles.push(roles[k]);
         }
 
         users_roles.sort((a, b) => (a.perm_lvl > b.perm_lvl) ? 1 : -1)
@@ -2650,7 +2723,14 @@ function renderUserInfo(users_name, user_time, users_servers, users_id_){
       var temp = document.createElement("div");
       
       var temp_text = document.createElement("p");
-          temp_text.innerHTML = element.name;
+
+      if(element.name.length > 5){
+        temp_text.innerHTML =  element.name.substr(0,8).trim() + "...";
+      }else{
+        temp_text.innerHTML = element.name;
+      }
+
+          
 
       temp.appendChild(temp_text);
       temp.style.borderColor = element.rgb;
