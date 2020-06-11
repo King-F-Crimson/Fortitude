@@ -37,11 +37,11 @@ A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
 
 === { Pre-Alpha 1.2937 - [15/05/2020] ~Notifications + Roles v2~
 ### Added
-- Ability to Create Roles
-- Ability to Assign Roles to Users
-- Role Permissions
+[✓] - Ability to Create Roles
+[✓] - Ability to Assign Roles to Users
+[•] - Role Permissions
 
-!- Nodifications (Delayed)
+[•] !- Nodifications (Delayed)
 }
 
 ============= [Released] =============

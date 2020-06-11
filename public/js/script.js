@@ -40,7 +40,7 @@ function changeForm() {
 }
 
 function getItem(key){
-  console.log("Retriving Cache");
+  //console.log("Retriving Cache");
   try{
       return JSON.parse(localStorage.getItem(key));
   }
@@ -1374,7 +1374,7 @@ function renderMessages(){
         p = roles.findIndex(i => i.name === result[0]);
         
         var users_photo = server_members.findIndex(i => i.uid == userId_message[i])
-        console.log(userId_message[i], users_photo);
+        //console.log(userId_message[i], users_photo);
 
         var role_called = res[1].split(" ");
         //console.log(role_called[0]);
@@ -2140,7 +2140,7 @@ function openSettingsRoles(index, k){
   $("#role_" + index).css("background-color", roles[index].rgb);
   $("#role_" + index).css("color", "white");
 
-  console.log(roles[index]);
+  //console.log(roles[index]);
   var deafult_role = roles[index];
 
   var right_pannel = document.createElement("div");
@@ -2332,6 +2332,8 @@ function renderMemberList() {
     querySnapshot.forEach(doc => {
       var parent_div_ = document.createElement("div");
           parent_div_.id = `roler_${doc.data().userId}`;
+          parent_div_.classList.add("role_class_person");
+
       var role_div = document.createElement("div");
 
       var users_name_div = document.createElement("div");
@@ -2398,15 +2400,26 @@ function renderMemberList() {
   });
 }
 
+var role_selector_open = false;
+
 function openAddRoleToUser(users_id_to_open){
+  if(role_selector_open){
+    $("#role_selector").remove();
+  }
+  
+  role_selector_open = true;
   //var parent_div = document.getElementById(`roler_${users_id_to_open}`);
   var parent_div = $('*[id="roler_' + users_id_to_open + '"]');
 
   var role_div_ = document.createElement("div");
       role_div_.classList.add("add_roles_div");
+      role_div_.id = "role_selector";
 
   var top_patition_ = document.createElement("div");
-      top_patition_.classList.add("add_role_div_top")
+      top_patition_.classList.add("add_role_div_top");
+
+  //var top_partition_tooltip = document.createElement("span");
+  //    top_partition_tooltip.classList.add("tooltip");
   
   var top_patition_text = document.createElement("h3");
       top_patition_text.innerHTML = "<strong>ADD:</strong>";
@@ -2415,6 +2428,7 @@ function openAddRoleToUser(users_id_to_open){
       top_patition_input.setAttribute("placeholder", "Role");
       top_patition_input.setAttribute("type", "text");
 
+  //top_patition_.appendChild(top_partition_tooltip);
   top_patition_.appendChild(top_patition_text);
   top_patition_.appendChild(top_patition_input);
 
@@ -2427,7 +2441,7 @@ function openAddRoleToUser(users_id_to_open){
   roles.forEach((element) => {
     //console.log(element, server_members[this_user].info[users_index].roles);
     if(server_members[this_user].info[users_index].roles.includes(element)){
-      console.log("it includes" + element.name);
+      //console.log("it includes" + element.name);
     }else{
       var new_role = document.createElement("div");
           new_role.setAttribute("onclick", `addRoleToUser("${users_id_to_open}", "${element.name}")`);
@@ -2445,7 +2459,30 @@ function openAddRoleToUser(users_id_to_open){
   role_div_.appendChild(top_patition_);
   role_div_.appendChild(role_div_list);
   parent_div.append(role_div_);
+
+  
 }
+
+$('body').on('click', function(event) {
+
+  console.log(event.target);
+
+  if($(event.target).is("i.fa.fa-plus")){
+    console.log($(event.target.offsetParent).is("#role_selector"), "TARGET");
+    console.log(role_selector_open, "OPEN");
+    
+    if(!$(event.target.offsetParent).is("#role_selector") && !role_selector_open){
+      $("#role_selector").remove();
+    }
+  }else {
+    console.log($(event.target.offsetParent).is("#role_selector"), "TARGET");
+    console.log(role_selector_open, "OPEN");
+
+    if(!$(event.target.offsetParent).is("#role_selector")){
+      $("#role_selector").remove();
+    }
+  }
+});
 
 function addRoleToUser(user_id__, role) {
   showNotitfication("", "Assigning Role");
@@ -2462,7 +2499,7 @@ function addRoleToUser(user_id__, role) {
 
 function findWithAttr(array, value) {
   for(var i = 0; i < array.length; i += 1) {
-      console.log(array[i].name, value);
+      //console.log(array[i].name, value);
       if(array[i].name === value) {
           return i;
       }
@@ -2494,7 +2531,7 @@ function renderMembersList() {
           //var k = roles.indexOf(user_role[i]);
           
           var k = findWithAttr(roles, user_role[i]);
-          console.log(user_role[i], k);
+          //console.log(user_role[i], k);
           users_roles.push(roles[k]);
         }
 
@@ -2730,7 +2767,6 @@ function renderUserInfo(users_name, user_time, users_servers, users_id_){
         temp_text.innerHTML = element.name;
       }
 
-          
 
       temp.appendChild(temp_text);
       temp.style.borderColor = element.rgb;
@@ -3038,7 +3074,7 @@ $(".settings_icon_container").on('click', function() {
       var storRef = storageRef.child(`userIcons/${user_id}.${extension.toLowerCase()}`);
       showNotitfication("", "Uploading...");
 
-      console.log(file);
+      //console.log(file);
 
       var newMetadata = {
         cacheControl: 'public,max-age=69000'
@@ -3055,7 +3091,7 @@ $(".settings_icon_container").on('click', function() {
               var user_servers = db.collection("users").doc(user_id);
               $("#settings_icon").attr("src", server_members[user_loc].icon);
               showNotitfication("", "Applied Changes");
-              console.log("Appling User Icon...", server_members[user_loc].icon);
+              //console.log("Appling User Icon...", server_members[user_loc].icon);
             
               return user_servers.update({
                 icon: `${user_id}.${extension.toLowerCase()}`
@@ -3063,7 +3099,7 @@ $(".settings_icon_container").on('click', function() {
             });
           });
         }).catch(function(error) {
-          console.log(error)
+          //console.log(error)
         });
       }else{
         storRef.put(file, newMetadata).then(function(snapshot) {
@@ -3074,7 +3110,7 @@ $(".settings_icon_container").on('click', function() {
 
             var user_servers = db.collection("users").doc(user_id);
             $("#settings_icon").attr("src", server_members[user_loc].icon);
-            console.log("Appling User Icon...", server_members[user_loc].icon);
+            //console.log("Appling User Icon...", server_members[user_loc].icon);
             showNotitfication(server_members[user_loc].icon = url, "Applied Changes");
 
             return user_servers.update({
@@ -3085,7 +3121,7 @@ $(".settings_icon_container").on('click', function() {
       }
     });   
   }).catch(function(error) {
-      console.log("Error getting document:", error);
+      //'console.log("Error getting document:", error);
   });
 
   
