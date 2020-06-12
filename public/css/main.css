@@ -2284,7 +2284,6 @@ p strong {
 #member_managment > div > div p {
   font-size: 0.9em;
   text-transform: capitalize;
-
 }
 
 #member_managment > div:not(:first-child):hover {
@@ -2752,6 +2751,8 @@ p strong {
 
 .roles_left_pannel {
   height: 100%;
+  border-right: 2px solid var(--background-color-primary);
+  padding-right: 15px;
 }
 
 .roles_left_pannel p {

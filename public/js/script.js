@@ -2122,6 +2122,9 @@ function renderInvite(){
   });  
 }
 
+var temp_edit_role;
+var temp_comp_role;
+
 function openSettingsRoles(index, k){
   if(k == 0){
     document.getElementById("role_sett_div").removeChild(document.getElementById("roles_right_pannel"));
@@ -2142,7 +2145,15 @@ function openSettingsRoles(index, k){
 
   //console.log(roles[index]);
   var deafult_role = roles[index];
+  temp_edit_role = roles[index];
 
+  if(temp_comp_role === null || temp_comp_role === undefined){
+    temp_comp_role = temp_edit_role;
+  }else if(temp_edit_role.name !== temp_comp_role.name){
+    temp_comp_role = temp_edit_role;
+  }
+  // Unlink Objects ?!!?!?!
+  
   var right_pannel = document.createElement("div");
       right_pannel.classList.add("roles_right_pannel");
       right_pannel.id = "roles_right_pannel";
@@ -2182,62 +2193,48 @@ function openSettingsRoles(index, k){
       var right_title_3 = document.createElement("h4");
           right_title_3.innerHTML = "ROLE PERMISSIONS";
       
-      var pingable = document.createElement("div");
-          pingable.classList.add("role_setting_");
+      var ping_section = createDocument(
+        "Allow this role to be @mentioned", 
+        "Enabling this allows <strong>anyone</strong> to mention this role", 
+        `pingable", "${deafult_role.name}`,
+        deafult_role.pingable),
+        index;
 
-          var pingable_text = document.createElement("div");
-          
-          var pingable_header = document.createElement("h1");
-              pingable_header.innerHTML = "Allow this role to be @mentioned.";
-
-          var pingable_paragraph = document.createElement("p");
-              pingable_paragraph.innerHTML = "Enabling this allows <strong>anyone</strong> to @ this role";
-
-          var pingable_button = document.createElement("div");
-              pingable_button.style.alignSelf = "center";
-              pingable_button.setAttribute("onclick", `changeRole("${10}", "${deafult_role.name}")`);
-              pingable_button.append(button__);
-
-          pingable_text.append(pingable_header);
-          pingable_text.append(pingable_paragraph);
-
-          pingable.append(pingable_text);
-          pingable.append(pingable_button);
-      
-      var administrator_access = document.createElement("div");
-          administrator_access.classList.add("role_setting_");
-
-          var administrator_text = document.createElement("div");
-          
-          var administrator_header = document.createElement("h1");
-              administrator_header.innerHTML = "Give this role administrator permissions";
-
-          var administrator_paragraph = document.createElement("p");
-              administrator_paragraph.innerHTML = "Enabling this allows <strong>the user</strong> access any of the below features and shoud only be given to trustworthy individuals";
-
-          var admin_button = document.createElement("div");
-              admin_button.style.alignSelf = "center";
-              admin_button.setAttribute("onclick", `changeRole("${10}", "${deafult_role.name}")`);
-              admin_button.append(button__.cloneNode(true));
-
-          administrator_text.append(administrator_header);
-          administrator_text.append(administrator_paragraph);
-
-          administrator_access.append(administrator_text);
-          administrator_access.append(admin_button);
+      var admin_section = createDocument(
+        "Give this role administrator permissions", 
+        "Enabling this allows <strong>the user</strong> access any of the below features and shoud only be given to trustworthy individuals", 
+        `admin", "${deafult_role.name}`,
+        deafult_role.admin),
+        index;
       
           // continue eeeeee
-      var audit_access = document.createElement("div");
-          //...
+      var audit_section = createDocument(
+        "Give this role the ability to read the audit log", 
+        "", 
+        `audit", "${deafult_role.name}`,
+        deafult_role.audit),
+        index;
 
-      var manage_roles = document.createElement("div");
-          //...
+      var manage_server_section = createDocument(
+        "Give this role and its users the ability to manage the server", 
+        "", 
+        `manage_server", "${deafult_role.name}`,
+        deafult_role.manage_server),
+        index;
 
-      var manage_channels = document.createElement("div");
-          //...
+      var manage_channel_section = createDocument(
+        "Give this role and its users the ability to manage channels, thier names and thier settings", 
+        "", 
+        `manage_channels", "${deafult_role.name}`,
+        deafult_role.manage_channels),
+        index;
 
-      var manage_server = document.createElement("div");
-          //...
+      var manage_roles_section = createDocument(
+        "Give this role and its users the ability to manage roles, their names and their settings", 
+        "", 
+        `manage_roles", "${deafult_role.name}`,
+        deafult_role.manage_roles),
+        index;
       
       
       right_pannel_first_section.append(right_title_1);
@@ -2247,8 +2244,13 @@ function openSettingsRoles(index, k){
       right_pannel_seccond_section.append(color_selector);
 
       right_pannel_third_section.append(right_title_3);
-      right_pannel_third_section.append(pingable);
-      right_pannel_third_section.append(administrator_access)
+      right_pannel_third_section.append(ping_section);
+      right_pannel_third_section.append(admin_section);
+      right_pannel_third_section.append(audit_section);
+
+      right_pannel_third_section.append(manage_server_section);
+      right_pannel_third_section.append(manage_channel_section);
+      right_pannel_third_section.append(manage_roles_section);
 
       right_pannel.appendChild(right_pannel_first_section);
       right_pannel.appendChild(right_pannel_seccond_section);
@@ -2256,6 +2258,62 @@ function openSettingsRoles(index, k){
       
 
   document.getElementById("role_sett_div").appendChild(right_pannel);
+}
+
+function createDocument(a,b,c,d, e){
+  console.log(c, d);
+  var button__ = document.createElement("label");
+          button__.classList.add("switch");
+          var button_input = document.createElement("input");
+              button_input.setAttribute("type", "checkbox");
+
+              if(d){
+                button_input.setAttribute("checked", "checked");
+              }
+              
+          var button_span = document.createElement("span");
+              button_span.classList.add("slider");
+              button_span.classList.add("round");
+
+          button__.append(button_input);
+          button__.append(button_span);
+
+  var administrator_access = document.createElement("div");
+          administrator_access.classList.add("role_setting_");
+
+          var administrator_text = document.createElement("div");
+          
+          var administrator_header = document.createElement("h1");
+              administrator_header.innerHTML = a;
+
+          var administrator_paragraph = document.createElement("p");
+              administrator_paragraph.innerHTML = b;
+
+          var admin_button = document.createElement("div");
+              admin_button.style.alignSelf = "center";
+              admin_button.setAttribute("onmouseup", `changeRole("${c, e}")`);
+              admin_button.append(button__.cloneNode(true));
+
+          administrator_text.append(administrator_header);
+          administrator_text.append(administrator_paragraph);
+
+          administrator_access.append(administrator_text);
+          administrator_access.append(admin_button);
+
+  return administrator_access;
+}
+
+function changeRole(type, role_name, index) {
+  //$('.role_setting_ input:checkbox:checked').length;
+  //console.log(`Changing ${role_name}'s [${type}] from ${temp_edit_role[type]} ref(${temp_comp_role[type]}) to ${!temp_edit_role[type]}`);
+  temp_edit_role[type] = !temp_edit_role[type];
+  console.log(`? ${temp_edit_role[type]} : ${roles[index][type]}`);
+
+  if(JSON.stringify(temp_edit_role) === JSON.stringify(roles[index][type])){
+    //showNotitfication("", "Saved!");
+  }else{
+    //alert("Unsaved Changes!");
+  }
 }
 
 $('#member_invite').on('mouseover', '.role_div', function() {
@@ -2436,23 +2494,32 @@ function openAddRoleToUser(users_id_to_open){
       role_div_list.id = "add_roles_div_list";
 
   var this_user = server_members.findIndex(element => element.uid == users_id_to_open);
-  var users_index = server_members[this_user].info.findIndex(element => element.server == room);;
+  var users_index = server_members[this_user].info.findIndex(element => element.server == room);
+  //var server_role_index = server_members[this_user].info
 
   roles.forEach((element) => {
-    //console.log(element, server_members[this_user].info[users_index].roles);
-    if(server_members[this_user].info[users_index].roles.includes(element)){
-      //console.log("it includes" + element.name);
-    }else{
-      var new_role = document.createElement("div");
-          new_role.setAttribute("onclick", `addRoleToUser("${users_id_to_open}", "${element.name}")`);
+    var can_add_role = false;
+    server_members[this_user].info[users_index].roles.forEach((element_) => {
+      if(element_.perm_level >= element.perm_level){
+        can_add_role = true;
+      }
+    });
 
-      var new_role_text = document.createElement("h5");
-          new_role_text.innerHTML = toUpper(element.name);
-          new_role_text.style.color = element.rgb;
-          
+    if(can_add_role){
+      if(server_members[this_user].info[users_index].roles.includes(element)){
+        //console.log("it includes" + element.name);
+      }else{
+        var new_role = document.createElement("div");
+            new_role.setAttribute("onclick", `addRoleToUser("${users_id_to_open}", "${element.name}")`);
 
-      new_role.appendChild(new_role_text);
-      role_div_list.appendChild(new_role);
+        var new_role_text = document.createElement("h5");
+            new_role_text.innerHTML = toUpper(element.name);
+            new_role_text.style.color = element.rgb;
+            
+
+        new_role.appendChild(new_role_text);
+        role_div_list.appendChild(new_role);
+      }
     }
   });
 
@@ -2465,18 +2532,18 @@ function openAddRoleToUser(users_id_to_open){
 
 $('body').on('click', function(event) {
 
-  console.log(event.target);
+  //console.log(event.target);
 
   if($(event.target).is("i.fa.fa-plus")){
-    console.log($(event.target.offsetParent).is("#role_selector"), "TARGET");
-    console.log(role_selector_open, "OPEN");
+    //console.log($(event.target.offsetParent).is("#role_selector"), "TARGET");
+    //console.log(role_selector_open, "OPEN");
     
     if(!$(event.target.offsetParent).is("#role_selector") && !role_selector_open){
       $("#role_selector").remove();
     }
   }else {
-    console.log($(event.target.offsetParent).is("#role_selector"), "TARGET");
-    console.log(role_selector_open, "OPEN");
+    //console.log($(event.target.offsetParent).is("#role_selector"), "TARGET");
+    //console.log(role_selector_open, "OPEN");
 
     if(!$(event.target.offsetParent).is("#role_selector")){
       $("#role_selector").remove();
