@@ -2127,7 +2127,7 @@ var temp_comp_role;
 
 function openSettingsRoles(index, k){
   if(k == 0){
-    document.getElementById("role_sett_div").removeChild(document.getElementById("roles_right_pannel"));
+    document.getElementById("role_sett_div").removeChild(document.getElementById("roles_right_pannel_parent"));
   }
   
   $(".role_div").removeClass("active");
@@ -2145,7 +2145,21 @@ function openSettingsRoles(index, k){
 
   //console.log(roles[index]);
   var deafult_role = roles[index];
-  temp_edit_role = roles[index];
+  temp_edit_role = 
+  {
+    name: roles[index].name, 
+    color: roles[index].color, 
+    rgb: roles[index].rgb,
+    perm_level: roles[index].perm_level,
+    admin: roles[index].admin, 
+    audit: roles[index].audit, 
+    manage_server: roles[index].manage_server,
+    manage_roles: roles[index].manage_roles,
+    manage_channels: roles[index].manage_channels,
+    pingable: roles[index].pingable,
+    deletable: roles[index].deletable, 
+    deafult: roles[index].deafult, 
+  };
 
   if(temp_comp_role === null || temp_comp_role === undefined){
     temp_comp_role = temp_edit_role;
@@ -2153,12 +2167,31 @@ function openSettingsRoles(index, k){
     temp_comp_role = temp_edit_role;
   }
   // Unlink Objects ?!!?!?!
+
+  var right_pannel_parent = document.createElement("div");
+      right_pannel_parent.id = "roles_right_pannel_parent";
+
+  var unsaved_changes = document.createElement("div");
+      unsaved_changes.classList.add("unsaved_changes");
+      unsaved_changes.id = "roles_unsaved_changes";
+      unsaved_changes.classList.add("hidden");
+
+  var unsaved_changes_text = document.createElement("h1");
+      unsaved_changes_text.innerHTML = "You have unsaved changes";
+      unsaved_changes.append(unsaved_changes_text);
+
+  var unsaved_changes_button = document.createElement("button");
+      unsaved_changes_button.innerHTML = "Apply";
+      unsaved_changes.append(unsaved_changes_button);
   
   var right_pannel = document.createElement("div");
       right_pannel.classList.add("roles_right_pannel");
       right_pannel.id = "roles_right_pannel";
-
+      
       // Role Name
+      var role_top_partition = document.createElement("div");
+          role_top_partition.classList.add("role_right_pannel_top");
+
       var right_pannel_first_section = document.createElement("div");
       var right_title_1 = document.createElement("h4");
           right_title_1.innerHTML = "ROLE NAME";
@@ -2172,9 +2205,17 @@ function openSettingsRoles(index, k){
       var right_pannel_seccond_section = document.createElement("div");
       var right_title_2 = document.createElement("h4");
           right_title_2.innerHTML = "ROLE COLOUR";
+
+      var color_selector_div = document.createElement("div");
       
       var color_selector = document.createElement("input");
           color_selector.setAttribute("type", "color");
+          color_selector.setAttribute("value", deafult_role.rgb)
+
+      var color_selector_text = document.createElement("input");
+          color_selector_text.classList.add("role_name_settings");
+          color_selector_text.value = deafult_role.name; 
+          color_selector_text.style.color = deafult_role.rgb; 
       
       // Permissions
       var button__ = document.createElement("label");
@@ -2197,44 +2238,43 @@ function openSettingsRoles(index, k){
         "Allow this role to be @mentioned", 
         "Enabling this allows <strong>anyone</strong> to mention this role", 
         `pingable", "${deafult_role.name}`,
-        deafult_role.pingable),
-        index;
+        deafult_role.pingable,
+        index);
 
       var admin_section = createDocument(
         "Give this role administrator permissions", 
         "Enabling this allows <strong>the user</strong> access any of the below features and shoud only be given to trustworthy individuals", 
         `admin", "${deafult_role.name}`,
-        deafult_role.admin),
-        index;
-      
-          // continue eeeeee
+        deafult_role.admin,
+        index);
+
       var audit_section = createDocument(
         "Give this role the ability to read the audit log", 
         "", 
         `audit", "${deafult_role.name}`,
-        deafult_role.audit),
-        index;
+        deafult_role.audit,
+        index);
 
       var manage_server_section = createDocument(
         "Give this role and its users the ability to manage the server", 
         "", 
         `manage_server", "${deafult_role.name}`,
-        deafult_role.manage_server),
-        index;
+        deafult_role.manage_server,
+        index);
 
       var manage_channel_section = createDocument(
         "Give this role and its users the ability to manage channels, thier names and thier settings", 
         "", 
         `manage_channels", "${deafult_role.name}`,
-        deafult_role.manage_channels),
-        index;
+        deafult_role.manage_channels,
+        index);
 
       var manage_roles_section = createDocument(
         "Give this role and its users the ability to manage roles, their names and their settings", 
         "", 
         `manage_roles", "${deafult_role.name}`,
-        deafult_role.manage_roles),
-        index;
+        deafult_role.manage_roles,
+        index);
       
       
       right_pannel_first_section.append(right_title_1);
@@ -2242,6 +2282,9 @@ function openSettingsRoles(index, k){
 
       right_pannel_seccond_section.append(right_title_2);
       right_pannel_seccond_section.append(color_selector);
+
+      role_top_partition.appendChild(right_pannel_first_section);
+      role_top_partition.appendChild(right_pannel_seccond_section);
 
       right_pannel_third_section.append(right_title_3);
       right_pannel_third_section.append(ping_section);
@@ -2252,16 +2295,17 @@ function openSettingsRoles(index, k){
       right_pannel_third_section.append(manage_channel_section);
       right_pannel_third_section.append(manage_roles_section);
 
-      right_pannel.appendChild(right_pannel_first_section);
-      right_pannel.appendChild(right_pannel_seccond_section);
+      right_pannel.appendChild(role_top_partition);
       right_pannel.appendChild(right_pannel_third_section);
-      
 
-  document.getElementById("role_sett_div").appendChild(right_pannel);
+      right_pannel_parent.append(right_pannel);
+      right_pannel_parent.append(unsaved_changes);
+
+    document.getElementById("role_sett_div").appendChild(right_pannel_parent);
 }
 
 function createDocument(a,b,c,d, e){
-  console.log(c, d);
+  //console.log(c, d);
   var button__ = document.createElement("label");
           button__.classList.add("switch");
           var button_input = document.createElement("input");
@@ -2291,7 +2335,7 @@ function createDocument(a,b,c,d, e){
 
           var admin_button = document.createElement("div");
               admin_button.style.alignSelf = "center";
-              admin_button.setAttribute("onmouseup", `changeRole("${c, e}")`);
+              admin_button.setAttribute("onmouseup", `changeRole("${c}", "${e}")`);
               admin_button.append(button__.cloneNode(true));
 
           administrator_text.append(administrator_header);
@@ -2307,12 +2351,15 @@ function changeRole(type, role_name, index) {
   //$('.role_setting_ input:checkbox:checked').length;
   //console.log(`Changing ${role_name}'s [${type}] from ${temp_edit_role[type]} ref(${temp_comp_role[type]}) to ${!temp_edit_role[type]}`);
   temp_edit_role[type] = !temp_edit_role[type];
-  console.log(`? ${temp_edit_role[type]} : ${roles[index][type]}`);
+  //console.log(index);
+  //console.log(`? ${temp_edit_role[type]} : ${roles[index][type]}`);
 
-  if(JSON.stringify(temp_edit_role) === JSON.stringify(roles[index][type])){
-    //showNotitfication("", "Saved!");
+  if(JSON.stringify(temp_edit_role) !== JSON.stringify(roles[index])){
+    $("#roles_unsaved_changes").removeClass("hidden");
+    $("#roles_right_pannel").addClass("roles_right_pannel_unsaved");
   }else{
-    //alert("Unsaved Changes!");
+    $("#roles_unsaved_changes").addClass("hidden");
+    $("#roles_right_pannel").removeClass("roles_right_pannel_unsaved");
   }
 }
 
@@ -2827,13 +2874,7 @@ function renderUserInfo(users_name, user_time, users_servers, users_id_){
       var temp = document.createElement("div");
       
       var temp_text = document.createElement("p");
-
-      if(element.name.length > 5){
-        temp_text.innerHTML =  element.name.substr(0,8).trim() + "...";
-      }else{
-        temp_text.innerHTML = element.name;
-      }
-
+          temp_text.innerHTML = element.name;
 
       temp.appendChild(temp_text);
       temp.style.borderColor = element.rgb;

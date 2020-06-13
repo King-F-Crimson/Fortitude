@@ -2521,7 +2521,7 @@ p strong {
 .user_name_card_top_patition {
   display: grid;
   grid-template-columns: 15% 50% 1fr 30% 4%;
-  background-color: var(--background-color-quaternary);
+  background-color: var(--background-color-compliement);
   padding: 30px;
 
   border-radius: 7px;
@@ -2569,10 +2569,15 @@ p strong {
   margin-left: 25px;
 }
 
+.user_card_naming p {
+  text-overflow: ellipsis;
+}
+
 .user_card_naming div {
   display: flex;
   flex-direction: row;
   text-transform: capitalize;
+  flex-wrap: wrap;
 }
 
 .user_card_naming div:not(:first-child) {
@@ -2654,6 +2659,10 @@ p strong {
   height: 40vh;
   margin: 15px;
   grid-gap: 15px;
+}
+
+.role_parent > div {
+  overflow: hidden;
 }
 
 .add_roles_div {
@@ -2827,9 +2836,46 @@ p strong {
   display: flex;
   width: 90%;
   justify-content: space-between;
-  border-bottom: 0.5px solid grey;
+  border-bottom: 0.5px solid rgba(255,255,255,0.05);
   padding-bottom: 15px;
   padding-top: 15px;
+}
+
+.unsaved_changes {
+  background-color: var(--background-message-highlight);
+  border-radius: 7px;
+  font-size: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  align-items: center;
+  position: sticky;
+  grid-row: 2;
+  grid-column: 2;
+  padding-left: 3%;
+}
+
+.role_right_pannel_top {
+  display: flex;
+  justify-content: end;
+  width: 100%;
+}
+
+.role_right_pannel_top input[type="color"] {
+  padding: 0;
+  height: 70%;
+  border: none;
+  width: 40%;
+  border-radius: 5px;
+}
+
+.role_right_pannel_top input[type="color"]:focus {
+  color: black;
+  background-color: var(--background-color-seccondary);
+}
+
+.role_right_pannel_top div {
+  width: 50%;
 }
 
 .pingable_role {
@@ -2994,6 +3040,11 @@ input:checked + .slider:before {
 
 .roles_right_pannel {
   overflow: auto;
+  height: 98.9%;
+}
+
+.roles_right_pannel_unsaved {
+  height: 80% !important;
 }
 
 .roles_right_pannel > div {
