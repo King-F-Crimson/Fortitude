@@ -258,7 +258,12 @@ input:focus {
   width: 95%;
 }
 
+.mentioned {
+  
+}
+
 #message-container {
+  overflow-x: hidden;
   grid-area: main;
   overflow: auto;
   bottom: 0%;
@@ -309,11 +314,10 @@ input:focus {
 
 #message-container img {
   left: 0;
-  padding: 15px;
+  padding: 0px;
+  margin-left: 15px;
   display: block;
   border-radius: 50%;
-  height: 50px;
-  width: 50px;
 }
 
 #message-container hr {
@@ -322,6 +326,32 @@ input:focus {
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   width: 98%;
   margin-right: 2%;
+}
+
+#message-container div:first-of-type {
+  display: flex;
+}
+
+#message-container > div:hover {
+  background-color: var(--background-message-hover);
+}
+
+#message-container > div {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+#message-continer > div > div:not(:first-child){
+  width: 100%;
+}
+
+.message {
+  width: 100%;
+}
+
+.message h2:hover {
+  cursor: pointer;
 }
 
 #send-container {
@@ -2749,17 +2779,43 @@ p strong {
   margin: 5;
 }
 
+.role_div p {
+  font-family: 'DeafultUi-Semi-Bold' !important;
+}
+
+.delete_role_button {
+  border: 1px solid var(--do-not-disturb);
+  background-color: transparent;
+  color: var(--do-not-disturb);
+  margin-bottom: 5%;
+  margin-left: 80%;
+}
+
+.delete_role_button:hover {
+  color: red;
+  border-color: red;
+  background-color: transparent;
+  
+  width: fit-content;
+}
+
+.message_left {
+  width: 50px;
+}
+
+.message_left img {
+  height: 40px !important;
+  width: 40px !important;
+}
+
 .role_div:hover {
   background-color: var(--background-color-compliement);
   cursor: pointer;
 }
 
-.role_div .active {
-  
-}
-
 .roles_left_pannel {
-  height: 100%;
+  height: 94%;
+  overflow-y: auto !important;
   border-right: 2px solid var(--background-color-primary);
   padding-right: 15px;
 }
@@ -2853,6 +2909,17 @@ p strong {
   grid-row: 2;
   grid-column: 2;
   padding-left: 3%;
+}
+
+.unsaved_changes button:first-of-type {
+  background-color: transparent;
+}
+
+.button_role_reset_changes *{
+  width: fit-content;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: 0px;
 }
 
 .role_right_pannel_top {
@@ -3190,14 +3257,12 @@ input:checked + .slider:before {
   
 }
 
-.message:hover {
-  background-color: var(--background-message-hover);
-}
+
 
 .highlighted {
   background-color: var(--background-message-highlight);
   border-left: 2px solid var(--background-message-highlight-strong);
-  padding-left: 26px;
+  width: calc(100% - 2px) !important;
 }
 
 .highlighted:hover {
@@ -3208,7 +3273,7 @@ input:checked + .slider:before {
 .owner {
   background-color: rgba(255,215,0,0.2);
   border-left: 2px solid rgb(255,215,0);
-  padding-left: 26px;
+  width: calc(100% - 2px) !important;
 }
 
 .owner:hover {
@@ -3219,7 +3284,7 @@ input:checked + .slider:before {
 .mentioned {
   background-color: var(--background-message-mentioned);
   border-left: 2px solid var(--background-message-mentioned-strong);
-  padding-left: 26px;
+  width: calc(100% - 2px) !important;
 }
 
 .mentioned:hover {
@@ -3261,7 +3326,7 @@ button {
   border: none;
   margin: 10px;
   margin-left: 12px;
-  width: 10%;
+  width: fit-content;
   white-space: nowrap;
 }
 

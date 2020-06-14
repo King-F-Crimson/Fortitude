@@ -1321,7 +1321,6 @@ function joinServer(room_id_element){
 
             updateMessages("null");
             updateTyping();
-            renderMessages();
         });
 
         db.collection("groups/"+ rmid +"/roles").get()
@@ -1335,6 +1334,7 @@ function joinServer(room_id_element){
             roles.sort((a, b) => (a.perm_level > b.perm_level) ? -1 : 1)
 
             renderMembersList();
+            
         });
 
         
@@ -1360,8 +1360,38 @@ function renderMessages(){
 
     for(var i = 0; i < messages.length; i++){
       var highlight_color = "deafult";
+      var message = document.createElement("div");
+
       var divider = document.createElement("div");
           divider.classList.add("message");
+
+      var divider2 = document.createElement("div");
+          divider2.classList.add("message_left");
+
+      var m = server_members.findIndex(element => element.name == authors[i]);
+      console.log(server_members[m]);
+      /*
+      var location = server_members[i].info.findIndex(element => element.server == room);
+      console.log(server_members[m].info[location]);
+
+      if(location >= 0){
+        var high = 0;
+        var high_role;
+        var itterator = 0;
+
+        //console.log(server_members[i].info[location].roles);
+        console.log(server_members[m]);
+        server_members[m].info[location].roles.forEach((element, m) =>{
+          //console.log(element);
+
+          if(element.perm_level >= high){
+            high = element.perm_level;
+            high_role = element;
+            itterator = m;
+          }
+        });
+      }
+      */
 
       if(messages[i].includes("@")){
         var str = messages[i];
@@ -1400,25 +1430,35 @@ function renderMessages(){
         if(highlight_color !== "deafult"){
           if(authors[i - 1] === authors[i] && samecount < 10){
                 divider.classList.add("special_message");
-                var message = document.createElement("p");
-                    message.innerHTML = end_result;
+                var message2 = document.createElement("p");
+                    message2.innerHTML = end_result;
                 
                 if(highlight_color == "ping"){
-                  divider.classList.add("mentioned"); 
+                  message.classList.add("mentioned"); 
                 }else if(highlight_color == "light_blue"){
-                  divider.classList.add("highlighted");
+                  message.classList.add("highlighted");
                 }else if(highlight_color == "gold"){
-                  divider.classList.add("owner");
+                  message.classList.add("owner");
+                }else{
+                  message.style.backgroundColor = hexToRgbA(role_color, 0.2);
+                  message.style.borderLeftColor = role_color;
+                  message.style.borderLeftStyle = "solid";
+                  message.style.borderLeftWidth = "2px";
+                  message.style.width = "calc(100% - 2px)";
                 }
                  
-                divider.append(message);
+                divider.append(message2);
                 samecount++;
             }else{
                 //$("#message-container").append($('<br>'));
                 //$("#message-container").append($('<hr>'));
                 $("#message-container").append($('<br>'));
-                //$("#message-container").append($('<img src="public/'+ user +'.jpg">'));
-                // $("#message-container").append($('<img src="' + user_img +'">'));  GET SENDERS PROFILE PIC
+                
+                var image = document.createElement("img");
+                    image.setAttribute("src", server_members[m].icon);
+                    
+                divider2.append(image); 
+
                 var author = document.createElement("h2");
                     author.classList.add("user_refrence");
                     author.innerHTML = authors[i];
@@ -1426,49 +1466,54 @@ function renderMessages(){
                 var date = document.createElement("h3");
                     date.innerHTML = dates[i];
                 
-                var message = document.createElement("p");
-                    message.innerHTML = messages[i];
+                var message2 = document.createElement("p");
+                    message2.innerHTML = messages[i];
                 
                 divider.append(author);
                 divider.append(date);
-                divider.append(message);
+                divider.append(message2);
 
                 if(highlight_color == "ping"){
-                  divider.classList.add("mentioned"); 
+                  message.classList.add("mentioned"); 
                 }else if(highlight_color == "light_blue"){
-                  divider.classList.add("highlighted");
+                  message.classList.add("highlighted");
                 }else if(highlight_color == "gold"){
-                  divider.classList.add("owner");
+                  message.classList.add("owner");
                 }
 
                 samecount = 0;
             }
         }else{
           if(authors[i - 1] === authors[i] && samecount < 10){
-                var message = document.createElement("p");
-                    message.innerHTML = messages[i];
+                var message2 = document.createElement("p");
+                    message2.innerHTML = messages[i];
                   
-                divider.append(message);
+                divider.append(message2);
                 samecount++;
             }else{
                 //$("#message-container").append($('<br>'));
                 //$("#message-container").append($('<hr>'));
                 $("#message-container").append($('<br>'));
                 //$("#message-container").append($('<img src="public/'+ user +'.jpg">'));
-                // $("#message-container").append($('<img src="' + user_img +'">'));  GET SENDERS PROFILE PIC
+                var image = document.createElement("img");
+                    image.setAttribute("src", server_members[m].icon);
+
+                divider2.append(image); 
+                
                 var author = document.createElement("h2");
                     author.classList.add("user_refrence");
                     author.innerHTML = authors[i];
+                    //author.style.color = server_members[m].info[location].roles[itterator].rgb;
                 
                 var date = document.createElement("h3");
                     date.innerHTML = dates[i];
                 
-                var message = document.createElement("p");
-                    message.innerHTML = messages[i];
+                var message2 = document.createElement("p");
+                    message2.innerHTML = messages[i];
                 
                 divider.append(author);
                 divider.append(date);
-                divider.append(message);
+                divider.append(message2);
                 samecount = 0;
                 
             }
@@ -1484,16 +1529,19 @@ function renderMessages(){
               var date = document.createElement("h3");
                   date.innerHTML = dates[i];
               
-              var message = document.createElement("p");
-                  message.innerHTML = messages[i];
+              var message2 = document.createElement("p");
+                  message2.innerHTML = messages[i];
               
               divider.append(author);
               divider.append(date);
-              divider.append(message);
+              divider.append(message2);
               samecount = 0;
       }
+      
+          message.append(divider2);
+          message.append(divider);
 
-      $("#message-container").append(divider);
+      $("#message-container").append(message);
     }
 
     var elem = document.getElementById("message-container");
@@ -2180,9 +2228,19 @@ function openSettingsRoles(index, k){
       unsaved_changes_text.innerHTML = "You have unsaved changes";
       unsaved_changes.append(unsaved_changes_text);
 
+  var button_div = document.createElement("div");
+      button_div.classList.add("button_role_reset_changes");
+
+  var reset_changes_button = document.createElement("button");
+      reset_changes_button.innerHTML = "Reset";
+      reset_changes_button.setAttribute("onclick", `openSettingsRoles(${index}, ${k})`);
+      button_div.append(reset_changes_button);
+      unsaved_changes.append(button_div);
+
   var unsaved_changes_button = document.createElement("button");
       unsaved_changes_button.innerHTML = "Apply";
-      unsaved_changes.append(unsaved_changes_button);
+      unsaved_changes_button.setAttribute("onclick", `saveRoleChanges(${index}, ${k})`);
+      button_div.append(unsaved_changes_button);
   
   var right_pannel = document.createElement("div");
       right_pannel.classList.add("roles_right_pannel");
@@ -2200,6 +2258,7 @@ function openSettingsRoles(index, k){
           name_div.classList.add("role_name_settings");
           name_div.value = deafult_role.name; 
           name_div.style.color = deafult_role.rgb; 
+          name_div.id = `${index}_name_${deafult_role.name}`;
 
       // Role Colour
       var right_pannel_seccond_section = document.createElement("div");
@@ -2210,7 +2269,9 @@ function openSettingsRoles(index, k){
       
       var color_selector = document.createElement("input");
           color_selector.setAttribute("type", "color");
-          color_selector.setAttribute("value", deafult_role.rgb)
+          color_selector.setAttribute("value", deafult_role.rgb);
+          color_selector.classList.add("colour_picker");
+          color_selector.id = `${index}_colour_${deafult_role.name}`;
 
       var color_selector_text = document.createElement("input");
           color_selector_text.classList.add("role_name_settings");
@@ -2275,8 +2336,12 @@ function openSettingsRoles(index, k){
         `manage_roles", "${deafult_role.name}`,
         deafult_role.manage_roles,
         index);
-      
-      
+
+      var delete_role_button = document.createElement("button");
+          delete_role_button.innerHTML = "Delete Role";
+          delete_role_button.setAttribute("onclick", `deleteRole(${index}, ${k})`);
+          delete_role_button.classList.add("delete_role_button");
+        
       right_pannel_first_section.append(right_title_1);
       right_pannel_first_section.append(name_div);
 
@@ -2297,6 +2362,7 @@ function openSettingsRoles(index, k){
 
       right_pannel.appendChild(role_top_partition);
       right_pannel.appendChild(right_pannel_third_section);
+      right_pannel.append(delete_role_button);
 
       right_pannel_parent.append(right_pannel);
       right_pannel_parent.append(unsaved_changes);
@@ -2347,10 +2413,37 @@ function createDocument(a,b,c,d, e){
   return administrator_access;
 }
 
+$(document).on('change', 'input[type="color"]', function() {
+  console.log($(this).val());
+  $(".role_name_settings").css("color", $(this).val());
+  var info__ = $(this)[0].id.split("_colour_");
+  var index = info__[0];
+  var role_name = info__[1];
+  temp_edit_role["rgb"] = $(this).val();
+
+  changeRole("rgb", role_name, index);
+});
+
+$(document).on('input', '.role_name_settings', function() {
+  console.log($(this).val());
+
+  var info__ = $(this)[0].id.split("_colour_");
+
+  var index = info__[0];
+  var role_name = info__[1];
+
+  temp_edit_role["name"] = $(this).val();
+
+  changeRole("name", role_name, index);
+});
+
 function changeRole(type, role_name, index) {
   //$('.role_setting_ input:checkbox:checked').length;
   //console.log(`Changing ${role_name}'s [${type}] from ${temp_edit_role[type]} ref(${temp_comp_role[type]}) to ${!temp_edit_role[type]}`);
-  temp_edit_role[type] = !temp_edit_role[type];
+  if(type !== "rgb" && type !== "name"){
+    temp_edit_role[type] = !temp_edit_role[type];
+  }
+  
   //console.log(index);
   //console.log(`? ${temp_edit_role[type]} : ${roles[index][type]}`);
 
@@ -2361,6 +2454,42 @@ function changeRole(type, role_name, index) {
     $("#roles_unsaved_changes").addClass("hidden");
     $("#roles_right_pannel").removeClass("roles_right_pannel_unsaved");
   }
+}
+
+function doesUserHavePerms(perm) {
+  var this_user = server_members.findIndex(element => element.uid == uid);
+  var users_index = server_members[this_user].info.findIndex(element => element.server == rmid);
+
+  server_members[this_user].info[users_index].roles.forEach((element) => {
+    if(element[perm]){
+      return true;
+    }
+  });
+
+  return false;
+}
+
+function saveRoleChanges(index, k){
+  showNotitfication("", "Applying Changes");
+
+  db.collection("groups/"+ rmid +"/roles").doc(temp_comp_role.name).delete().then(() => {
+    db.collection("groups/"+ rmid +"/roles").doc(temp_edit_role.name).set({
+      admin: temp_edit_role.admin,
+      audit: temp_edit_role.audit,
+      colour: temp_edit_role.color,
+      colour_rgb: temp_edit_role.rgb,
+      deafult: temp_edit_role.deafult,
+      deletable: temp_edit_role.deletable,
+      manage_channels: temp_edit_role.manage_channels,
+      manage_roles: temp_edit_role.manage_channels,
+      manage_server: temp_edit_role.manage_server,
+      name: temp_edit_role.name,
+      perm_lvl: temp_edit_role.perm_level,
+      pingable: temp_edit_role.pingable
+    }).then(() => {
+      showNotitfication("", "Changes Applied");
+    });
+  })
 }
 
 $('#member_invite').on('mouseover', '.role_div', function() {
@@ -2434,6 +2563,7 @@ function renderMemberList() {
 
   db.collection("groups/"+ rmid +"/members").get()
   .then(querySnapshot => {
+    setTimeout(renderMessages, 500);
     querySnapshot.forEach(doc => {
       var parent_div_ = document.createElement("div");
           parent_div_.id = `roler_${doc.data().userId}`;
@@ -2502,6 +2632,7 @@ function renderMemberList() {
       document.getElementById("member_managment").appendChild(parent_div_);
       $("#server_members_count").text("SERVER MEMBERS - " + server_count);
     });
+    
   });
 }
 
@@ -2694,7 +2825,7 @@ function renderMembersList() {
 
 function renderMemberList2(){
   var parent = document.getElementById("members_2");
-
+  
   while(parent.firstChild){
     parent.removeChild( parent.firstChild);
   }
