@@ -2808,6 +2808,10 @@ p strong {
   width: 40px !important;
 }
 
+.message_left img:hover {
+  cursor: pointer;
+}
+
 .role_div:hover {
   background-color: var(--background-color-compliement);
   cursor: pointer;

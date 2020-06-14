@@ -2742,6 +2742,14 @@ function addRoleToUser(user_id__, role) {
   });
 }
 
+$(document).on("mousedown", ".message_left img", function () {
+  $(this).css("transform", "translateY(1px)");
+})
+
+$(document).on("mouseup", ".message_left img", function () {
+  $(this).css("transform", "translateY(-1px)");
+})
+
 function findWithAttr(array, value) {
   for(var i = 0; i < array.length; i += 1) {
       //console.log(array[i].name, value);
