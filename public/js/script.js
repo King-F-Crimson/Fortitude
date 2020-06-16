@@ -26,6 +26,15 @@ userId_message = [];
 typing_local = [];
 empty = [];
 
+var patch_notes;
+
+if(localStorage.getItem("patch_notes")){
+  patch_notes = localStorage.getItem("patch_notes");
+}else{
+  patch_notes = true;
+  localStorage.setItem("patch_notes", patch_notes);
+}
+
 if(room === ""){
   room = "deafult";
   human_room = "Deafult";
@@ -221,6 +230,7 @@ loginForm.addEventListener('submit', (e) => {
         loginForm.querySelector(".error").innerHTML = "";
         loginForm.querySelector(".error").classList.add("hidden");
         loginForm.reset();
+        location.reload();
         loadUserInfo(user);
     }).catch(err => {
         loginForm.querySelector(".error").classList.remove("hidden");
@@ -244,21 +254,31 @@ function loadUserInfo(user) {
           users_name.text(user.displayName);
           users_hello.text("Hello, " + user.displayName + "");
       }
+      
+      console.log("Loading UI");
 
       closeLoader();
   }
 }
 
 function closeLoader(){
+
+  if(!patch_notes || patch_notes == "false"){
+    $("#patch_notes_black").hide();
+  }else{
+    patch_notes = false;
+    localStorage.setItem("patch_notes", patch_notes);
+  }
   
   setTimeout(function(){
       $("#loader").find("p").text("Having a good time!");
+      loaded = true;
       setTimeout(function(){
         $("#loader").find("p").text("Logging In");
         
         
         var docRef = db.collection("users").doc(user_id);
-        loaded = true;
+        
         docRef.get().then(function(doc) {
             if (doc.exists) {
                 
@@ -1752,8 +1772,6 @@ $("#patch_notes_black").click(function(event){
     $("#patch_notes_black").hide();
   }
 });
-
-
 
 function closeForm(){
   setTimeout(function(){
