@@ -69,6 +69,14 @@ firebase.firestore().settings({
 
 firebase.firestore().enablePersistence()
 
+const messaging = firebase.messaging();
+messaging.usePublicVapidKey("BJKm3rJ6LyCsCZW3DAtOF-7f1WPy68gR5nd81koJFVphgQrPNJR8rFmvcX9odNz8k6YvFfm_kE1tbWpldy9Q7io");
+
+messaging.onMessage((payload) => {
+  console.log('Message received. ', payload);
+  // ...
+});
+
 $("#loader").find("p").text("Connecting");
 
 const auth = firebase.auth();
@@ -156,7 +164,7 @@ signupForm.addEventListener('submit', (e) => {
             //console.log(error);
         });
         
-        username = user.displayName;
+        username = designated_dspln;
         user_email = user.email;
         user_id = user.uid;
 
@@ -168,12 +176,15 @@ signupForm.addEventListener('submit', (e) => {
             servers: [],
             username: designated_dspln
         });
+        
 
     }).then(() =>{
         signupForm.querySelector(".error").innerHTML = "";
         signupForm.querySelector(".error").classList.add("hidden");
         signupForm.reset();
         loadUserInfo(user);
+
+        location.reload();
     }).catch(err => {
         signupForm.querySelector(".error").classList.remove("hidden");
         signupForm.querySelector(".error").innerHTML = err.message;
@@ -3155,9 +3166,6 @@ function hideUserCard() {
     $("#user_card_non_bg").removeClass("scale-out-center");
 }
 
-/*
-const messaging = firebase.messaging();
-messaging.usePublicVapidKey("BJKm3rJ6LyCsCZW3DAtOF-7f1WPy68gR5nd81koJFVphgQrPNJR8rFmvcX9odNz8k6YvFfm_kE1tbWpldy9Q7io");
 
 messaging.getToken().then((currentToken) => {
   if (currentToken) {
@@ -3191,12 +3199,6 @@ messaging.onTokenRefresh(() => {
   });
 });
 
-
-messaging.onMessage((payload) => {
-  console.log('Message received. ', payload);
-  // ...
-});
-*/
 
 window.addEventListener('load', function () {
   if (window.Notification && Notification.permission !== "granted") {

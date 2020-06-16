@@ -23,18 +23,18 @@ exports.messageNotification = functions.firestore
         var adress = `groups/${context.params.serverId}/messages/${context.params.messageId}`;
         console.log(adress);
 
-        /*
+        
         const payload = {
             notification: {
               title: 'Notification!',
-              body: `${follower.displayName} is now following you.`,
-              icon: follower.photoURL
+              body: `Someone is now following you.`,
+              icon: "https://firebasestorage.googleapis.com/v0/b/fortitude-0.appspot.com/o/userIcons%2F356KAy0ZZdfBJBbIvmotAos5NJU2.jpg?alt=media&token=c8785c3f-7192-4ac2-a0d6-b0d3a1ac4fb0"
             }
-          };*/
+          };
 
-        //return admin.messaging().send(payload);
+        return admin.messaging().send(payload);
 
-        return 1;
+        //return 1;
     });
 
 
