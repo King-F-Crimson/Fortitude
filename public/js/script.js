@@ -228,34 +228,40 @@ loginForm.addEventListener('submit', (e) => {
     });
 });
 
+var loaded = false;
 
 function loadUserInfo(user) {
-    var userInfo_div = $("#user");
-    var users_name = userInfo_div.find("h4");
-    var user_code = userInfo_div.find("h6");
-    var users_hello = $("#lobby").find("h1");
+  if(!loaded){
+      var userInfo_div = $("#user");
+      var users_name = userInfo_div.find("h4");
+      var user_code = userInfo_div.find("h6");
+      var users_hello = $("#lobby").find("h1");
 
-    if(!user) {
-        users_name.text("Logged Out");
-        users_hello.text("Logged Out");
-    }else {
-        users_name.text(user.displayName);
-        users_hello.text("Hello, " + user.displayName + "");
-    }
+      if(!user) {
+          users_name.text("Logged Out");
+          users_hello.text("Logged Out");
+      }else {
+          users_name.text(user.displayName);
+          users_hello.text("Hello, " + user.displayName + "");
+      }
 
-    closeLoader();
+      closeLoader();
+  }
 }
 
 function closeLoader(){
+  
   setTimeout(function(){
       $("#loader").find("p").text("Having a good time!");
       setTimeout(function(){
         $("#loader").find("p").text("Logging In");
         
+        
         var docRef = db.collection("users").doc(user_id);
-
+        loaded = true;
         docRef.get().then(function(doc) {
             if (doc.exists) {
+                
                 //console.log("Document data:", doc.data());
 
                 for(var i = 0; i < doc.data().servers.length; i++){
@@ -267,6 +273,7 @@ function closeLoader(){
             }
 
            createServerNav();
+           
             
         }).catch(function(error) {
             //console.log("Error getting document:", error);
@@ -282,6 +289,7 @@ function closeLoader(){
 }
 
 function createServerNav(){
+  
   for(var i = 0; i < connectable_servers.length; i++){
     var serverRef = db.collection("groups").doc(connectable_servers[i]);
 
@@ -1498,6 +1506,7 @@ function renderMessages(){
           if(authors[i - 1] === authors[i] && samecount < 10){
                 var message2 = document.createElement("p");
                     message2.innerHTML = messages[i];
+                    divider.style.paddingLeft = "33px";
                   
                 divider.append(message2);
                 samecount++;
