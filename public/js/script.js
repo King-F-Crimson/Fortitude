@@ -22,6 +22,7 @@ var dm_users_id = "";
 messages = [];
 authors = [];
 dates = [];
+complete_date = [];
 userId_message = [];
 typing_local = [];
 empty = [];
@@ -467,7 +468,7 @@ function sendMessage() {
       if(room !== "lobby_link"){
         let autoID = db.collection("groups/"+ rmid +"/messages").doc().id;
 
-        db.collection("groups/"+ rmid +"/messages").doc(autoID).set({
+        db.collection("groups/"+ rmid +"/channels/" + channel + "/messages").doc(autoID).set({
           sender: username,
           senderId: user_id,
           message: msg,
@@ -533,8 +534,8 @@ function loadDM(){
   document.getElementById("header").style.backgroundImage = "linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0)), url('" + "https://media3.giphy.com/media/b29IZK1dP4aWs/giphy.gif" + "')";
   
   $("#serverName").text("Direct Messages");
-  $("#connected_channel").text("Direct Messages");
-  $("#connected_channel_desc").hide();
+  $("#channel_con").text("Direct Messages");
+  $("#channel_con_des").hide();
   $("#toggle_members").hide();
 
   $("#channels").hide();
@@ -707,16 +708,16 @@ function  showFriendsList() {
   $("#serverMoreInfo").hide();
 
   $("#serverName").text("Direct Messages");
-  $("#connected_channel").text("Direct Messages");
-  $("#connected_channel_desc").hide();
+  $("#channel_con").text("Direct Messages");
+  $("#channel_con_des").hide();
   $("#toggle_members").hide();
 
   $("#channels").hide();
   $("#members").hide();
   $("#DM").show();
 
-  $("#connected_channel").innerHTML = "Friends";
-  $("#connected_channel_desc").hide();
+  $("#channel_con").innerHTML = "Friends";
+  $("#channel_con_des").hide();
 
   $("#friends").show();
   $("#lobby").hide();
@@ -824,16 +825,16 @@ function loadLobby() {
   $("#serverMoreInfo").hide();
 
   $("#serverName").text("Direct Messages");
-  $("#connected_channel").text("Direct Messages");
-  $("#connected_channel_desc").hide();
+  $("#channel_con").text("Direct Messages");
+  $("#channel_con_des").hide();
   $("#toggle_members").hide();
 
   $("#channels").hide();
   $("#members").hide();
   $("#DM").show();
 
-  $("#connected_channel").text("Friends");
-  $("#connected_channel_desc").hide();
+  $("#channel_con").text("Friends");
+  $("#channel_con_des").hide();
 
   $("#friends").hide();
   $("#lobby").show();
@@ -872,10 +873,8 @@ $("body").on("click",'div[name*="server_item"]',function(){
       joinServer(this.id);
 
       //console.log("JOINING " + this.id);
-      $("#connected_channel").text(room);
-      $("#connected_channel_desc").show();
+      $("#channel_con_des").show();
       $("#toggle_members").show();
-      $("#connected_channel_desc").text("wow betta change that!");
     }
 });
 
@@ -1153,32 +1152,31 @@ function createServer(serverName){
 
     var now = new Date();
 
-    db.collection("groups/"+ autoID +"/messages").doc("1").set({
-        sender: "Server",
-        senderId: "1",
-        message: "Welcome to <strong>" + serverName + "</strong>.",
-        timestamp: now
+    var new_auto_id = db.collection("groups/"+ autoID +"/channels/").doc().id;
+
+    db.collection("groups/"+ autoID +"/channels").doc(new_auto_id).set({
+      deafult: true,
+      desc: "A New Channel",
+      name: "New Channel",
+      type: "text"
     }).then(function() {
-        //console.log("Server created!");
-
-        var user_servers = db.collection("users").doc(user_id);
-        //console.log(user_servers.servers);
-
-        //var docRef = db.collection("users").doc(user_id);
-
-        //docRef.get()
-        
-        
-        return user_servers.update({
-          servers: firebase.firestore.FieldValue.arrayUnion(autoID)
-        })
+      db.collection("groups/"+ autoID +"/channels/" + new_auto_id + "/messages").doc("1").set({
+          sender: "Server",
+          senderId: "1",
+          message: "Welcome to <strong>" + serverName + "</strong>.",
+          timestamp: now
+      }).then(function() {
+          var user_servers = db.collection("users").doc(user_id);
+          return user_servers.update({
+            servers: firebase.firestore.FieldValue.arrayUnion(autoID)
+          })
+      });
     });
 
     db.collection("groups/"+ autoID +"/members").doc(user_id).set({
       userId: user_id,
       username: username
     }).then(function() {
-      //console.log("Server's Users Set!");
     });
 
     db.collection("groups/"+ autoID +"/roles").doc("owner").set({
@@ -1213,11 +1211,9 @@ function createServer(serverName){
       //console.log("Server's Roles Setup!");
 
       var user_roles = db.collection("groups/" + autoID + "/members").doc(user_id);
-
       return user_roles.update({
         roles: firebase.firestore.FieldValue.arrayUnion("owner", "all")
       })
-
     });
 
     createServerNav();
@@ -1286,12 +1282,16 @@ function loadServerID(room_id_element){
     }); 
 }
 
+var channel;
+var channel_info;
+
 function joinServer(room_id_element){
     removeDuplicates();
     $("#deafult_ui_loading_category_").show();
     $("#members_2").hide();
 
     var appart = false;
+    
 
     db.collection("groups/"+ room_id_element +"/members").get()
     .then(querySnapshot => {
@@ -1306,16 +1306,75 @@ function joinServer(room_id_element){
           return;
         }
     
-
     while(role_names.length > 1){
       role_names.pop();
     }
 
-    
+    $("#channel_con").text("");
+    $("#channel_con_des").text("");
+
+    db.collection("groups/" + room_id_element + "/channels")
+    .orderBy("deafult", "asc").get() 
+    .then(querySnapshot => {
+      querySnapshot.forEach(doc => {
+        console.log(doc.data());
+
+        channel = doc.id;
+        channel_info = doc.data();
+
+        $("#channel_con").text(channel_info.name);
+        $("#channel_con_des").text(channel_info.desc);
+        console.log(channel_info.name, channel_info.desc);
+
+        
+
+        if(rmid){
+          db.collection("groups/"+ rmid + "/channels/" + channel + "/messages").orderBy("timestamp", "desc").limit(100).get()
+          .then(querySnapshot => {
+              querySnapshot.forEach(doc => {
+                  sender = doc.data().sender;
+                  authors.push(doc.data().sender);
+                  senderIdentification = doc.data().senderId;
+                  userId_message.push(doc.data().senderId);
+                  msge = doc.data().message;
+                  messages.push(doc.data().message);
+                  time = formatDate(doc.data().timestamp.toDate());
+                  dates.push(formatDate(doc.data().timestamp.toDate()));
+                  complete_date.push(doc.data().timestamp.toDate());
+                  var someElementsItems = document.querySelectorAll(".user_refrence");
+              });
+  
+              authors.reverse();
+              userId_message.reverse();
+              messages.reverse();
+              dates.reverse();
+  
+              updateMessages("null");
+              updateTyping();
+          });
+  
+          db.collection("groups/"+ rmid +"/roles").get()
+          .then(querySnapshot => {
+              querySnapshot.forEach(doc => {
+                  var dep_role = {name: doc.id, color: doc.data().colour, rgb: doc.data().colour_rgb, perm_level: doc.data().perm_lvl, admin: doc.data().admin, audit: doc.data().audit, manage_server: doc.data().manage_server, manage_roles: doc.data().manage_roles, manage_channels: doc.data().manage_channels, pingable: doc.data().pingable, deletable: doc.data().deletable, deafult: doc.data().deafult };
+                  roles.push(dep_role);
+                  role_names.push(doc.id)
+              });
+  
+              roles.sort((a, b) => (a.perm_level > b.perm_level) ? -1 : 1)
+  
+              renderMembersList();
+          });      
+        }
+      })   
+      
+      renderChannels();
+    });
 
     $("#serverMoreInfo").show();
     
     rmid = room_id_element;
+    
     var servername;
     var serverRef = db.collection("groups").doc(rmid);
 
@@ -1338,46 +1397,7 @@ function joinServer(room_id_element){
     var time = "";
     var senderIdentification = "";
 
-    if(rmid){
-        db.collection("groups/"+ rmid +"/messages").orderBy("timestamp", "desc").limit(100).get()
-        .then(querySnapshot => {
-            querySnapshot.forEach(doc => {
-                sender = doc.data().sender;
-                authors.push(doc.data().sender);
-                senderIdentification = doc.data().senderId;
-                userId_message.push(doc.data().senderId);
-                msge = doc.data().message;
-                messages.push(doc.data().message);
-                time = formatDate(doc.data().timestamp.toDate());
-                dates.push(formatDate(doc.data().timestamp.toDate()));
-                var someElementsItems = document.querySelectorAll(".user_refrence");
-            });
-
-            authors.reverse();
-            userId_message.reverse();
-            messages.reverse();
-            dates.reverse();
-
-            updateMessages("null");
-            updateTyping();
-        });
-
-        db.collection("groups/"+ rmid +"/roles").get()
-        .then(querySnapshot => {
-            querySnapshot.forEach(doc => {
-                var dep_role = {name: doc.id, color: doc.data().colour, rgb: doc.data().colour_rgb, perm_level: doc.data().perm_lvl, admin: doc.data().admin, audit: doc.data().audit, manage_server: doc.data().manage_server, manage_roles: doc.data().manage_roles, manage_channels: doc.data().manage_channels, pingable: doc.data().pingable, deletable: doc.data().deletable, deafult: doc.data().deafult };
-                roles.push(dep_role);
-                role_names.push(doc.id)
-            });
-
-            roles.sort((a, b) => (a.perm_level > b.perm_level) ? -1 : 1)
-
-            renderMembersList();
-            
-        });
-
-        
-    }
+    
 
     if(room_id_element){
         $("#" + room_id_element).find("span").removeClass("pill_hidden");
@@ -1387,6 +1407,39 @@ function joinServer(room_id_element){
 
     var image_src = $("#" + room_id_element).find("img").attr('src');
     document.getElementById("header").style.backgroundImage = "linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0)), url('" + image_src + "')";
+  });
+}
+
+function renderChannels() {
+  while(document.getElementById("channels").firstChild){
+    document.getElementById("channels").removeChild(document.getElementById("channels").firstChild);
+  }
+
+  db.collection("groups/" + rmid + "/channels")
+  .orderBy("deafult", "desc").get() 
+  .then(querySnapshot => {
+    querySnapshot.forEach((doc) => {
+      console.log(doc.data());
+
+      var new_channel = document.createElement("div");
+          new_channel.classList.add("server_channel");
+
+      var new_channel_hashtag = document.createElement("i");
+          new_channel_hashtag.classList.add("fa");
+          new_channel_hashtag.classList.add("fa-hashtag");
+          new_channel.appendChild(new_channel_hashtag);
+
+      var new_channel_text = document.createElement("p");
+          new_channel_text.innerHTML  = doc.data().name;
+          new_channel.appendChild(new_channel_text);
+
+      var new_channel_settings = document.createElement("i");
+          new_channel_settings.classList.add("fa");
+          new_channel_settings.classList.add("fa-gear");
+          new_channel.appendChild(new_channel_settings);
+          
+      document.getElementById("channels").appendChild(new_channel);
+    });
   });
 }
 
@@ -1408,7 +1461,7 @@ function renderMessages(){
           divider2.classList.add("message_left");
 
       var m = server_members.findIndex(element => element.name == authors[i]);
-      console.log(server_members[m]);
+      //console.log(server_members[m]);
       /*
       var location = server_members[i].info.findIndex(element => element.server == room);
       console.log(server_members[m].info[location]);
@@ -1705,15 +1758,14 @@ function updateTyping(){
 
 function updateMessages(usersid){
   if(room !== "lobby_link"){
-    db.collection("groups").doc(rmid).collection("messages").orderBy("timestamp", "desc").limit(1)
+    db.collection("groups/" + rmid + "/channels/" + channel + "/messages").orderBy("timestamp", "desc").limit(1)
     .onSnapshot(function(querySnapshot) {
       //console.log("new one down the pipe!");
       querySnapshot.forEach(function(doc) {
+          //console.log(doc.data().timestamp.toDate().toString() == complete_date[0].toString());
 
-          var leng = messages.length - 1;
-
-          if(doc.data().message == messages[leng]){
-
+          if(doc.data().timestamp.toDate().toString() == complete_date[0].toString()){ 
+            
           }else{
             //console.log(doc.data().message + " | " + messages[leng]);
             //console.log(doc.data().timestamp + " | " + dates[leng]);
@@ -1729,6 +1781,7 @@ function updateMessages(usersid){
             //console.log(msge);
             time = formatDate(doc.data().timestamp.toDate());
             dates.push(formatDate(doc.data().timestamp.toDate()));
+            complete_date.push(doc.data().timestamp.toDate());
           }
       });
 
@@ -3193,6 +3246,7 @@ function hideUserCard() {
     $("#user_card_non_bg").removeClass("scale-out-center");
 }
 
+/*
 
 messaging.getToken().then((currentToken) => {
   if (currentToken) {
@@ -3226,6 +3280,7 @@ messaging.onTokenRefresh(() => {
   });
 });
 
+*/
 
 window.addEventListener('load', function () {
   if (window.Notification && Notification.permission !== "granted") {

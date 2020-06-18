@@ -20,6 +20,7 @@ A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
 - Html Links (https://www.youtube.com) w/ underscore and blue test coloring + [openinnewtab] in Messages
 - Channels
 - VOIP
+[•] !- Nodifications (Delayed)
 
 ### Working On
 - Manage Members Popup Functionality (Requests, Role Managment and Invites)
@@ -39,12 +40,14 @@ A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
 ### Added
 [✓] - Ability to Create Roles
 [✓] - Ability to Assign Roles to Users
-[•] - Role Permissions
+[✓] - Role Permissions
         Issue to adress: When changing role name, the refrence on the database has a name which is different to the changed name. 
         Even when doing so, the line 1330 the name is set to the Id of the role, this means that the array on the personals database
         is not the same name as refrenced by the role name on the server. For this reason, you cannot chanage the name of the server for now.
 
-[•] !- Nodifications (Delayed)
+[•] - Fixes & Adjustments
+        - Calcuate permission level based on given atributes (up to 9)
+        - 
 }
 
 ============= [Released] =============

@@ -190,12 +190,11 @@ img {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: var(--background-color-primary);
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
 
-  background-image: url(https://i.redd.it/y1ostvqnr4711.jpg);
+  background-image: url(../branding/auth.jpg);
   background-repeat: no-repeat;
 }
 
@@ -242,7 +241,8 @@ body {
   overflow: visible;
   left: 0;
   top: 5%;
-  margin-top: 4.8%;
+  margin-top: 2.3%;
+  padding-top: 2%;
   z-index: 998;
   color: var(--text-color);
   height: 100vh;
@@ -1478,7 +1478,7 @@ height: 100% !important;
 }
 
 #top_bar {
-  background-color: var(--background-color-primary);
+  background-color: var(--background-color-seccondary);
   color: var(--text-color);
   position: fixed;
   z-index: 9;
@@ -1487,10 +1487,6 @@ height: 100% !important;
   padding: 0.5vh;
   top: 0;
   right: 0;
-
-  -webkit-box-shadow: 10px 10px 37px -18px rgba(48, 48, 48, 1);
-  -moz-box-shadow: 10px 10px 37px -18px rgba(48, 48, 48, 1);
-  box-shadow: 10px 10px 37px -18px rgba(48, 48, 48, 1);
 }
 
 #top_bar h1 {
@@ -1687,6 +1683,31 @@ p strong {
     -webkit-transform-origin: 50% 0%;
             transform-origin: 50% 0%;
   }
+}
+
+.server_channel {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  align-content: center;
+  color: rgba(255,255,255,0.4);
+
+  margin-right: 5%;
+  margin-left: 5%;
+
+  padding-left: 5%;
+
+  height: 5%;
+  border-radius: 5px;
+}
+
+.server_channel:first-of-type {
+  margin-top: 5%;
+}
+
+.server_channel:hover {
+  background-color: var(--background-color-primary);
+  cursor: pointer;
 }
 
 #leave_server_button p:hover {
