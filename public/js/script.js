@@ -122,6 +122,7 @@ auth.onAuthStateChanged(user => {
             var storageRef = firebase.storage().ref("userIcons/").child(image_source).getDownloadURL().then(function(url) {
               ur2 = url;
               server_members.push({name: username, info: [], uid: user_id, icon: url});
+              $("#user_name_img").attr("src", url);
 
               removeDuplicates();
 
@@ -243,6 +244,7 @@ var loaded = false;
 
 function loadUserInfo(user) {
   if(!loaded){
+    
       var userInfo_div = $("#user");
       var users_name = userInfo_div.find("h4");
       var user_code = userInfo_div.find("h6");
@@ -648,6 +650,7 @@ function loadConvo(usersid, usersname_dm) {
       serverMembers.pop();
       roles.pop();
       rolecolours.pop();
+      complete_date.pop();
     }
 
     $(".dm_element_active").removeClass("dm_element_active");
@@ -1236,7 +1239,7 @@ function leaveRoom(){
       serverMembers.pop();
       roles.pop();
       rolecolours.pop();
-      
+      complete_date.pop();
     }
 }
 
@@ -1291,7 +1294,6 @@ function joinServer(room_id_element){
     $("#members_2").hide();
 
     var appart = false;
-    
 
     db.collection("groups/"+ room_id_element +"/members").get()
     .then(querySnapshot => {
@@ -1324,35 +1326,11 @@ function joinServer(room_id_element){
 
         $("#channel_con").text(channel_info.name);
         $("#channel_con_des").text(channel_info.desc);
-        console.log(channel_info.name, channel_info.desc);
+        //console.log(channel_info.name, channel_info.desc);
 
-        
+        joinChannel(channel)
 
         if(rmid){
-          db.collection("groups/"+ rmid + "/channels/" + channel + "/messages").orderBy("timestamp", "desc").limit(100).get()
-          .then(querySnapshot => {
-              querySnapshot.forEach(doc => {
-                  sender = doc.data().sender;
-                  authors.push(doc.data().sender);
-                  senderIdentification = doc.data().senderId;
-                  userId_message.push(doc.data().senderId);
-                  msge = doc.data().message;
-                  messages.push(doc.data().message);
-                  time = formatDate(doc.data().timestamp.toDate());
-                  dates.push(formatDate(doc.data().timestamp.toDate()));
-                  complete_date.push(doc.data().timestamp.toDate());
-                  var someElementsItems = document.querySelectorAll(".user_refrence");
-              });
-  
-              authors.reverse();
-              userId_message.reverse();
-              messages.reverse();
-              dates.reverse();
-  
-              updateMessages("null");
-              updateTyping();
-          });
-  
           db.collection("groups/"+ rmid +"/roles").get()
           .then(querySnapshot => {
               querySnapshot.forEach(doc => {
@@ -1367,8 +1345,8 @@ function joinServer(room_id_element){
           });      
         }
       })   
-      
-      renderChannels();
+     
+      renderChannels(channel);
     });
 
     $("#serverMoreInfo").show();
@@ -1410,7 +1388,7 @@ function joinServer(room_id_element){
   });
 }
 
-function renderChannels() {
+function renderChannels(channel) {
   while(document.getElementById("channels").firstChild){
     document.getElementById("channels").removeChild(document.getElementById("channels").firstChild);
   }
@@ -1418,11 +1396,17 @@ function renderChannels() {
   db.collection("groups/" + rmid + "/channels")
   .orderBy("deafult", "desc").get() 
   .then(querySnapshot => {
+    $(".active").removeClass("active");
+
     querySnapshot.forEach((doc) => {
-      console.log(doc.data());
+      //console.log(doc.data());
 
       var new_channel = document.createElement("div");
           new_channel.classList.add("server_channel");
+          new_channel.setAttribute("draggable", "true");
+          new_channel.id = `channel_${doc.id}`;
+      
+          if(doc.id == channel) new_channel.classList.add("active");
 
       var new_channel_hashtag = document.createElement("i");
           new_channel_hashtag.classList.add("fa");
@@ -1443,10 +1427,81 @@ function renderChannels() {
   });
 }
 
+function joinChannel(channel_id){ 
+  while(document.getElementById("message-container").firstChild){
+    document.getElementById("message-container").removeChild( document.getElementById("message-container").firstChild);
+  }
+
+  while(messages.length > 0) {
+    messages.pop();
+    authors.pop();
+    dates.pop();
+    userId_message.pop();
+    serverMembers.pop();
+    roles.pop();
+    rolecolours.pop();
+    complete_date.pop();
+  }
+
+  $("#channel_con").text("");
+  $("#channel_con_des").text("");
+
+  if(unsubscribe) unsubscribe();   // FUCKING UNSUBSCRIBE GODDAMIT
+
+  db.collection("groups/" + rmid + "/channels").doc(channel_id).get() 
+    .then(querySnapshot => {
+      console.log(querySnapshot._document.proto.fields);
+
+      channel = querySnapshot.id;
+      channel_info = {deafult: querySnapshot._document.proto.fields.deafult.booleanValue, desc: querySnapshot._document.proto.fields.desc.stringValue, name: querySnapshot._document.proto.fields.name.stringValue, type: querySnapshot._document.proto.fields.type.stringValue};
+      document.title = `#${channel_info.name.toLowerCase()}`; // Change # for type
+
+      $("#channel_con").text(channel_info.name);
+      $("#channel_con_des").text(channel_info.desc);
+    });
+
+  if(rmid){
+    db.collection("groups/"+ rmid + "/channels/" + channel_id + "/messages").orderBy("timestamp", "desc").limit(100).get()
+    .then(querySnapshot => {
+        querySnapshot.forEach(doc => {
+            sender = doc.data().sender;
+            authors.push(doc.data().sender);
+            senderIdentification = doc.data().senderId;
+            userId_message.push(doc.data().senderId);
+            msge = doc.data().message;
+            messages.push(doc.data().message);
+            time = formatDate(doc.data().timestamp.toDate());
+            dates.push(formatDate(doc.data().timestamp.toDate()));
+            complete_date.push(doc.data().timestamp.toDate());
+            var someElementsItems = document.querySelectorAll(".user_refrence");
+        });
+
+        authors.reverse();
+        userId_message.reverse();
+        messages.reverse();
+        dates.reverse();
+
+        updateMessages("null");
+        updateTyping();
+    });
+  }
+
+  $("#serverMoreInfo").show();
+}
+
+$("#channels").on("click", "div", function() {
+  var clicked_ = $(this)[0].id.replace("channel_", "");
+  $(".active").removeClass("active");
+  $(this).addClass("active");
+  unsubscribe(); 
+  joinChannel(clicked_);
+});
+
 function renderMessages(){
     while(document.getElementById("message-container").firstChild){
       document.getElementById("message-container").removeChild( document.getElementById("message-container").firstChild);
     }
+
     var someElementsItems = document.querySelectorAll(".user_refrence");
     var samecount = 0;
 
@@ -1756,14 +1811,26 @@ function updateTyping(){
     }
 }
 
-function updateMessages(usersid){
-  if(room !== "lobby_link"){
-    db.collection("groups/" + rmid + "/channels/" + channel + "/messages").orderBy("timestamp", "desc").limit(1)
+function testerFunction() {
+  db.collection("groups/")
     .onSnapshot(function(querySnapshot) {
       //console.log("new one down the pipe!");
       querySnapshot.forEach(function(doc) {
-          //console.log(doc.data().timestamp.toDate().toString() == complete_date[0].toString());
+          console.log(doc);
+      });
+    });
+}
 
+var unsubscribe;
+
+function updateMessages(usersid){
+  
+  
+  if(room !== "lobby_link"){
+    unsubscribe = db.collection("groups/" + rmid + "/channels/" + channel + "/messages").orderBy("timestamp", "desc").limit(1)
+    .onSnapshot(function(querySnapshot) {
+      //console.log("new one down the pipe!");
+      querySnapshot.forEach(function(doc) {
           if(doc.data().timestamp.toDate().toString() == complete_date[0].toString()){ 
             
           }else{
@@ -1782,13 +1849,14 @@ function updateMessages(usersid){
             time = formatDate(doc.data().timestamp.toDate());
             dates.push(formatDate(doc.data().timestamp.toDate()));
             complete_date.push(doc.data().timestamp.toDate());
+            console.log(msge);
           }
       });
 
       renderMessages();
     });
   }else {
-    db.collection("users/" + user_id + "/direct_messages/" + usersid + "/messages").orderBy("timestamp", "desc").limit(1)
+    unsubscribe = db.collection("users/" + user_id + "/direct_messages/" + usersid + "/messages").orderBy("timestamp", "desc").limit(1)
     .onSnapshot(function(querySnapshot) {
       //console.log("new one down the pipe!");
       querySnapshot.forEach(function(doc) {
@@ -2265,7 +2333,9 @@ var temp_edit_role;
 var temp_comp_role;
 
 function openSettingsRoles(index, k){
-  if(k == 0){
+  
+  console.log(k);
+  if(document.getElementById("roles_right_pannel_parent")){
     document.getElementById("role_sett_div").removeChild(document.getElementById("roles_right_pannel_parent"));
   }
   

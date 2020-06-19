@@ -36,7 +36,7 @@ A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
 
 ============= [Releasing] =============
 
-=== { Pre-Alpha 1.2937 - [15/05/2020] ~Notifications + Roles v2~
+=== { Pre-Alpha 1.2937 - [15/05/2020] ~Roles v2 + Channels~
 ### Added
 [✓] - Ability to Create Roles
 [✓] - Ability to Assign Roles to Users
@@ -45,9 +45,11 @@ A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
         Even when doing so, the line 1330 the name is set to the Id of the role, this means that the array on the personals database
         is not the same name as refrenced by the role name on the server. For this reason, you cannot chanage the name of the server for now.
 
+[•] - Server Channels
+[•] - Messages UI Update (Icon Displayed and Flexbox Rendering)
 [•] - Fixes & Adjustments
         - Calcuate permission level based on given atributes (up to 9)
-        - 
+        - Make Roles have an ID Based System
 }
 
 ============= [Released] =============
