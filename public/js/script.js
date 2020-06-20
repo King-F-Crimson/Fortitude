@@ -736,9 +736,17 @@ function loadFriendsList(){
     document.getElementById("friends").removeChild(document.getElementById("friends").firstChild);
   }
 
+  var server_member_manage_top = document.createElement("div");
+  var friend_count = 0;
+  var friends_title = document.createElement("h4");
+      friends_title.id = "friends_count";
+
+  var friends_div = document.createElement("div");
+
   db.collection("users/"+ user_id +"/friends").orderBy("latest_interaction", "desc").get()
     .then(querySnapshot => {
         querySnapshot.forEach(doc => {
+          friend_count++;
           //console.log(doc.data());
           usernames.push(doc.data().name);
           userids.push(doc.id);
@@ -788,12 +796,17 @@ function loadFriendsList(){
               
               parent_div.append(user_icon);
               parent_div.append(userstext);
-              document.getElementById("friends").append(parent_div);
-              
+              friends_div.append(parent_div);
             });                 
           });
           setTimeout(loadingFriends = true, 1000);
         });
+
+        friends_title.innerHTML = `Friends - ${friend_count}`;
+        friends_title.classList.add("friend");
+        
+        friends_div.append(friends_title);
+        document.getElementById("friends").append(friends_div);
     });   
 }
 
@@ -1446,8 +1459,6 @@ function joinChannel(channel_id){
   $("#channel_con").text("");
   $("#channel_con_des").text("");
 
-  if(unsubscribe) unsubscribe();   // FUCKING UNSUBSCRIBE GODDAMIT
-
   db.collection("groups/" + rmid + "/channels").doc(channel_id).get() 
     .then(querySnapshot => {
       console.log(querySnapshot._document.proto.fields);
@@ -1480,7 +1491,7 @@ function joinChannel(channel_id){
         userId_message.reverse();
         messages.reverse();
         dates.reverse();
-
+        
         updateMessages("null");
         updateTyping();
     });
@@ -1489,12 +1500,17 @@ function joinChannel(channel_id){
   $("#serverMoreInfo").show();
 }
 
+function closeListener() {
+  unsubscribe(); 
+}
+
 $("#channels").on("click", "div", function() {
   var clicked_ = $(this)[0].id.replace("channel_", "");
   $(".active").removeClass("active");
   $(this).addClass("active");
-  unsubscribe(); 
+  
   joinChannel(clicked_);
+  
 });
 
 function renderMessages(){
@@ -1824,9 +1840,11 @@ function testerFunction() {
 var unsubscribe;
 
 function updateMessages(usersid){
-  
-  
   if(room !== "lobby_link"){
+    if(unsubscribe){
+      unsubscribe();   // FUCKING UNSUBSCRIBE GODDAMIT
+    } 
+
     unsubscribe = db.collection("groups/" + rmid + "/channels/" + channel + "/messages").orderBy("timestamp", "desc").limit(1)
     .onSnapshot(function(querySnapshot) {
       //console.log("new one down the pipe!");
