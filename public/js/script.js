@@ -802,7 +802,7 @@ function loadFriendsList(){
           setTimeout(loadingFriends = true, 1000);
         });
 
-        friends_title.innerHTML = `Friends - ${friend_count}`;
+        friends_title.innerHTML = `FRIENDS - ${friend_count}`;
         friends_title.classList.add("friend");
         
         friends_div.append(friends_title);
@@ -2155,8 +2155,8 @@ function getRequests() {
       }
 
       if(have == 0){
-        var fail_to_create = document.createElement("h1");
-            fail_to_create.innerHTML = "No Requests :(";
+        var fail_to_create = document.createElement("img");
+            fail_to_create.src = "./branding/empty.svg";
         
         document.getElementById("member_requests").append(fail_to_create);
       }

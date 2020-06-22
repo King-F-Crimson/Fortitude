@@ -275,6 +275,7 @@ input:focus {
 }
 
 #message-container {
+  margin-top: 4%;
   overflow-x: hidden;
   grid-area: main;
   overflow: auto;
@@ -283,6 +284,10 @@ input:focus {
   width: 72vw;
   padding-bottom: 4%;
   transition: 0.55s cubic-bezier(.52,.23,.6,1.77) all;
+}
+
+#message-contatiner > div:last-child {
+  padding-bottom: 50px;
 }
 
 #message-continer div {
@@ -1295,8 +1300,12 @@ height: 100% !important;
 }
 
 #friends > div > h4 {
+  font-size: 0.7em;
+  opacity: 0.6;
+
   display: flex;
   margin-bottom: 0px;
+  text-transform: capitalize;  
 }
 
 #friends > div > h4:hover {
@@ -1793,6 +1802,7 @@ p strong {
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   font-family: DeafultUi;
+  padding-left: 4% !important;
 }
 
 .server_channel.active {
@@ -2348,6 +2358,11 @@ p strong {
   grid-row: 2;
   border-radius: 5px;
   background-color: var(--background-color-seccondary);
+}
+
+#member_requests img {
+  height: 100%;
+  width: 100%;
 }
 
 #member_managment {

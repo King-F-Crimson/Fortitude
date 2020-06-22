@@ -46,6 +46,10 @@ A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
         is not the same name as refrenced by the role name on the server. For this reason, you cannot chanage the name of the server for now.
 
 [•] - Server Channels
+        [✓] - Messaging and Backbone  + OnServerCreate and UI
+        [•] - Creatable
+        [•] - Deletable & Settings
+
 [•] - Messages UI Update (Icon Displayed and Flexbox Rendering)
 [•] - Fixes & Adjustments
         - Calcuate permission level based on given atributes (up to 9)
