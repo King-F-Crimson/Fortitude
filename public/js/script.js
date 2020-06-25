@@ -1340,9 +1340,8 @@ function joinServer(room_id_element){
         $("#channel_con").text(channel_info.name);
         $("#channel_con_des").text(channel_info.desc);
         //console.log(channel_info.name, channel_info.desc);
-
-        joinChannel(channel)
-
+      })  
+      
         if(rmid){
           db.collection("groups/"+ rmid +"/roles").get()
           .then(querySnapshot => {
@@ -1357,7 +1356,8 @@ function joinServer(room_id_element){
               renderMembersList();
           });      
         }
-      })   
+       
+      joinChannel(channel);
      
       renderChannels(channel);
     });
@@ -1433,6 +1433,7 @@ function renderChannels(channel) {
       var new_channel_settings = document.createElement("i");
           new_channel_settings.classList.add("fa");
           new_channel_settings.classList.add("fa-gear");
+          new_channel_settings.classList.add("channel_setting");
           new_channel.appendChild(new_channel_settings);
           
       document.getElementById("channels").appendChild(new_channel);
@@ -1444,6 +1445,17 @@ function joinChannel(channel_id){
   while(document.getElementById("message-container").firstChild){
     document.getElementById("message-container").removeChild( document.getElementById("message-container").firstChild);
   }
+
+  $(function() {
+    $("#channels").sortable({
+        connectWith: "#channels",
+        items: "div.server_channel",
+
+        change: function(event, ui) {
+          ui.placeholder.css({visibility: 'visible', border : '1px solid var(--online)', backgroundColor : 'var(--online)'});
+        }
+    }).disableSelection();
+});
 
   while(messages.length > 0) {
     messages.pop();
@@ -1500,6 +1512,36 @@ function joinChannel(channel_id){
   $("#serverMoreInfo").show();
 }
 
+$("#server_channel_create").on("click", () => {
+  createChannel();
+});
+
+function createChannel(){
+  if(doesUserHavePerms('manage_channels')){
+    var now = new Date();
+    var new_auto_id = db.collection("groups/"+ rmid +"/channels/").doc().id;
+    
+    db.collection("groups/"+ rmid +"/channels").doc(new_auto_id).set({
+      deafult: true,
+      desc: "A New Channel",
+      name: "new-channel",
+      type: "text"
+    }).then(function() {
+      db.collection("groups/"+ rmid +"/channels/" + new_auto_id + "/messages").doc("1").set({
+          sender: "Server",
+          senderId: "1",
+          message: "Welcome to <strong> new-channel </strong>.",
+          timestamp: now
+      });
+
+      showNotitfication("", "Channel Created");
+    });
+    
+  }else{
+    showNotitfication("", "An Error Occured");
+  }
+}
+
 function closeListener() {
   unsubscribe(); 
 }
@@ -1511,6 +1553,10 @@ $("#channels").on("click", "div", function() {
   
   joinChannel(clicked_);
   
+});
+
+$("#channels").on("click", ".channel_setting", function() {
+  showNotitfication("", "IT HAS BEEN CHOSEN");
 });
 
 function renderMessages(){
@@ -2635,17 +2681,22 @@ function changeRole(type, role_name, index) {
   }
 }
 
-function doesUserHavePerms(perm) {
-  var this_user = server_members.findIndex(element => element.uid == uid);
+function doesUserHavePerms(perm){
+  var this_user = server_members.findIndex(element => element.uid == user_id);
   var users_index = server_members[this_user].info.findIndex(element => element.server == rmid);
+  var failure = false;
 
   server_members[this_user].info[users_index].roles.forEach((element) => {
-    if(element[perm]){
-      return true;
-    }
+    //console.log(element);
+    //console.log(element[perm]);
+
+    var k = (element[perm]) ? true : false;
+    console.log(k);
+
+    if(k == true) failure = true;
   });
 
-  return false;
+  return failure;
 }
 
 function saveRoleChanges(index, k){

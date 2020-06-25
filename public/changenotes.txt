@@ -47,10 +47,10 @@ A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
 
 [•] - Server Channels
         [✓] - Messaging and Backbone  + OnServerCreate and UI
-        [•] - Creatable
+        [✓] - Creatable
         [•] - Deletable & Settings
 
-[•] - Messages UI Update (Icon Displayed and Flexbox Rendering)
+[✓ •] - Messages UI Update (Icon Displayed and Flexbox Rendering)
 [•] - Fixes & Adjustments
         - Calcuate permission level based on given atributes (up to 9)
         - Make Roles have an ID Based System
