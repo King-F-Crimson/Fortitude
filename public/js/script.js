@@ -16,6 +16,9 @@ var server_members = [];
 
 var nav = false;
 var loadingFriends = false;
+let loadable = true;
+
+let servers = [];
 
 var dm_users_id = "";
 
@@ -79,13 +82,14 @@ firebase.firestore().settings({
 
 firebase.firestore().enablePersistence()
 
+/*
 const messaging = firebase.messaging();
 messaging.usePublicVapidKey("BJKm3rJ6LyCsCZW3DAtOF-7f1WPy68gR5nd81koJFVphgQrPNJR8rFmvcX9odNz8k6YvFfm_kE1tbWpldy9Q7io");
 
 messaging.onMessage((payload) => {
   console.log('Message received. ', payload);
   // ...
-});
+});*/
 
 $("#loader").find("p").text("Connecting");
 
@@ -149,6 +153,13 @@ function removeDuplicates() {
   server_members = Array.from(new Set(server_members.map(a => a.uid)))
   .map(id => {
     return server_members.find(a => a.uid === id)
+  })
+}
+
+function removeDuplicateServer() {
+  servers = Array.from(new Set(servers.map(a => a.sid)))
+  .map(id => {
+    return servers.find(a => a.sid === id)
   })
 }
 
@@ -352,6 +363,9 @@ function createServerNav(){
       if(i === connectable_servers.length){
         setTimeout(completeNav, 500);
       }
+
+      var this_server = {sid: doc.id, info: doc.data(), channels: [], roles: []};
+      servers.push(this_server);
     });
   }
 
@@ -463,8 +477,8 @@ function sendMessage() {
     var now = new Date();
     var msg = document.getElementById("message-input").value;
 
-    msg = msg.replace(/>/g,"");
-    msg = msg.replace(/</g,"");
+    msg = msg.replace(/>/g,"&#62;");
+    msg = msg.replace(/</g,"&#60;");
 
     if(rmid !== "invalid"){
       if(room !== "lobby_link"){
@@ -591,10 +605,10 @@ function loadDM(){
             direct_message_home.append(direct_message_home_i);
             direct_message_home.append(direct_messages_home_text);
             direct_message_home.setAttribute('onclick', 'loadLobby()');
-
+            
+        document.getElementById("DM").append(direct_message_home);
         document.getElementById("DM").append(direct_message_friends);
         //document.getElementById("DM").append(direct_message_about);
-        document.getElementById("DM").append(direct_message_home);
         document.getElementById("DM").append(direct_message_message);
 
         
@@ -719,7 +733,7 @@ function  showFriendsList() {
   $("#members").hide();
   $("#DM").show();
 
-  $("#channel_con").innerHTML = "Friends";
+  $("#channel_con").text("Friends");
   $("#channel_con_des").hide();
 
   $("#friends").show();
@@ -849,7 +863,6 @@ function loadLobby() {
   $("#members").hide();
   $("#DM").show();
 
-  $("#channel_con").text("Friends");
   $("#channel_con_des").hide();
 
   $("#friends").hide();
@@ -1332,7 +1345,7 @@ function joinServer(room_id_element){
     .orderBy("deafult", "asc").get() 
     .then(querySnapshot => {
       querySnapshot.forEach(doc => {
-        console.log(doc.data());
+        //console.log(doc.data());
 
         channel = doc.id;
         channel_info = doc.data();
@@ -1349,6 +1362,9 @@ function joinServer(room_id_element){
                   var dep_role = {name: doc.id, color: doc.data().colour, rgb: doc.data().colour_rgb, perm_level: doc.data().perm_lvl, admin: doc.data().admin, audit: doc.data().audit, manage_server: doc.data().manage_server, manage_roles: doc.data().manage_roles, manage_channels: doc.data().manage_channels, pingable: doc.data().pingable, deletable: doc.data().deletable, deafult: doc.data().deafult };
                   roles.push(dep_role);
                   role_names.push(doc.id)
+
+                  var index___  = servers.findIndex(element => element.sid == rmid);
+                  servers[index___].roles.push(dep_role);
               });
   
               roles.sort((a, b) => (a.perm_level > b.perm_level) ? -1 : 1)
@@ -1356,8 +1372,8 @@ function joinServer(room_id_element){
               renderMembersList();
           });      
         }
-       
-      joinChannel(channel);
+      
+      if(loadable) joinChannel(channel);
      
       renderChannels(channel);
     });
@@ -1435,6 +1451,13 @@ function renderChannels(channel) {
           new_channel_settings.classList.add("fa-gear");
           new_channel_settings.classList.add("channel_setting");
           new_channel.appendChild(new_channel_settings);
+
+      
+      var channel_info_ = {cid: doc.id, info: doc.data()};
+      console.log(channel_info_);
+
+      var index___  = servers.findIndex(element => element.sid == rmid);
+      servers[index___].channels.push(channel_info_);
           
       document.getElementById("channels").appendChild(new_channel);
     });
@@ -1442,6 +1465,7 @@ function renderChannels(channel) {
 }
 
 function joinChannel(channel_id){ 
+  loadable = false;
   while(document.getElementById("message-container").firstChild){
     document.getElementById("message-container").removeChild( document.getElementById("message-container").firstChild);
   }
@@ -1463,8 +1487,6 @@ function joinChannel(channel_id){
     dates.pop();
     userId_message.pop();
     serverMembers.pop();
-    roles.pop();
-    rolecolours.pop();
     complete_date.pop();
   }
 
@@ -1506,6 +1528,7 @@ function joinChannel(channel_id){
         
         updateMessages("null");
         updateTyping();
+        loadable = true;
     });
   }
 
@@ -1551,9 +1574,9 @@ $("#channels").on("click", "div", function() {
   $(".active").removeClass("active");
   $(this).addClass("active");
   
-  joinChannel(clicked_);
+  if(loadable) joinChannel(clicked_);
   
-});
+}); //eeeeeeee
 
 $("#channels").on("click", ".channel_setting", function() {
   showNotitfication("", "IT HAS BEEN CHOSEN");
@@ -2082,7 +2105,7 @@ function loadAccountSettings() {
   $("#account").show();
 
   var index = server_members.findIndex(element => element.uid == user_id);
-  console.log(server_members[index]);
+  //console.log(server_members[index]);
 
   $("#settings_username").text(username);
   $("#settings_email").text(user_email);
@@ -2322,7 +2345,10 @@ function createRole() {
     .then(querySnapshot => {
         querySnapshot.forEach(doc => {
             var dep_role = {name: doc.id, color: doc.data().colour, rgb: doc.data().colour_rgb, perm_level: doc.data().perm_lvl, admin: doc.data().admin, audit: doc.data().audit, manage_server: doc.data().manage_server, manage_roles: doc.data().manage_roles, manage_channels: doc.data().manage_channels, pingable: doc.data().pingable, deletable: doc.data().deletable, deafult: doc.data().deafult };
-            roles.push(dep_role);
+            roles.push(dep_role); 
+
+            var index___  = servers.findIndex(element => element.sid == rmid);
+            servers[index___].roles.push(dep_role);
             role_names.push(doc.id)
         });
 
@@ -2398,7 +2424,7 @@ var temp_comp_role;
 
 function openSettingsRoles(index, k){
   
-  console.log(k);
+  //console.log(k);
   if(document.getElementById("roles_right_pannel_parent")){
     document.getElementById("role_sett_div").removeChild(document.getElementById("roles_right_pannel_parent"));
   }
@@ -2639,7 +2665,7 @@ function createDocument(a,b,c,d, e){
 }
 
 $(document).on('change', 'input[type="color"]', function() {
-  console.log($(this).val());
+  //console.log($(this).val());
   $(".role_name_settings").css("color", $(this).val());
   var info__ = $(this)[0].id.split("_colour_");
   var index = info__[0];
@@ -2650,7 +2676,7 @@ $(document).on('change', 'input[type="color"]', function() {
 });
 
 $(document).on('input', '.role_name_settings', function() {
-  console.log($(this).val());
+  //console.log($(this).val());
 
   var info__ = $(this)[0].id.split("_colour_");
 
@@ -2691,7 +2717,7 @@ function doesUserHavePerms(perm){
     //console.log(element[perm]);
 
     var k = (element[perm]) ? true : false;
-    console.log(k);
+    //console.log(k);
 
     if(k == true) failure = true;
   });

@@ -200,6 +200,11 @@
       <div id="loader" class="">
         <h1>Fortitude</h1>
         <p></p>
+
+        <div>
+          <h4>Ben White</h4>
+          <a href="https://github.com/UnRealReincarlution/Fortitude"><i class="fa fa-github"></i></a>
+        </div>
       </div>
 
       <div id="settings" class="">
@@ -324,11 +329,14 @@
           <div id="member_manage_par" class="fade-in">
             <div id="member_manage" class="scale-up-center" style="opacity: 1"> 
               <div id="member_manage_header">
+                <h4 id="member_manage_title">Manage Members</h4>
                 <h2 id="show_invite">Roles</h2>
                 <h2 id="show_managment">Manage Members</h2>
                 <h2 id="show_requests">Requests</h2>
+                <h2 id="show_requests">Bans <tooltip class="hidden tooltip_text_right">Currently Unavaliable Feature</tooltip></h2>
+                <h2 id="show_requests">Invites</h2>
 
-                <a id="close_member_managment" style="margin: auto; margin-top: 5px;">
+                <a id="close_member_managment" class="hidden" style="margin: auto; margin-top: 5px;">
                   <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512" class="svg-inline--fa fa-times fa-w-10 fa-2x"><path fill="currentColor" d="M193.94 256L296.5 153.44l21.15-21.15c3.12-3.12 3.12-8.19 0-11.31l-22.63-22.63c-3.12-3.12-8.19-3.12-11.31 0L160 222.06 36.29 98.34c-3.12-3.12-8.19-3.12-11.31 0L2.34 120.97c-3.12 3.12-3.12 8.19 0 11.31L126.06 256 2.34 379.71c-3.12 3.12-3.12 8.19 0 11.31l22.63 22.63c3.12 3.12 8.19 3.12 11.31 0L160 289.94 262.56 392.5l21.15 21.15c3.12 3.12 8.19 3.12 11.31 0l22.63-22.63c3.12-3.12 3.12-8.19 0-11.31L193.94 256z" class=""></path></svg>
                 </a>
               </div>
@@ -384,7 +392,7 @@
 
               <!-- Non Responsive - Cannot Move elements to chose priorty.-->
               <div class="server_pre_sett" id="serverMenu">
-                <a><p>Server Settings</p> <i class="fas fa-cog"></i></a>
+                <a ><p>Server Settings</p> <i class="fas fa-cog"></i></a>
                 <hr>
                 <a id="server_members_button"><p>Members</p> <i class="fas fa-user-friends"></i></a>
                 <a id="server_channel_create"><p>Create Channel</p> <i class="fas fa-plus-circle"></i></a>
@@ -431,11 +439,14 @@
 
           <div id="chat">
             <div id="top_bar">
+            <a> <img src="./branding/hastag.svg"></a>
             <h1 id="channel_con"><strong>#</strong> General</h1>
             <p id="channel_con_des">A Place to chill, relax and have fun!</p>
+
+
             <input type="text" placeholder="Search">
-            <a>Help</a>
             <a id="toggle_members"><i class="fas fa-users"></i></a>
+            
           </div>
 
             <div id="message-div">  
@@ -550,7 +561,7 @@
     <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-analytics.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-functions.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-storage.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-messaging.js"></script>
+    <!-- <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-messaging.js"></script> -->
     <script src="js/script.js"></script>
   </div>
 </html>
