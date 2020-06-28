@@ -2214,10 +2214,22 @@ function getRequests() {
       }
 
       if(have == 0){
-        var fail_to_create = document.createElement("img");
-            fail_to_create.src = "./branding/empty.svg";
+        var failed_div = document.createElement("div");
+            failed_div.id = "failed_div";
+
+        var fail_to_create = document.createElement("h4");
+            fail_to_create.innerHTML = "NO REQUESTS...";
+            failed_div.appendChild(fail_to_create);
         
-        document.getElementById("member_requests").append(fail_to_create);
+        var fail_to_create2 = document.createElement("h6");
+            fail_to_create2.innerHTML = "Its lonely out here...";
+            failed_div.appendChild(fail_to_create2);
+        
+        var fail_to_create_image = document.createElement("img");
+            fail_to_create_image.src = "";
+            failed_div.appendChild(fail_to_create_image);
+        
+        document.getElementById("member_requests").append(failed_div);
       }
   });
 }

@@ -416,6 +416,34 @@ input:focus {
   z-index: 800;
 }
 
+#failed_div {
+  justify-self: center;
+  align-items: center;
+
+  width: 100%;
+  text-align: center;
+  margin-top: 150px;
+}
+
+#failed_div > h4 {
+  font-size: 17px !important;
+  line-height: 22px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+#failed_div > h6 {
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 100;
+  opacity: 0.4;
+  margin: 0;
+}
+
+#failed_div > img {
+  display: none;
+}
+
 #form_input {
   border-radius: 10px;
   background-color: var(--background-black);
