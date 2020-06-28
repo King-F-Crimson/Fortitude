@@ -325,7 +325,7 @@
           
         </nav>
         
-        <div id="content" style="grid-column: 2; display: grid; grid-template-columns: 12% 1fr 12%; width: 100%">
+        <div id="content" style="grid-column: 2; display: flex; grid-template-columns: 12% 1fr 12%; width: 100%">
           <div id="member_manage_par" class="fade-in">
             <div id="member_manage" class="scale-up-center" style="opacity: 1"> 
               <div id="member_manage_header">
@@ -370,22 +370,13 @@
               </div>
             </div> 
           </div>
-        <!--
-          <div id="top_bar_2" class="hidden">
-            <h1 id="channel_con">Friends</h1>
-            <p id="channel_con_des">A Place to chill, relax and have fun!</p>
-            <input type="text" placeholder="Search">
-            <a>Help</a>
-            <a id="toggle_members"><i class="fas fa-users"></i></a>
-          </div>
--->
           <div id="side_bar">
             <div id="header" class="header_blur">
               <a class="fas fa-plus hidden" id="invite"  title="Invite" onclick="generateURL()" style=" border-radius: 55px; font-size: 20px; left: 0; text-decoration: none;"></a>
 
               
               <p id="serverName"></p>
-              <p id="serverMoreInfo"><i class="fas fa-angle-down"></i></p>
+              <p id="serverMoreInfo"><i id="serverMoreInfo_" class="fas fa-angle-down"></i></p>
               <p id="serverMoreInfo_close" class="hidden"><i class="fas fa-times"></i></p>
               <p id="serverCount" class="hidden"></p>
 
@@ -444,113 +435,115 @@
             <p id="channel_con_des">A Place to chill, relax and have fun!</p>
 
 
-            <input type="text" placeholder="Search">
+            <input id="search_general" type="text" placeholder="Search">
             <a id="toggle_members"><i class="fas fa-users"></i></a>
             
-          </div>
+            </div>
 
-            <div id="message-div">  
-            
-            <div id="lobby">
-              <h1>Hello {user.id}, Welcome!</h1>
+            <div id="content_div">
+              <div id="message-div">  
+              
+              <div id="lobby">
+                <h1>Hello {user.id}, Welcome!</h1>
 
-              <div>
-                <h4>NEWS</h4>
-                <p>... Experimental Features not enabled</p>
+                <div>
+                  <h4>NEWS</h4>
+                  <p>... Experimental Features not enabled</p>
+                </div>
+
+                <a class="lobby_create" id="add_server2">Create Server</a>
+                <a class="lobby_create" id="join_server3">Join Server</a>
               </div>
 
-              <a class="lobby_create" id="add_server2">Create Server</a>
-              <a class="lobby_create" id="join_server3">Join Server</a>
-            </div>
+              <div id="friends">
+              </div>
 
-            <div id="friends">
-            </div>
+              <div id="message-container" class="chat " style="overflow-y: auto; height:83.6%;"></div> <!--   Message Container   -->
+          
+              <form id="send-container" autocomplete="off" class=""> <!--   Form   --> 
+                  
 
-            <div id="message-container" class="chat " style="overflow-y: auto; height:83.6%;"></div> <!--   Message Container   -->
-        
-            <form id="send-container" autocomplete="off" class=""> <!--   Form   --> 
+                  
+                  <div id="form_input">
+                    <p id="isTypingID" class="isTyping_hid slide-in-bottom">Is Typing</p> <!--   isTyping Popup   -->
+                        <div id="ping_users" class="hidden">
+                          
+                        </div>
+                        <div id="form_field">
+                          <!-- <a id="add_items">+</a> -->
+                          <input type="text" id="message-input" placeholder="Message @General"> 
+                          <!-- <a class="form_other">GIF</a> -->
+                          <!-- <a id="emoticon"  class="form_other">😍</a> -->
+                        </div>
+                  </div>
+                </form>
+              </div>
+
+              <div id="members" class="">
+                <br>
+                <br>
+                <br>
+    
+                <div id="deafult_ui_loading_category_" class="">
+                  <p class="user_category" style="color: grey;background-color: grey;width: 30%;border-radius: 5px; opacity: 0.1;">owner</p>
+                  <br>
+                  <div class="member_user" onclick="userInfo('Uwd0jqga1QMZeqD9Bk2SFvliic23')">
+                    <div class="member_icon" style="background-color: grey;height: 35px;width: 35px;border-radius: 50%;opacity: 0.1;">
+                    </div>
+                    <div>
+                      <h1 style="/* color: rgb(255, 215, 0); */background-color: grey;border-radius: 5px;width: 70px;opacity: 0.1;color: grey;">.</h1>
+                    </div>
+                  </div>
+    
+                  <div class="member_user" onclick="userInfo('Uwd0jqga1QMZeqD9Bk2SFvliic23')">
+                    <div class="member_icon" style="background-color: grey;height: 35px;width: 35px;border-radius: 50%;opacity: 0.1;">
+                    </div>
+                    <div>
+                      <h1 style="/* color: rgb(255, 215, 0); */background-color: grey;border-radius: 5px;width: 90px;opacity: 0.1;color: grey;">.</h1>
+                    </div>
+                  </div>
+    
+                  <div class="member_user" onclick="userInfo('Uwd0jqga1QMZeqD9Bk2SFvliic23')">
+                    <div class="member_icon" style="background-color: grey;height: 35px;width: 35px;border-radius: 50%;opacity: 0.1;">
+                    </div>
+                    <div>
+                      <h1 style="/* color: rgb(255, 215, 0); */background-color: grey;border-radius: 5px;width: 50px;opacity: 0.1;color: grey;">.</h1>
+                    </div>
+                  </div>
+                  <br>
+    
+                  <p class="user_category" style="color: grey;background-color: grey;width: 30%;border-radius: 5px; opacity: 0.1;">owner</p>
+                  <br>
+                  <div class="member_user" onclick="userInfo('Uwd0jqga1QMZeqD9Bk2SFvliic23')">
+                    <div class="member_icon" style="background-color: grey;height: 35px;width: 35px;border-radius: 50%;opacity: 0.1;">
+                    </div>
+                    <div>
+                      <h1 style="/* color: rgb(255, 215, 0); */background-color: grey;border-radius: 5px;width: 95px;opacity: 0.1;color: grey;">.</h1>
+                    </div>
+                  </div>
+    
+                  <div class="member_user" onclick="userInfo('Uwd0jqga1QMZeqD9Bk2SFvliic23')">
+                    <div class="member_icon" style="background-color: grey;height: 35px;width: 35px;border-radius: 50%;opacity: 0.1;">
+                    </div>
+                    <div>
+                      <h1 style="/* color: rgb(255, 215, 0); */background-color: grey;border-radius: 5px;width: 80px;opacity: 0.1;color: grey;">.</h1>
+                    </div>
+                  </div>
+    
+                  <div class="member_user" onclick="userInfo('Uwd0jqga1QMZeqD9Bk2SFvliic23')">
+                    <div class="member_icon" style="background-color: grey;height: 35px;width: 35px;border-radius: 50%;opacity: 0.1;">
+                    </div>
+                    <div>
+                      <h1 style="/* color: rgb(255, 215, 0); */background-color: grey;border-radius: 5px;width: 100px;opacity: 0.1;color: grey;">.</h1>
+                    </div>
+                  </div>
+                </div>
                 
-
-                
-                <div id="form_input">
-                  <p id="isTypingID" class="isTyping_hid slide-in-bottom">Is Typing</p> <!--   isTyping Popup   -->
-                      <div id="ping_users" class="hidden">
-                        
-                      </div>
-                      <div id="form_field">
-                        <!-- <a id="add_items">+</a> -->
-                        <input type="text" id="message-input" placeholder="Message @General"> 
-                        <!-- <a class="form_other">GIF</a> -->
-                        <!-- <a id="emoticon"  class="form_other">😍</a> -->
-                      </div>
-                </div>
-              </form>
-            </div>
-          </div>
-            
-          <div id="members" class="">
-            <br>
-            <br>
-            <br>
-
-            <div id="deafult_ui_loading_category_" class="">
-              <p class="user_category" style="color: grey;background-color: grey;width: 30%;border-radius: 5px; opacity: 0.1;">owner</p>
-              <br>
-              <div class="member_user" onclick="userInfo('Uwd0jqga1QMZeqD9Bk2SFvliic23')">
-                <div class="member_icon" style="background-color: grey;height: 35px;width: 35px;border-radius: 50%;opacity: 0.1;">
-                </div>
-                <div>
-                  <h1 style="/* color: rgb(255, 215, 0); */background-color: grey;border-radius: 5px;width: 70px;opacity: 0.1;color: grey;">.</h1>
-                </div>
-              </div>
-
-              <div class="member_user" onclick="userInfo('Uwd0jqga1QMZeqD9Bk2SFvliic23')">
-                <div class="member_icon" style="background-color: grey;height: 35px;width: 35px;border-radius: 50%;opacity: 0.1;">
-                </div>
-                <div>
-                  <h1 style="/* color: rgb(255, 215, 0); */background-color: grey;border-radius: 5px;width: 90px;opacity: 0.1;color: grey;">.</h1>
-                </div>
-              </div>
-
-              <div class="member_user" onclick="userInfo('Uwd0jqga1QMZeqD9Bk2SFvliic23')">
-                <div class="member_icon" style="background-color: grey;height: 35px;width: 35px;border-radius: 50%;opacity: 0.1;">
-                </div>
-                <div>
-                  <h1 style="/* color: rgb(255, 215, 0); */background-color: grey;border-radius: 5px;width: 50px;opacity: 0.1;color: grey;">.</h1>
-                </div>
-              </div>
-              <br>
-
-              <p class="user_category" style="color: grey;background-color: grey;width: 30%;border-radius: 5px; opacity: 0.1;">owner</p>
-              <br>
-              <div class="member_user" onclick="userInfo('Uwd0jqga1QMZeqD9Bk2SFvliic23')">
-                <div class="member_icon" style="background-color: grey;height: 35px;width: 35px;border-radius: 50%;opacity: 0.1;">
-                </div>
-                <div>
-                  <h1 style="/* color: rgb(255, 215, 0); */background-color: grey;border-radius: 5px;width: 95px;opacity: 0.1;color: grey;">.</h1>
-                </div>
-              </div>
-
-              <div class="member_user" onclick="userInfo('Uwd0jqga1QMZeqD9Bk2SFvliic23')">
-                <div class="member_icon" style="background-color: grey;height: 35px;width: 35px;border-radius: 50%;opacity: 0.1;">
-                </div>
-                <div>
-                  <h1 style="/* color: rgb(255, 215, 0); */background-color: grey;border-radius: 5px;width: 80px;opacity: 0.1;color: grey;">.</h1>
-                </div>
-              </div>
-
-              <div class="member_user" onclick="userInfo('Uwd0jqga1QMZeqD9Bk2SFvliic23')">
-                <div class="member_icon" style="background-color: grey;height: 35px;width: 35px;border-radius: 50%;opacity: 0.1;">
-                </div>
-                <div>
-                  <h1 style="/* color: rgb(255, 215, 0); */background-color: grey;border-radius: 5px;width: 100px;opacity: 0.1;color: grey;">.</h1>
+                <div id="members_2">
                 </div>
               </div>
             </div>
-            
-            <div id="members_2">
-            </div>
-          </div>
+          </div>         
         </div>
       </div>
   </body>

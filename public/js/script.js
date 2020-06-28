@@ -547,11 +547,12 @@ function loadDM(){
   $("#lobby_link").find("div span").addClass("pill");
 
   $("#lobby_link").find("img").attr("src","/branding/concept_logo_small_active.png");
-  document.getElementById("header").style.backgroundImage = "linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0)), url('" + "https://media3.giphy.com/media/b29IZK1dP4aWs/giphy.gif" + "')";
+  //document.getElementById("header").style.backgroundImage = "linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0)), url('" + "https://media3.giphy.com/media/b29IZK1dP4aWs/giphy.gif" + "')";
   
   $("#serverName").text("Direct Messages");
   $("#channel_con").text("Direct Messages");
   $("#channel_con_des").hide();
+  $("#search_general").hide();
   $("#toggle_members").hide();
 
   $("#channels").hide();
@@ -727,6 +728,7 @@ function  showFriendsList() {
   $("#serverName").text("Direct Messages");
   $("#channel_con").text("Direct Messages");
   $("#channel_con_des").hide();
+  $("#search_general").hide();
   $("#toggle_members").hide();
 
   $("#channels").hide();
@@ -903,6 +905,7 @@ $("body").on("click",'div[name*="server_item"]',function(){
 
       //console.log("JOINING " + this.id);
       $("#channel_con_des").show();
+      $("#search_general").show();
       $("#toggle_members").show();
     }
 });
@@ -1413,7 +1416,7 @@ function joinServer(room_id_element){
     }
 
     var image_src = $("#" + room_id_element).find("img").attr('src');
-    document.getElementById("header").style.backgroundImage = "linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0)), url('" + image_src + "')";
+    //document.getElementById("header").style.backgroundImage = "linear-gradient(to bottom, rgba(0, 0, 0, 0.6), rgba(255, 255, 255, 0)), url('" + image_src + "')";
   });
 }
 
@@ -1649,7 +1652,7 @@ function renderMessages(){
         if(p != -1 && roles[p].pingable){
           highlight_color = roles[p].color;
           role_color = roles[p].rgb;
-          end_result = messages[i].replace(`@${role_called[0]}`, `<div class="role_call"><p style="color: ${role_color}">@${role_called[0]}</p></div>`);
+          end_result = messages[i].replace(`@${role_called[0]}`, `<div class="role_call"><p style="color: ${role_color}; padding-left: 2px; padding-right: 2px">@${role_called[0]}</p></div>`);
         }else{
           highlight_color = "deafult";
         }
@@ -1664,20 +1667,13 @@ function renderMessages(){
                 divider.classList.add("special_message");
                 var message2 = document.createElement("p");
                     message2.innerHTML = end_result;
-                
-                if(highlight_color == "ping"){
-                  message.classList.add("mentioned"); 
-                }else if(highlight_color == "light_blue"){
-                  message.classList.add("highlighted");
-                }else if(highlight_color == "gold"){
-                  message.classList.add("owner");
-                }else{
+/*                
                   message.style.backgroundColor = hexToRgbA(role_color, 0.2);
                   message.style.borderLeftColor = role_color;
                   message.style.borderLeftStyle = "solid";
                   message.style.borderLeftWidth = "2px";
                   message.style.width = "calc(100% - 2px)";
-                }
+*/                
                  
                 divider.append(message2);
                 samecount++;
@@ -1698,13 +1694,25 @@ function renderMessages(){
                 var date = document.createElement("h3");
                     date.innerHTML = dates[i];
                 
-                var message2 = document.createElement("p");
-                    message2.innerHTML = messages[i];
+                    divider.classList.add("special_message");
+                    var message2 = document.createElement("p");
+                        message2.innerHTML = end_result;
+/*                    
+                      message.style.backgroundColor = hexToRgbA(role_color, 0.2);
+                      message.style.borderLeftColor = role_color;
+                      message.style.borderLeftStyle = "solid";
+                      message.style.borderLeftWidth = "2px";
+                      message.style.width = "calc(100% - 2px)";
+*/                    
+                     
+                    divider.append(message2);
+                    samecount++;
                 
                 divider.append(author);
                 divider.append(date);
                 divider.append(message2);
-
+                
+/*
                 if(highlight_color == "ping"){
                   message.classList.add("mentioned"); 
                 }else if(highlight_color == "light_blue"){
@@ -1712,7 +1720,7 @@ function renderMessages(){
                 }else if(highlight_color == "gold"){
                   message.classList.add("owner");
                 }
-
+*/
                 samecount = 0;
             }
         }else{
@@ -1743,6 +1751,8 @@ function renderMessages(){
                 
                 var message2 = document.createElement("p");
                     message2.innerHTML = messages[i];
+
+                    //console.log(messages[i]);
                 
                 divider.append(author);
                 divider.append(date);
@@ -1754,7 +1764,19 @@ function renderMessages(){
             
       }else{
               $("#message-container").append($('<br>'));
-              //$("#message-container").append($('<img src="' + user_img +'">'));
+
+              if(server_members[m]){
+                var image = document.createElement("img");
+                  image.setAttribute("src", server_members[m].icon);
+                    
+                divider2.append(image); 
+              }else{
+                var image = document.createElement("img");
+                  image.setAttribute("src", "./branding/deafultUserIcon.jpg");
+                    
+                divider2.append(image); 
+              }
+              
               var author = document.createElement("h2");
                   author.classList.add("user_refrence");
                   author.innerHTML = authors[i];
@@ -2017,27 +2039,15 @@ function lightTheme(){
   document.documentElement.setAttribute('theme', 'light');
 }
 
+function darkTheme() {
+  document.documentElement.setAttribute('theme', 'dark');
+}
+
 const toggleMembers = document.querySelector("#toggle_members");
 
 toggleMembers.addEventListener('click', e => {
   $("#members").toggle();
 });
-
-
-/* Add Member Toggle Fully.
-
-$("#serverMoreInfo").click(function() {
-  if(room !== "lobby_link"){
-    toggleServerMenu();
-  }
-});
-
-$("#serverName").click(function() {
-  if(room !== "lobby_link"){
-    toggleServerMenu();
-  }
-});
-*/
 
 $("#header a").click(function() {
   if(room !== "lobby_link"){
@@ -2051,11 +2061,11 @@ $("#header a i").click(function() {
   }
 });
 
-$("#header p").click(function() {
+$("#serverMoreInfo").on("click", function() {
   if(room !== "lobby_link"){
     toggleServerMenu();
   }
-});
+})
 
 var serverMenu_hid = true;
 
@@ -2073,15 +2083,13 @@ function hideServerMenu(){
 }
 
 $('body').click(function(event) {
-  if(serverMenu_hid == false){
-    //console.log("HEY!");
-
+  if(!serverMenu_hid){
     if(!$(event.target).is('#serverMenu')){
       hideServerMenu();
     }
-
-  }else if($(event.target).is("#header") && room !== "lobby_link"){
+  }else if($(event.target).is("#header") && room !== "lobby_link" || $(event.target).is("#serverMoreInfo_") && room !== "lobby_link"){
     toggleServerMenu();
+  }else{
     //console.log($(event.target));
   }
 });
