@@ -2049,24 +2049,6 @@ toggleMembers.addEventListener('click', e => {
   $("#members").toggle();
 });
 
-$("#header a").click(function() {
-  if(room !== "lobby_link"){
-    toggleServerMenu();
-  }
-});
-
-$("#header a i").click(function() {
-  if(room !== "lobby_link"){
-    toggleServerMenu();
-  }
-});
-
-$("#serverMoreInfo").on("click", function() {
-  if(room !== "lobby_link"){
-    toggleServerMenu();
-  }
-})
-
 var serverMenu_hid = true;
 
 function toggleServerMenu(){
@@ -2087,7 +2069,7 @@ $('body').click(function(event) {
     if(!$(event.target).is('#serverMenu')){
       hideServerMenu();
     }
-  }else if($(event.target).is("#header") && room !== "lobby_link" || $(event.target).is("#serverMoreInfo_") && room !== "lobby_link"){
+  }else if($(event.target).is("#header") && room !== "lobby_link" || $(event.target).parents('#header').length > 0 && room !== "lobby_link"){
     toggleServerMenu();
   }else{
     //console.log($(event.target));

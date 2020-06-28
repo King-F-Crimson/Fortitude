@@ -54,6 +54,9 @@ A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
 [•] - Fixes & Adjustments
         - Calcuate permission level based on given atributes (up to 9)
         - Make Roles have an ID Based System
+
+[✓] - Responsive UI - MASSIVE OVERHAUL
+[•] - News API
 }
 
 ============= [Released] =============
