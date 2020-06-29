@@ -3653,3 +3653,23 @@ function hideNotitfication(){
 function loadNews() {
 
 }
+
+
+var amOnline = new Firebase('https://fortitude-0.firebaseio.com/.info/connected');
+var userRef = new Firebase('https://fortitude-0.firebaseio.com/presence/' + userid);
+
+amOnline.on('value', function(snapshot) {
+  if (snapshot.val()) {
+    userRef.onDisconnect().set('☆ offline');
+    userRef.set('★ online');
+  }
+});
+document.onIdle = function () {
+  userRef.set('☆ idle');
+}
+document.onAway = function () {
+  userRef.set('☄ away');
+}
+document.onBack = function (isIdle, isAway) {
+  userRef.set('★ online');
+}
