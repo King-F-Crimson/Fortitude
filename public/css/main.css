@@ -4,6 +4,7 @@
   --background-color-tertiary: #ffffff;
   --background-color-quaternary: #202225;
   --background-color-compliement: rgba(32, 34, 37, 0.6);
+  --background-color-floating: #18191c;
   --background-dark: #292b2f;
   --background-true-dark: #2f3035;
   --background-near-black: #000000;
@@ -305,7 +306,6 @@ input:focus {
   flex: 1;
   
   flex-direction: column;
-  margin-top: -1%;
 }
 
 #message-container > div:first-of-type {
@@ -766,6 +766,10 @@ input:focus {
 
 #members h1 {
   font-size: 15px;
+
+  white-space: nowrap;
+  overflow: hidden;
+  width: 100px;
 }
 
 #members img {
@@ -1927,7 +1931,7 @@ p strong {
 .server_pre_sett {
   transition: 0s linear all;
 
-  background-color: var(--background-near-black);
+  background-color: var(--background-color-floating);
   width: 75%;
   padding: 10px;
 
@@ -2867,7 +2871,7 @@ p strong {
   position: fixed;
   z-index: 998;
   border-radius: 7px;
-  /* height: 50%; */
+  width: 35%;
 
   -webkit-animation: scale-up-center 0.2s cubic-bezier(.175,.885,.32,1.275);
 	        animation: scale-up-center 0.2s cubic-bezier(.175,.885,.32,1.275);

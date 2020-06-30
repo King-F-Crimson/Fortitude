@@ -448,6 +448,10 @@ function completeNav() {
 function enableAnimation() {
 
     // Hide all Hidden Elements. E8HIDEPOINTERHUB
+
+    if(getItem("1")){
+      //server_members = getItem("1");
+    }
     
     hideServerCreator();
     hideServerJoin();
@@ -461,7 +465,7 @@ function enableAnimation() {
 
     removeDuplicates();
     
-    $("#user_card").hide();
+    $("#user_card").hide();   
 
     setTimeout(function(){
       $("#loader").addClass("hidden");
@@ -504,6 +508,12 @@ function sendMessage() {
             //console.log("Message created");
         });
 
+        db.collection("users/"+ user_id +"/friends/").doc(dm_users_id).update({
+          latest_interaction: now,
+        }).then(function() {
+          //console.log("Updated!");
+        });
+
         let autoID2 = db.collection("users/"+ dm_users_id +"/direct_messages/" + user_id + "/messages").doc().id;
 
         db.collection("users/"+ dm_users_id +"/direct_messages/" + user_id + "/messages").doc(autoID2).set({
@@ -513,6 +523,12 @@ function sendMessage() {
           timestamp: now
         }).then(function() {
             //console.log("Message created");
+        });
+
+        db.collection("users/"+ dm_users_id +"/friends/").doc(user_id).update({
+          latest_interaction: now,
+        }).then(function() {
+          //console.log("Updated!");
         });
       }
     }else {
@@ -1453,11 +1469,11 @@ function renderChannels(channel) {
           new_channel_settings.classList.add("fa");
           new_channel_settings.classList.add("fa-gear");
           new_channel_settings.classList.add("channel_setting");
+          new_channel_settings.setAttribute("tooltip-content", "Ebic")
           new_channel.appendChild(new_channel_settings);
 
       
       var channel_info_ = {cid: doc.id, info: doc.data()};
-      console.log(channel_info_);
 
       var index___  = servers.findIndex(element => element.sid == rmid);
       servers[index___].channels.push(channel_info_);
@@ -3654,6 +3670,24 @@ function loadNews() {
 
 }
 
+tippy('[tooltip-content]', {
+  trigger: 'mouseenter',
+  onShow(instance) {
+    // v5
+    instance.setProps({trigger: 'click'});
+    // v3-v4
+    // instance.set({trigger: 'click'});
+  },
+  onHide(instance) {
+    // v5
+    instance.setProps({trigger: 'mouseenter'});
+    // v3-v4
+    // instance.set({trigger: 'mouseenter'});
+  }
+});
+
+
+/*
 
 var amOnline = new Firebase('https://fortitude-0.firebaseio.com/.info/connected');
 var userRef = new Firebase('https://fortitude-0.firebaseio.com/presence/' + userid);
@@ -3673,3 +3707,5 @@ document.onAway = function () {
 document.onBack = function (isIdle, isAway) {
   userRef.set('★ online');
 }
+
+*/
