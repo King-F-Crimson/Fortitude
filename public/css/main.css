@@ -286,10 +286,6 @@ input:focus {
   width: 95%;
 }
 
-.mentioned {
-  
-}
-
 #message-container {
   overflow-x: hidden;
   grid-area: main;
@@ -455,14 +451,31 @@ input:focus {
 }
 
 #add_items {
-  color: var(--text-color-inactive);
+  color: var(--text-field);
+  background-color: var(--text-color-inactive);
+
   width: 20px;
-  font-size: 25px;
-  border-right: 2px solid var(--background-color-primary);
-  padding-right: 20px;
-  padding-left: 20px;
+  height: 20px;
+
+  font-size: 20px;
+  margin-left: 10px;
+
   bottom: 2%;
   display: inline-block;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+}
+
+#add_items:hover {
+  background-color: var(--text-color);
+}
+
+#add_items i {
+  color: var(--text-field);
+  opacity: 1;
 }
 
 .form_other {
@@ -498,14 +511,23 @@ input:focus {
   border-width: 0px;
   padding: 10px;
   width: 75%;
+  
+  background-color: var(--text-field);
+  color: white;
+  font-family: DeafultUi;
+  padding: 2px;
+  width: 100%;
+
+  margin: 0;
+}
+
+#message_input_container {
   margin-right: .5%;
   margin-top: 10px;
   margin-bottom: 10px;
-  background-color: var(--text-field);
-  color: white;
-  border-radius: 5px;
   margin-left: 10px;
-  font-family: DeafultUi;
+
+  width: 100%;
 }
 
 #send-button {
@@ -688,7 +710,7 @@ input:focus {
 }
 
 #form_input > div:not(:first-child){
-  border-radius: 10px;
+  border-radius: 8px;
   /* width: 80%; */
   height: 100%;
   margin: 0;
@@ -700,6 +722,10 @@ input:focus {
 #form_field {
   background-color: var(--text-field);
   z-index: 500;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 }
 
 #leave_server_button {
@@ -2481,6 +2507,109 @@ p strong {
   opacity: 0.8;
   font-size: 10px !important;
   user-select: none;
+}
+
+#server_settings {
+  background-color: rgba(0, 0, 0, 0.8);
+  /*backdrop-filter: saturate(180%) blur(5px);*/
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 998;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#server_manage {
+  opacity: 1;
+  background-color: var(--background-color-quaternary);
+  color: var(--text-color);
+
+  display: grid;
+  grid-template-rows: 1fr;
+  grid-template-columns: fit-content(20%) 1fr;
+  grid-gap: 30px;
+
+  position: fixed;
+  z-index: 998;
+
+  border-radius: 7px;
+  opacity: 1;
+
+  height: 55vh;
+  width: 60%;
+}
+
+#server_manage_header{
+  grid-row: 1;
+  display: grid;
+
+  grid-template-columns: 11% 13% 8% 1fr 5%;
+  font-size: 0.9em;
+  grid-column-gap: 5px;
+
+  padding: 30px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+#server_manage_header *{
+  align-content: center;
+  transition: 0s ease all;
+}
+
+#server_manage_header > h2:hover {
+  background-color: var(--background-color-seccondary);
+}
+
+#server_manage_header h2{
+  margin: 2px;
+  text-align: left;
+  
+  color: var(--text-color-inactive);
+  font-family: DeafultUi-Bold;
+  user-select: none;
+  font-size: 1em;
+
+  padding: 4px 7px 4px 7px;
+  padding-left: 15px;
+  margin-left: 0px;
+
+  font-weight: 400;
+  font-family: DeafultUi;
+
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+
+  border-left: 4px solid transparent;
+}
+
+#server_manage_header h2:hover{
+  cursor: pointer;
+  color: var(--text-color);
+  /*border-bottom: 2px solid var(--harsh);*/
+}
+
+#server_overview {
+  grid-row: 1;
+  border-radius: 5px;
+  background-color: var(--background-color-seccondary);
+}
+
+#server_manage_title {
+  text-transform: uppercase;
+  font-size: 15px !important;
+  color: white;
+  margin: 5px;
+  opacity: 1 !important;
+  text-align: center;
+  margin-bottom: 15px !important;
+  font-family: "DeafultUi-Bold";
 }
 
 #user_icon_change_status {

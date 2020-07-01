@@ -459,6 +459,7 @@ function enableAnimation() {
     hideServerMenu();
     hideSettings();
     hideMembers();
+    hideServerSettings();
     hideSucessfullAdd();
     loadDM();
     loadNews();
@@ -2130,11 +2131,26 @@ $("#close_member_managment").click(function(){
   hideMembers();
 });
 
+$("#server_settings_button").click(function() {
+  showServerSettings();
+});
+
+$("#close_server_settings").click(function(){
+  hideServerSettings();
+});
+
 $("#member_manage_par").click(function(event){
   if($(event.target).is("#member_manage_par")){
     hideMembers();
   }
 });
+
+$("#server_settings").click(function(event){
+  if($(event.target).is("#server_settings")){
+    hideServerSettings();
+  }
+});
+
 
 $("#show_requests").click(function(){
   $("#member_requests").show();
@@ -2800,7 +2816,7 @@ function showMembers() {
   $("#member_requests").hide();
   $("#member_managment").hide();
   $("#member_invite").show();
-//nmew
+
   $("#member_manage_par").addClass("fade-in");
   $("#member_manage_par").removeClass("fade-out");
 
@@ -2819,6 +2835,39 @@ function hideMembers() {
     $("#member_manage_par #member_manage").removeClass("scale-out-center");
     $("#member_manage_par").hide();
   }, 350);
+}
+
+function showServerSettings() {
+  $("#server_settings").show();
+  renderOverview();
+
+  $("#server_overview").show();
+
+  $("#server_settings").addClass("fade-in");
+  $("#server_settings").removeClass("fade-out");
+
+  $("#server_settings #server_manage").removeClass("scale-out-center");
+  $("#server_settings #server_manage").addClass("scale-up-center");
+}
+
+function hideServerSettings() {
+  $("#server_settings #server_manage").removeClass("scale-up-center");
+  $("#server_settings #server_manage").addClass("scale-out-center");
+
+  $("#server_settings").addClass("fade-out");
+  $("#server_settings").removeClass("fade-in");
+
+  setTimeout(function(){
+    $("#server_settings #server_manage").removeClass("scale-out-center");
+    $("#server_settings").hide();
+  }, 350);
+}
+
+function renderOverview() {
+  $("#server_overview").show();
+
+  $(".active_member_manage").removeClass("active_member_manage");
+  $("#show_overview").addClass("active_member_manage");
 }
 
 function renderMemberList() {

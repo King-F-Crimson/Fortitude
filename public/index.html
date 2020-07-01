@@ -370,6 +370,19 @@
               </div>
             </div> 
           </div>
+
+          <div id="server_settings" class="fade-in">
+            <div id="server_manage" class="scale-up-center" style="opacity: 1"> 
+              <div id="server_manage_header">
+                <h4 id="server_manage_title">Manage Server</h4>
+                <h2 id="show_overview">Overview</h2>
+              </div>
+
+              <div id="server_overview">
+                
+              </div>
+            </div> 
+          </div>
           <div id="side_bar">
             <div id="header" class="header_blur">
               <a class="fas fa-plus hidden" id="invite"  title="Invite" onclick="generateURL()" style=" border-radius: 55px; font-size: 20px; left: 0; text-decoration: none;"></a>
@@ -383,7 +396,7 @@
 
               <!-- Non Responsive - Cannot Move elements to chose priorty.-->
               <div class="server_pre_sett" id="serverMenu">
-                <a ><p>Server Settings</p> <i class="fas fa-cog"></i></a>
+                <a id="server_settings_button"><p>Server Settings</p> <i class="fas fa-cog"></i></a>
                 <hr>
                 <a id="server_members_button"><p>Members</p> <i class="fas fa-user-friends"></i></a>
                 <a id="server_channel_create"><p>Create Channel</p> <i class="fas fa-plus-circle"></i></a>
@@ -458,7 +471,7 @@
               <div id="friends">
               </div>
 
-              <div id="message-container" class="chat " style="overflow-y: auto; height:80%;"></div> <!--   Message Container   -->
+              <div id="message-container" class="chat " style="overflow-y: auto;"></div> <!--   Message Container   -->
           
               <form id="send-container" autocomplete="off" class=""> <!--   Form   --> 
                   
@@ -470,8 +483,10 @@
                           
                         </div>
                         <div id="form_field">
-                          <!-- <a id="add_items">+</a> -->
-                          <input type="text" id="message-input" placeholder="Message @General"> 
+                          <!-- <a id="add_items"><span><i class="fas fa-plus"></i></span></a> -->
+                          <div id="message_input_container">
+                            <input type="text" id="message-input" placeholder="Message @General"> 
+                          </div>
                           <!-- <a class="form_other">GIF</a> -->
                           <!-- <a id="emoticon"  class="form_other">😍</a> -->
                         </div>
@@ -547,7 +562,7 @@
   <div>
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <script src="https://unpkg.com/tippy.js@6"></script>
-    <script src='https://www.firebase.com/js/libs/idle.js'></script>
+    <!-- <script src='https://www.firebase.com/js/libs/idle.js'></script> -->
     <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.8.0/firebase-firestore.js"></script>
