@@ -308,8 +308,8 @@ input:focus {
   margin-top: auto !important;
 }
 
-#message-contatiner > div:last-child {
-  padding-bottom: 50px;
+#message-container > div:last-child {
+  margin-bottom: 30px;
 }
 
 #message-continer div {
@@ -2501,6 +2501,9 @@ p strong {
 .settings_icon_container {
   margin-left: 3%;
   position: relative;
+
+  height: 100px;
+  width: 100px;
 }
 
 .settings_icon_overlay {
@@ -3125,6 +3128,23 @@ p strong {
   align-items: center;
   align-content: center;
   justify-items: center;
+}
+
+#server_overview__ {
+  display: flex;
+  flex-direction: row;
+}
+
+#server_overview__ h3{
+  font-size: 12px;
+  uppercase
+}
+
+#server_overview__ h4 {
+  padding: 2px 4px 2px 4px;
+  border: 1px solid var(--background-color-quaternary);
+  background-color: var(--background-color-compliement);
+  border-radius: 5px;
 }
 
 .user_name_card_top_patition a {
