@@ -2504,12 +2504,17 @@ p strong {
 
   height: 100px;
   width: 100px;
+
+  width: 35%;
 }
 
 .settings_icon_overlay {
   opacity: 0.8;
   font-size: 10px !important;
   user-select: none;
+
+  width: 100px;
+  height: 100px;
 }
 
 #server_settings {
@@ -3133,11 +3138,25 @@ p strong {
 #server_overview__ {
   display: flex;
   flex-direction: row;
+
+  width: 100%;
+}
+
+#server_overview__ > div:not(:first-of-type){
+  display: flex;
+  flex-direction: column;
+
+  justify-content: space-evenly;
 }
 
 #server_overview__ h3{
   font-size: 12px;
-  uppercase
+  text-transform: uppercase;
+  margin: 0;
+}
+
+#server_overview__ h4 {
+  margin: 5px;
 }
 
 #server_overview__ h4 {
@@ -3145,6 +3164,18 @@ p strong {
   border: 1px solid var(--background-color-quaternary);
   background-color: var(--background-color-compliement);
   border-radius: 5px;
+}
+
+#server_overview_settings > h4 {
+  font-size: 12px;
+  opacity: 0.8;
+  margin-left: 15px;
+}
+
+#settings_icon {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
 }
 
 .user_name_card_top_patition a {
