@@ -237,7 +237,7 @@
             <h1>My Account</h1>
 
             <div id="user_info_settings">
-              <div class="settings_icon_container">
+              <div class="settings_icon_container" id="user_icon">
                 <img id="settings_icon">
                 <div class="settings_icon_overlay">CHANGE <br> AVATAR</div>
               </div>
@@ -380,28 +380,29 @@
 
               <div id="server_overview">
                 <div id="server_overview_settings" class="">
-                  <h4>OVERVIEW</h4>
+                  <h4>SERVER OVERVIEW</h4>
       
                   <div id="server_overview__">
                     <div class="settings_icon_container sic2">
-                      <div>
-                        <img id="settings_icon" src="./branding/deafultUserIcon.jpg">
+                      <div class="settings_icon_container_2" id="server_icon">
+                        <img id="settings_overview_icon" src="./branding/deafultUserIcon.jpg">
                         <div class="settings_icon_overlay">CHANGE <br> ICON</div>
                       </div>
-                      <h6>Remove</h6>
+                      <div class="settings_icon_desc">
+                        <h5>Optimal size is 512x512 <br> For loading speed and visibility</h5>
+                        <a>Remove</a>
+                      </div>
                     </div>
       
                     <div>
                       <div>
                         <h3>SERVER NAME</h3>
-                        <input id="settings_username" placeholder="BoredCored">
-                        <input id="settings_username_input" type="text" placeholder="Username" class="hidden">
+                        <input id="server_settings_name" placeholder="Server Name" value="BoredCored">
                       </div>
 
                       <div>
                         <h3>SERVER REGION</h3>
-                        <input id="settings_username" placeholder="Sydney">
-                        <input id="settings_username_input" type="text" placeholder="Username" class="hidden">
+                        <input id="server_settings_region" placeholder="Sydney">
                       </div>
                     </div>
                   </div>

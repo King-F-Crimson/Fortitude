@@ -328,44 +328,46 @@ function createServerNav(){
     var serverRef = db.collection("groups").doc(connectable_servers[i]);
 
     serverRef.get().then(function(doc) {
-      var total_div = document.createElement("div");
+      var storageRef = firebase.storage().ref("serverIcons/").child(doc.data().icon).getDownloadURL().then(function(url) {
+        var this_server = {sid: doc.id, icon: url, info: doc.data(), channels: [], roles: []};
+        servers.push(this_server);
+
+        var total_div = document.createElement("div");
           total_div.setAttribute("name", "server_item");
           //console.log(total_div.name);
           total_div.classList.add("list_item");
           total_div.classList.add("tooltip");
           total_div.id = doc.id;
 
-      var small_div = document.createElement("div");
+        var small_div = document.createElement("div");
 
-      var pill_span = document.createElement("span");
-          pill_span.classList.add("pill_hidden");
-          pill_span.id = i + "group";
-          pill_span.style = "opacity: 1; transform: none;";
+        var pill_span = document.createElement("span");
+            pill_span.classList.add("pill_hidden");
+            pill_span.id = i + "group";
+            pill_span.style = "opacity: 1; transform: none;";
 
-      var image = document.createElement("img");
-          image.src = "https://cdn.wallpapersafari.com/47/75/i8cgUE.jpg";
-          image.classList.add("list_item_image");
-      
+        var image = document.createElement("img");
+            image.src = url;
+            image.classList.add("list_item_image");
+        
 
-      var tooltip = document.createElement("span");
-          tooltip.classList.add("tooltiptext");
-          tooltip.innerHTML = doc.data().name;
+        var tooltip = document.createElement("span");
+            tooltip.classList.add("tooltiptext");
+            tooltip.innerHTML = doc.data().name;
 
-      
-      small_div.appendChild(pill_span);
-      total_div.appendChild(small_div);    
+        
+        small_div.appendChild(pill_span);
+        total_div.appendChild(small_div);    
 
-      total_div.appendChild(image);
-      total_div.appendChild(tooltip);
+        total_div.appendChild(image);
+        total_div.appendChild(tooltip);
 
-      document.getElementById("navigation").appendChild(total_div);
+        document.getElementById("navigation").appendChild(total_div);
 
-      if(i === connectable_servers.length){
-        setTimeout(completeNav, 500);
-      }
-
-      var this_server = {sid: doc.id, info: doc.data(), channels: [], roles: []};
-      servers.push(this_server);
+        if(i === connectable_servers.length){
+          setTimeout(completeNav, 500);
+        }
+      }); 
     });
   }
 
@@ -1194,7 +1196,8 @@ function createServer(serverName){
 
     db.collection("groups").doc(autoID).set({
       name: serverName,
-      desc: description
+      desc: description,
+      icon: "defaultServerIcon.png"
     }).then(function() {
         //console.log("Server " + serverName + " is beging created");
     });
@@ -1789,7 +1792,7 @@ function renderMessages(){
                 divider2.append(image); 
               }else{
                 var image = document.createElement("img");
-                  image.setAttribute("src", "./branding/deafultUserIcon.jpg");
+                    image.setAttribute("src", "./branding/deafultUserIcon.jpg");
                     
                 divider2.append(image); 
               }
@@ -2865,6 +2868,11 @@ function hideServerSettings() {
 
 function renderOverview() {
   $("#server_overview").show();
+  var this_server = servers.findIndex(element => element.sid == rmid);
+  console.log(servers[this_server]);
+
+  $("#server_settings_name").attr("value", servers[this_server].info.name);
+  $("#settings_overview_icon").attr("src", servers[this_server].icon);
 
   $(".active_member_manage").removeClass("active_member_manage");
   $("#show_overview").addClass("active_member_manage");
@@ -3338,10 +3346,15 @@ function renderUserInfo(users_name, user_time, users_servers, users_id_){
       var temp_text = document.createElement("p");
           temp_text.innerHTML = element.name;
 
+      var temp_color_blob = document.createElement("div");
+          temp_color_blob.classList.add("role_blob");
+          temp_color_blob.style.backgroundColor = hexToRgbA(element.rgb, 0.9);
+
+      temp.appendChild(temp_color_blob);    
       temp.appendChild(temp_text);
-      temp.style.borderColor = element.rgb;
-      temp.style.borderWidth = "1px";
-      temp.style.borderStyle = "solid";
+      // temp.style.borderColor = element.rgb;
+      // temp.style.borderWidth = "1px";
+      // temp.style.borderStyle = "solid";
       temp.style.backgroundColor = hexToRgbA(element.rgb, 0.1);
       users_roles_.appendChild(temp);
     });
@@ -3618,8 +3631,8 @@ $("#account_edit h4").on('click', function() {
   $("#account_edit").toggleClass("hidden");
 });
 
-$(".settings_icon_container").on('click', function() {
-  //$("#user_image_upload").removeClass("hidden");
+$("#user_icon").on('click', function() {
+  $('#upload_field_').val = "";
   $('#upload_field_').trigger('click');
   
 
@@ -3679,6 +3692,78 @@ $(".settings_icon_container").on('click', function() {
             return user_servers.update({
               icon: `${user_id}.${extension.toLowerCase()}`
             })
+          });
+        });
+      }
+    });   
+  }).catch(function(error) {
+      //'console.log("Error getting document:", error);
+  });
+
+  
+})
+
+$("#server_icon").on('click', function() {
+  $('#upload_field_').val = "";
+  $('#upload_field_').trigger('click');
+
+  var docRef = db.collection("groups").doc(rmid);
+
+  docRef.get().then(function(doc) {
+    $('#upload_field_').change(function(e){ 
+      console.log(doc.data());
+      var image_url = doc.data().icon;
+
+      var file = $("#upload_field_")[0].files[0];
+      var extension = file.name.replace(/^.*\./, '');
+
+      var storageRef = firebase.storage().ref();
+      var imageRefrence = storageRef.child(`serverIcons/${image_url}`);
+      var storRef = storageRef.child(`serverIcons/${rmid}.${extension.toLowerCase()}`);
+      showNotitfication("", "Uploading...");
+
+      //console.log(file);
+
+      var newMetadata = {
+        cacheControl: 'public,max-age=69000'
+      }
+
+      if(image_url !== "defaultServerIcon.png"){
+        imageRefrence.delete().then(function() {
+          storRef.put(file, newMetadata).then(function(snapshot) {
+            showNotitfication("", "Applying Changes");
+            var storageRef = firebase.storage().ref().child(`serverIcons/${rmid}.${extension.toLowerCase()}`).getDownloadURL().then(function(url) {
+              var server_loc = servers.findIndex(obj => obj.sid === rmid);
+              servers[server_loc].icon = url;
+  
+              var server_ = db.collection("groups").doc(rmid);
+              $("#settings_overview_icon").attr("src", url);
+              showNotitfication("", "Applied Changes");
+              //console.log("Appling User Icon...", server_members[user_loc].icon);
+            
+              return server_.update({
+                icon: `${rmid}.${extension.toLowerCase()}`
+              })
+            });
+          });
+        }).catch(function(error) {
+          //console.log(error)
+        });
+      }else{
+        storRef.put(file, newMetadata).then(function(snapshot) {
+          showNotitfication("", "Applying Changes");
+          var storageRef = firebase.storage().ref().child(`serverIcons/${rmid}.${extension.toLowerCase()}`).getDownloadURL().then(function(url) {
+            var server_loc = servers.findIndex(obj => obj.sid === rmid);
+              servers[server_loc].icon = url;
+  
+              var server_ = db.collection("groups").doc(rmid);
+              $("#settings_overview_icon").attr("src", url);
+              showNotitfication("", "Applied Changes");
+              //console.log("Appling User Icon...", server_members[user_loc].icon);
+            
+              return server_.update({
+                icon: `${rmid}.${extension.toLowerCase()}`
+              })
           });
         });
       }
