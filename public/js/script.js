@@ -459,6 +459,7 @@ function enableAnimation() {
     hideServerJoin();
     hideSucessfullJoin();
     hideServerMenu();
+    hideChannelSettings();
     hideSettings();
     hideMembers();
     hideServerSettings();
@@ -1593,16 +1594,17 @@ function closeListener() {
 }
 
 $("#channels").on("click", "div", function() {
-  var clicked_ = $(this)[0].id.replace("channel_", "");
-  $(".active").removeClass("active");
-  $(this).addClass("active");
-  
-  if(loadable) joinChannel(clicked_);
-  
+  if(!$(this).hasClass("active")){
+    var clicked_ = $(this)[0].id.replace("channel_", "");
+    $(".active").removeClass("active");
+    $(this).addClass("active");
+    
+    if(loadable) joinChannel(clicked_);
+  }
 }); //eeeeeeee
 
 $("#channels").on("click", ".channel_setting", function() {
-  showNotitfication("", "IT HAS BEEN CHOSEN");
+  showChannelSettings();
 });
 
 function renderMessages(){
@@ -2151,6 +2153,12 @@ $("#member_manage_par").click(function(event){
 $("#server_settings").click(function(event){
   if($(event.target).is("#server_settings")){
     hideServerSettings();
+  }
+});
+
+$("#channel_settings").click(function(event){
+  if($(event.target).is("#channel_settings")){
+    hideChannelSettings();
   }
 });
 
@@ -2863,6 +2871,32 @@ function hideServerSettings() {
   setTimeout(function(){
     $("#server_settings #server_manage").removeClass("scale-out-center");
     $("#server_settings").hide();
+  }, 350);
+}
+
+function showChannelSettings() {
+  $("#channel_settings").show();
+  renderOverview();
+
+  $("#channel_settings").show();
+
+  $("#channel_settings").addClass("fade-in");
+  $("#channel_settings").removeClass("fade-out");
+
+  $("#channel_settings #server_manage").removeClass("scale-out-center");
+  $("#channel_settings #server_manage").addClass("scale-up-center");
+}
+
+function hideChannelSettings() {
+  $("#channel_settings #server_manage").removeClass("scale-up-center");
+  $("#channel_settings #server_manage").addClass("scale-out-center");
+
+  $("#channel_settings").addClass("fade-out");
+  $("#channel_settings").removeClass("fade-in");
+
+  setTimeout(function(){
+    $("#channel_settings #server_manage").removeClass("scale-out-center");
+    $("#channel_settings").hide();
   }, 350);
 }
 
