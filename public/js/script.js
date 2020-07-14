@@ -98,6 +98,7 @@ async function collectToken() {
 
 messaging.onMessage((content) => {
   console.log('Message Recieved', content);
+  showNotitfication("", `${content.notification.title} ${content.notification.body}`);
 });
 
 messaging.onTokenRefresh((content) => {
