@@ -336,11 +336,10 @@ input:focus {
   bottom: 0%;
   /* margin-left: 2%; */
   width: 72vw;
-  padding-bottom: 4%;
   transition: 0.55s cubic-bezier(.52,.23,.6,1.77) all;
 
   overflow-y: auto;
-  height: 83.6%;
+  height: 88%;
   display: flex;
   flex: 1;
   
@@ -1728,8 +1727,8 @@ height: 100% !important;
 }
 
 .list_item_image {
-  height: 6vh;
-  width: 6vh;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
 
   transition: 0.6s cubic-bezier(.17,.67,.16,.99) all;
@@ -1742,7 +1741,7 @@ height: 100% !important;
 .pill {
   display: block;
   width: 8px;
-  height: 5vh;
+  height: 40px;
   border-radius: 0 4px 4px 0;
   margin-left: -14px;
   background-color: var(--harsh);
@@ -2543,6 +2542,7 @@ p strong {
 
 .settings_icon_desc {
   margin-right: 10%;
+  width: 60%;
   text-align: left;
 }
 
@@ -2567,7 +2567,7 @@ p strong {
 }
 
 .settings_icon_container {
-  margin-left: 5%;
+  margin-left: 2.5%;
   position: relative;
 
   height: 100px;
@@ -2612,7 +2612,7 @@ p strong {
 
 .sic2 {
   width: 50%;
-
+  margin-left: 5%;
   display: flex;
   justify-content: space-between;
 }
@@ -3518,7 +3518,7 @@ p strong {
 .role_name_settings {
   background-color: var(--background-color-seccondary);
   border: none;
-  border-radius: 5px;
+  border-radius: 3px;
   width: 95%;
   background-color: var(--background-color-compliement);
   border-radius: 5px;
@@ -3530,11 +3530,11 @@ p strong {
 .role_name_settings:focus {
   background-color: var(--background-color-seccondary);
   border: none;
-  border-radius: 5px;
+  border-radius: 3px;
   width: 95%;
   background-color: var(--background-color-compliement);
   border-radius: 5px;
-  border: 1px solid var(--background-color-primary);
+  border: 1px solid var(--button-color);
 }
 
 .role_div {

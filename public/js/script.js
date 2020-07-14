@@ -82,14 +82,28 @@ firebase.firestore().settings({
 
 firebase.firestore().enablePersistence()
 
-/*
+
 const messaging = firebase.messaging();
 messaging.usePublicVapidKey("BJKm3rJ6LyCsCZW3DAtOF-7f1WPy68gR5nd81koJFVphgQrPNJR8rFmvcX9odNz8k6YvFfm_kE1tbWpldy9Q7io");
 
-messaging.onMessage((payload) => {
-  console.log('Message received. ', payload);
-  // ...
-});*/
+var messaging_token = collectToken();
+
+async function collectToken() {
+  await messaging.requestPermission();
+
+  const token = await messaging.getToken();
+  console.log(token);
+  return token;
+}
+
+messaging.onMessage((content) => {
+  console.log('Message Recieved', content);
+});
+
+messaging.onTokenRefresh((content) => {
+  token = content;
+});
+
 
 $("#loader").find("p").text("Connecting");
 
@@ -1519,7 +1533,7 @@ function joinChannel(channel_id){
 
   db.collection("groups/" + rmid + "/channels").doc(channel_id).get() 
     .then(querySnapshot => {
-      console.log(querySnapshot._document.proto.fields);
+      //console.log(querySnapshot._document.proto.fields);
 
       channel = querySnapshot.id;
       channel_info = {deafult: querySnapshot._document.proto.fields.deafult.booleanValue, desc: querySnapshot._document.proto.fields.desc.stringValue, name: querySnapshot._document.proto.fields.name.stringValue, type: querySnapshot._document.proto.fields.type.stringValue};
@@ -2772,6 +2786,9 @@ function doesUserHavePerms(perm){
 
 function saveRoleChanges(index, k){
   showNotitfication("", "Applying Changes");
+  console.log(roles[index]);
+  console.log(k);
+  console.log(roles[index][k]);
 
   db.collection("groups/"+ rmid +"/roles").doc(temp_comp_role.name).delete().then(() => {
     db.collection("groups/"+ rmid +"/roles").doc(temp_edit_role.name).set({
@@ -2903,7 +2920,7 @@ function hideChannelSettings() {
 function renderOverview() {
   $("#server_overview").show();
   var this_server = servers.findIndex(element => element.sid == rmid);
-  console.log(servers[this_server]);
+  //console.log(servers[this_server]);
 
   $("#server_settings_name").attr("value", servers[this_server].info.name);
   $("#settings_overview_icon").attr("src", servers[this_server].icon);
@@ -3524,42 +3541,6 @@ function hideUserCard() {
   $("#user_card").hide();
     $("#user_card_non_bg").removeClass("scale-out-center");
 }
-
-/*
-
-messaging.getToken().then((currentToken) => {
-  if (currentToken) {
-    sendTokenToServer(currentToken);
-    updateUIForPushEnabled(currentToken);
-  } else {
-    // Show permission request.
-    console.log('No Instance ID token available. Request permission to generate one.');
-    // Show permission UI.
-    updateUIForPushPermissionRequired();
-    setTokenSentToServer(false);
-  }
-}).catch((err) => {
-  console.log('An error occurred while retrieving token. ', err);
-  showToken('Error retrieving Instance ID token. ', err);
-  setTokenSentToServer(false);
-});
-
-messaging.onTokenRefresh(() => {
-  messaging.getToken().then((refreshedToken) => {
-    console.log('Token refreshed.');
-    // Indicate that the new Instance ID token has not yet been sent to the
-    // app server.
-    setTokenSentToServer(false);
-    // Send Instance ID token to app server.
-    sendTokenToServer(refreshedToken);
-    // ...
-  }).catch((err) => {
-    console.log('Unable to retrieve refreshed token ', err);
-    showToken('Unable to retrieve refreshed token ', err);
-  });
-});
-
-*/
 
 window.addEventListener('load', function () {
   if (window.Notification && Notification.permission !== "granted") {

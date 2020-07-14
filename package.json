@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "firebase-functions": "^3.7.0",
     "firebase-tools": "^7.16.2"
   }
 }

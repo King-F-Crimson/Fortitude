@@ -12,26 +12,31 @@ A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
 
 ==={ Pre-Alpha 1.3 - [Unconfirmed - Scheduled 20/06/2020]
 ### Queued 
-- Text-Integrated Math Functions
-- User Status (e.g. Online)
-- Role Sectioned Server Member Listing and Messaging
-- User Icon Caching (Less Server Requests -> Faster Load Times)
-- Html Links (https://www.youtube.com) w/ underscore and blue test coloring + [openinnewtab] in Messages
-- Channels
-- VOIP
+[•] - Text-Integrated Math Functions
+[•] - User Status (e.g. Online)
+[•] - Role Sectioned Server Member Listing and Messaging
+[•] - User Icon Caching (Less Server Requests -> Faster Load Times)
+[•] - Html Links (https://www.youtube.com) w/ underscore and blue test coloring + [openinnewtab] in Messages
+[•] - Channels
+[•] - VOIP
 [•] !- Nodifications (Delayed)
+[•] - News API
+[•] - Color Themes
+        [•] - Server Settings Menu
+        [•] - Custom and Importable Themes
 
 ### Working On
-- Manage Members Popup Functionality (Requests, Role Managment and Invites)
-- Leave Servers
-- Custom Text Formating
+[•] - Manage Members Popup Functionality (Requests, Role Managment and Invites)
+[•] - Leave Servers
+[•] - Intergrate Permissions
+[•] - Custom Text Formating
 
 ### Completed
-- Finishing Members View List (i.e RolesSort)
-- Role Popup and User Direct Messaging from Chat
+[✓] - Finishing Members View List (i.e RolesSort)
+[✓] - Role Popup and User Direct Messaging from Chat
 
 ### Changing
-- Settings Menu (Revamp)
+[✓] - Settings Menu (Revamp)
 
 ============= [Releasing] =============
 
@@ -49,18 +54,13 @@ A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
         [✓] - Creatable
         [•] - Deletable & Settings
 
+### Changed       
 [✓ ✓] - Messages UI Update (Icon Displayed and Flexbox Rendering)
 [•] - Fixes & Adjustments
         - Calcuate permission level based on given atributes (up to 9)
         - Make Roles have an ID Based System
 
 [✓] - Responsive UI (Overhaul from grid to flex layout)
-[•] - News API
-[•] - Color Themes
-        [•] - Server Settings Menu
-        [•] - Custom and Importable Themes
-
-[•] - Intergrate Permissions
 [✓] - Server Icons
 }
 
