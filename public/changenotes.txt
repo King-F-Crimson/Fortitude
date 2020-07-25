@@ -19,7 +19,7 @@ A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
 [•] - Html Links (https://www.youtube.com) w/ underscore and blue test coloring + [openinnewtab] in Messages
 [•] - Channels
 [•] - VOIP
-[•] !- Nodifications (Delayed)
+
 [•] - News API
 [•] - Color Themes
         [•] - Server Settings Menu
@@ -30,6 +30,9 @@ A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
 [•] - Leave Servers
 [•] - Intergrate Permissions
 [•] - Custom Text Formating
+[•] - Fixes & Adjustments
+        - Calcuate permission level based on given atributes (up to 9)
+        - Make Roles have an ID Based System
 
 ### Completed
 [✓] - Finishing Members View List (i.e RolesSort)
@@ -53,12 +56,18 @@ A stable release channel *will* be created when Fortitude Leaves Pre-Alpha.
         [✓] - Messaging and Backbone  + OnServerCreate and UI
         [✓] - Creatable
         [•] - Deletable & Settings
+        [•] - Client-side Opt-in/Opt-out Notifications
+
+[•] - Nodifications
+        [✓] - ServerSide
+                [✓] - TokenHandler
+        [✓] - ClientSide
+                [✓] - In-app and Off-app Handler
+                [•] - Notification Settings 
 
 ### Changed       
 [✓ ✓] - Messages UI Update (Icon Displayed and Flexbox Rendering)
-[•] - Fixes & Adjustments
-        - Calcuate permission level based on given atributes (up to 9)
-        - Make Roles have an ID Based System
+
 
 [✓] - Responsive UI (Overhaul from grid to flex layout)
 [✓] - Server Icons

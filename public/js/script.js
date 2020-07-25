@@ -1396,6 +1396,8 @@ function joinServer(room_id_element){
         channel = doc.id;
         channel_info = doc.data();
 
+        
+
         $("#channel_con").text(channel_info.name);
         $("#channel_con_des").text(channel_info.desc);
         //console.log(channel_info.name, channel_info.desc);
@@ -1418,10 +1420,10 @@ function joinServer(room_id_element){
               renderMembersList();
           });      
         }
-      
-      if(loadable) joinChannel(channel);
-     
+
       renderChannels(channel);
+
+      if(loadable) joinChannel(channel);
     });
 
     $("#serverMoreInfo").show();
@@ -1500,7 +1502,7 @@ function renderChannels(channel) {
           new_channel.appendChild(new_channel_settings);
 
       
-      var channel_info_ = {cid: doc.id, info: doc.data()};
+      var channel_info_ = {cid: doc.id, info: doc.data(), messages: []};
 
       var index___  = servers.findIndex(element => element.sid == rmid);
       servers[index___].channels.push(channel_info_);
@@ -1555,16 +1557,30 @@ function joinChannel(channel_id){
     db.collection("groups/"+ rmid + "/channels/" + channel_id + "/messages").orderBy("timestamp", "desc").limit(100).get()
     .then(querySnapshot => {
         querySnapshot.forEach(doc => {
-            sender = doc.data().sender;
+
             authors.push(doc.data().sender);
-            senderIdentification = doc.data().senderId;
+
             userId_message.push(doc.data().senderId);
-            msge = doc.data().message;
+
             messages.push(doc.data().message);
-            time = formatDate(doc.data().timestamp.toDate());
+
             dates.push(formatDate(doc.data().timestamp.toDate()));
+
             complete_date.push(doc.data().timestamp.toDate());
-            var someElementsItems = document.querySelectorAll(".user_refrence");
+
+            var server_loc = servers.findIndex(element => element.sid == room);
+            var channel_loc = servers[server_loc].channels.findIndex(element => element.cid == channel);
+
+            var message = {
+              sender: doc.data().sender,
+              user_id: doc.data().senderId,
+              message: doc.data().message,
+              formatted_date: formatDate(doc.data().timestamp.toDate()),
+              std_date: doc.data().timestamp.toDate()
+            }
+
+            servers[server_loc].channels[channel_loc].messages.push(message);
+            //console.log(servers[server_loc]);
         });
 
         authors.reverse();
@@ -1648,10 +1664,12 @@ function renderMessages(){
           divider2.classList.add("message_left");
 
       var m = server_members.findIndex(element => element.name == authors[i]);
+
       //console.log(server_members[m]);
-      /*
-      var location = server_members[i].info.findIndex(element => element.server == room);
-      console.log(server_members[m].info[location]);
+      
+      var location = server_members[m].info.findIndex(element => element.server == room);
+      console.log(location);
+      //console.log(server_members[m].info[location]);
 
       if(location >= 0){
         var high = 0;
@@ -1670,7 +1688,7 @@ function renderMessages(){
           }
         });
       }
-      */
+      
 
       if(messages[i].includes("@")){
         var str = messages[i];
@@ -1705,140 +1723,122 @@ function renderMessages(){
         highlight_color = "deafult";
       }
 
+      // If there are already messages in the div
       if($("#message-container").children().length > 0){
+        // If it is not a ping
         if(highlight_color !== "deafult"){
+          // If it is a continual message (no icon)
           if(authors[i - 1] === authors[i] && samecount < 10){
-                divider.classList.add("special_message");
-                var message2 = document.createElement("p");
-                    message2.innerHTML = end_result;
-/*                
-                  message.style.backgroundColor = hexToRgbA(role_color, 0.2);
-                  message.style.borderLeftColor = role_color;
-                  message.style.borderLeftStyle = "solid";
-                  message.style.borderLeftWidth = "2px";
-                  message.style.width = "calc(100% - 2px)";
-*/                
-                 
-                divider.append(message2);
-                samecount++;
-            }else{
-                //$("#message-container").append($('<br>'));
-                //$("#message-container").append($('<hr>'));
-                $("#message-container").append($('<br>'));
+            divider.classList.add("special_message");
+            var message2 = document.createElement("p");
+                message2.innerHTML = end_result;
+              
+            divider.append(message2);
+            samecount++;
+          
+          // If it is not a continual message
+          }else{
+            $("#message-container").append($('<br>'));
+            
+            var image = document.createElement("img");
+                image.setAttribute("src", server_members[m].icon);
                 
-                var image = document.createElement("img");
-                    image.setAttribute("src", server_members[m].icon);
-                    
-                divider2.append(image); 
+            divider2.append(image); 
 
-                var author = document.createElement("h2");
-                    author.classList.add("user_refrence");
-                    author.innerHTML = authors[i];
-                
-                var date = document.createElement("h3");
-                    date.innerHTML = dates[i];
-                
-                    divider.classList.add("special_message");
-                    var message2 = document.createElement("p");
-                        message2.innerHTML = end_result;
-/*                    
-                      message.style.backgroundColor = hexToRgbA(role_color, 0.2);
-                      message.style.borderLeftColor = role_color;
-                      message.style.borderLeftStyle = "solid";
-                      message.style.borderLeftWidth = "2px";
-                      message.style.width = "calc(100% - 2px)";
-*/                    
-                     
-                    divider.append(message2);
-                    samecount++;
-                
-                divider.append(author);
-                divider.append(date);
-                divider.append(message2);
-                
-/*
-                if(highlight_color == "ping"){
-                  message.classList.add("mentioned"); 
-                }else if(highlight_color == "light_blue"){
-                  message.classList.add("highlighted");
-                }else if(highlight_color == "gold"){
-                  message.classList.add("owner");
-                }
-*/
-                samecount = 0;
-            }
-        }else{
-          if(authors[i - 1] === authors[i] && samecount < 10){
+            var author = document.createElement("h2");
+                author.classList.add("user_refrence");
+                author.innerHTML = authors[i];
+            
+            var date = document.createElement("h3");
+                date.innerHTML = dates[i];
+            
+                divider.classList.add("special_message");
+
                 var message2 = document.createElement("p");
-                    message2.innerHTML = messages[i];
-                    divider.style.paddingLeft = "33px";
+                    message2.innerHTML = end_result;              
                   
                 divider.append(message2);
                 samecount++;
-            }else{
-                //$("#message-container").append($('<br>'));
-                //$("#message-container").append($('<hr>'));
-                $("#message-container").append($('<br>'));
-                //$("#message-container").append($('<img src="public/'+ user +'.jpg">'));
-                var image = document.createElement("img");
-                    image.setAttribute("src", server_members[m].icon);
-
-                divider2.append(image); 
-                
-                var author = document.createElement("h2");
-                    author.classList.add("user_refrence");
-                    author.innerHTML = authors[i];
-                    //author.style.color = server_members[m].info[location].roles[itterator].rgb;
-                
-                var date = document.createElement("h3");
-                    date.innerHTML = dates[i];
-                
-                var message2 = document.createElement("p");
-                    message2.innerHTML = messages[i];
-
-                    //console.log(messages[i]);
-                
-                divider.append(author);
-                divider.append(date);
-                divider.append(message2);
-                samecount = 0;
-                
-            }
-        }
             
-      }else{
-              $("#message-container").append($('<br>'));
+            divider.append(author);
+            divider.append(date);
+            divider.append(message2);
+            
+            samecount = 0;
+          }
+        // If it is not a ping message
+        }else{
+          // Same as prev.
+          if(authors[i - 1] === authors[i] && samecount < 10){
+            var message2 = document.createElement("p");
+                message2.innerHTML = messages[i];
+                //divider.style.paddingLeft = "33px";
+              
+            divider.append(message2);
+            samecount++;
+          }else{
+            //$("#message-container").append($('<br>'));
+            //$("#message-container").append($('<hr>'));
+            $("#message-container").append($('<br>'));
+            //$("#message-container").append($('<img src="public/'+ user +'.jpg">'));
+            var image = document.createElement("img");
+                image.setAttribute("src", server_members[m].icon);
 
-              if(server_members[m]){
-                var image = document.createElement("img");
-                  image.setAttribute("src", server_members[m].icon);
-                    
-                divider2.append(image); 
-              }else{
-                var image = document.createElement("img");
-                    image.setAttribute("src", "./branding/deafultUserIcon.jpg");
-                    
-                divider2.append(image); 
-              }
+            divider2.append(image); 
+            
+            var author = document.createElement("h2");
+                author.classList.add("user_refrence");
+                author.innerHTML = authors[i];
+                //author.style.color = server_members[m].info[location].roles[itterator].rgb;
+            
+            var date = document.createElement("h3");
+                date.innerHTML = dates[i];
+            
+            var message2 = document.createElement("p");
+                message2.innerHTML = messages[i];
+
+                //console.log(messages[i]);
+            
+            divider.append(author);
+            divider.append(date);
+            divider.append(message2);
+            samecount = 0;
+          }
+        }    
+      // If it is the first message.
+      }else{
+        $("#message-container").append($('<br>'));
+
+        if(server_members[m]){
+          var image = document.createElement("img");
+            image.setAttribute("src", server_members[m].icon);
               
-              var author = document.createElement("h2");
-                  author.classList.add("user_refrence");
-                  author.innerHTML = authors[i];
+          divider2.append(image); 
+        }else{
+          var image = document.createElement("img");
+              image.setAttribute("src", "./branding/deafultUserIcon.jpg");
               
-              var date = document.createElement("h3");
-                  date.innerHTML = dates[i];
-              
-              var message2 = document.createElement("p");
-                  message2.innerHTML = messages[i];
-              
-              divider.append(author);
-              divider.append(date);
-              divider.append(message2);
-              samecount = 0;
+          divider2.append(image); 
+        }
+        
+        var author = document.createElement("h2");
+            author.classList.add("user_refrence");
+            author.innerHTML = authors[i];
+        
+        var date = document.createElement("h3");
+            date.innerHTML = dates[i];
+        
+        var message2 = document.createElement("p");
+            message2.innerHTML = messages[i];
+        
+        divider.append(author);
+        divider.append(date);
+        divider.append(message2);
+        samecount = 0;
       }
       
-          message.append(divider2);
-          message.append(divider);
+      message.append(divider2);
+      message.append(divider);
 
       $("#message-container").append(message);
     }

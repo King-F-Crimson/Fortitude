@@ -651,7 +651,6 @@ input:focus {
 
 #serverMoreInfo {
   position: relative;
-  display: inline-block;
   justify-content: right;
   
   float: right;
@@ -1109,7 +1108,6 @@ input:focus {
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-  -ms-flex-direction: column;
   overflow: hidden;
 }
 
@@ -1881,7 +1879,6 @@ height: 100% !important;
 
 #top_bar input {
   right: 0;
-  float: right;
 
   color: var(--text-color);
   background-color: var(--background-black);
@@ -1895,7 +1892,6 @@ height: 100% !important;
 }
 
 #top_bar a:not(:first-of-type) {
-  float: right;
   margin: 1.3%;
   right: 0;
   color: var(--text-color);
@@ -1956,7 +1952,6 @@ height: 100% !important;
 
 #top_bar_2 input {
   right: 0;
-  float: right;
   margin: 1.3%;
   color: var(--text-color);
   background-color: var(--background-black);
@@ -1968,7 +1963,6 @@ height: 100% !important;
 }
 
 #top_bar_2 a {
-  float: right;
   margin: 1.3%;
   right: 0;
   color: var(--text-color);
@@ -3645,7 +3639,7 @@ p strong {
 }
 
 .message_left {
-  width: 50px;
+  width: 80px;
 }
 
 .message_left img {
@@ -4128,7 +4122,6 @@ input:checked + .slider:before {
 }
 
 .message {
-  padding-left: 30px;
   padding-right: 15px;
 
   align-self: safe center;
@@ -4545,13 +4538,15 @@ button:hover {
   border-radius: 7px;
 }
 
+
 ::-webkit-scrollbar-track-piece:start {
-  margin-top: 2%;
+  margin-top: 1%;
 }
 
 ::-webkit-scrollbar-track-piece:end {
-  margin-bottom: 4%;
+  margin-bottom: 1%;
 }
+
 
 .wave-1hkxOo {
   top: 0;
