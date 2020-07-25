@@ -92,18 +92,25 @@ async function collectToken() {
   await messaging.requestPermission();
 
   const token = await messaging.getToken();
+  sendTokenToServer(token);
   console.log(token);
   return token;
 }
 
 messaging.onMessage((content) => {
   console.log('Message Recieved', content);
-  showNotitfication("", `${content.notification.title} ${content.notification.body}`);
+  showNotitfication("", `${content.notification.title}`, `${content.notification.body}`);
 });
 
 messaging.onTokenRefresh((content) => {
   token = content;
 });
+
+function sendTokenToServer(token) {
+  db.collection("users").doc(user_id).update({
+    token: token
+  });
+}
 
 
 $("#loader").find("p").text("Connecting");
@@ -213,6 +220,7 @@ signupForm.addEventListener('submit', (e) => {
             servers: [],
             username: designated_dspln
         });
+        
         
 
     }).then(() =>{
@@ -1168,28 +1176,27 @@ function sendRequest(serverID, join_message, serverName){
 }
 
 function showSucessfullJoin(serverName) {
-  $("#success_join").css('opacity', '0');
+  $("#success_join_not").css('opacity', '0');
   $("#success_join_title").html("Sucessfully sent request to server  <strong>" + serverName +"</strong>");
-  $("#success_join").show();
+  $("#success_join_not").show();
+  $("#success_join_not").removeClass("slide-out-top");
 
   setTimeout(function(){
-    $("#success_join").css('opacity', '1');
-    
+    $("#success_join_not").addClass("slide-in-top");
   }, 100);
 
-  setTimeout(hideSucessfullJoin, 5000);
+  setTimeout(hideSucessfullJoin, 8000);
 }
 
 function showUnsucessfullJoin(serverName) {
   //$("#success_join").css('opacity', '0');
-  $("#success_join_title").html("You are already appart of  <strong>" + serverName +"</strong>");
-  $("#success_join").show();
-  $("#success_join").removeClass("slide-out-top");
+  $("#success_join_title").html("You already belong to  <strong>" + serverName +"</strong>");
+  $("#success_join_not").show();
+  $("#success_join_not").removeClass("slide-out-top");
 
   setTimeout(function(){
     //$("#success_join").css('opacity', '1');
-    $("#success_join").addClass("slide-in-top");
-    
+    $("#success_join_not").addClass("slide-in-top");
   }, 100);
 
   setTimeout(hideSucessfullJoin, 5000);
@@ -1197,11 +1204,11 @@ function showUnsucessfullJoin(serverName) {
 
 function hideSucessfullJoin(){
   //$("#success_join").css('opacity', '0');
-  $("#success_join").removeClass("slide-in-top");
-  $("#success_join").addClass("slide-out-top");
+  $("#success_join_not").removeClass("slide-in-top");
+  $("#success_join_not").addClass("slide-out-top");
 
   setTimeout(function(){
-    $("#success_join").hide();
+    $("#success_join_not").hide();
   }, 2000);
 }
 
@@ -3791,29 +3798,33 @@ $("#server_icon").on('click', function() {
   
 })
 
-function showNotitfication(image, content) {
+let hide_not = true;
+
+function showNotitfication(image, title, body = "", origin = "Foritude", channel="#official") {
   //$("#success_join").css('opacity', '0');
-  $("#notification_alert_title").html(content);
+  $("notification_image").src = image;
+  $("#notification_alert_title").html(`<strong>${title}:</strong> ${body}`);
+  $("#notification_origin").html(origin + " " + channel);
   $("#notification_alert").show();
   $("#notification_alert").removeClass("slide-out-top");
 
   setTimeout(function(){
-    //$("#success_join").css('opacity', '1');
     $("#notification_alert").addClass("slide-in-top");
-    
   }, 100);
 
-  setTimeout(hideNotitfication, 5000);
+  setTimeout(hideNotitfication, 8000);
 }
 
 function hideNotitfication(){
-  //$("#success_join").css('opacity', '0');
-  $("#notification_alert").removeClass("slide-in-top");
-  $("#notification_alert").addClass("slide-out-top");
+  if(hide_not){
+    //$("#success_join").css('opacity', '0');
+    $("#notification_alert").removeClass("slide-in-top");
+    $("#notification_alert").addClass("slide-out-top");
 
-  setTimeout(function(){
-    $("#notification_alert").hide();
-  }, 2000);
+    setTimeout(function(){
+      $("#notification_alert").hide();
+    }, 2000);
+  }
 }
 
 function loadNews() {
