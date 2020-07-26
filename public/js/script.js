@@ -1556,21 +1556,10 @@ function joinChannel(channel_id){
   if(rmid){
     db.collection("groups/"+ rmid + "/channels/" + channel_id + "/messages").orderBy("timestamp", "desc").limit(100).get()
     .then(querySnapshot => {
+        var server_loc = servers.findIndex(element => element.sid == room);
+        var channel_loc = servers[server_loc].channels.findIndex(element => element.cid == channel);
+
         querySnapshot.forEach(doc => {
-
-            authors.push(doc.data().sender);
-
-            userId_message.push(doc.data().senderId);
-
-            messages.push(doc.data().message);
-
-            dates.push(formatDate(doc.data().timestamp.toDate()));
-
-            complete_date.push(doc.data().timestamp.toDate());
-
-            var server_loc = servers.findIndex(element => element.sid == room);
-            var channel_loc = servers[server_loc].channels.findIndex(element => element.cid == channel);
-
             var message = {
               sender: doc.data().sender,
               user_id: doc.data().senderId,
@@ -1579,14 +1568,13 @@ function joinChannel(channel_id){
               std_date: doc.data().timestamp.toDate()
             }
 
+            //console.log(message);
+
             servers[server_loc].channels[channel_loc].messages.push(message);
             //console.log(servers[server_loc]);
         });
 
-        authors.reverse();
-        userId_message.reverse();
-        messages.reverse();
-        dates.reverse();
+        servers[server_loc].channels[channel_loc].messages.reverse();
         
         updateMessages("null");
         updateTyping();
@@ -1650,10 +1638,13 @@ function renderMessages(){
       document.getElementById("message-container").removeChild( document.getElementById("message-container").firstChild);
     }
 
+    var server_loc = servers.findIndex(element => element.sid == room);
+    var channel_loc = servers[server_loc].channels.findIndex(element => element.cid == channel);
+
     var someElementsItems = document.querySelectorAll(".user_refrence");
     var samecount = 0;
 
-    for(var i = 0; i < messages.length; i++){
+    for(var i = 0; i < servers[server_loc].channels[channel_loc].messages.length; i++){
       var highlight_color = "deafult";
       var message = document.createElement("div");
 
@@ -1663,13 +1654,13 @@ function renderMessages(){
       var divider2 = document.createElement("div");
           divider2.classList.add("message_left");
 
-      var m = server_members.findIndex(element => element.name == authors[i]);
+      var m = server_members.findIndex(element => element.name == servers[server_loc].channels[channel_loc].messages[i].sender);
 
-      //console.log(server_members[m]);
-      
-      var location = server_members[m].info.findIndex(element => element.server == room);
-      console.log(location);
-      //console.log(server_members[m].info[location]);
+      if(m !== -1){
+        // Server not talking
+        var location = server_members[m].info.findIndex(element => element.server == room);
+        console.log(location);
+      }
 
       if(location >= 0){
         var high = 0;
@@ -1690,8 +1681,8 @@ function renderMessages(){
       }
       
 
-      if(messages[i].includes("@")){
-        var str = messages[i];
+      if(servers[server_loc].channels[channel_loc].messages[i].message.includes("@")){
+        var str = servers[server_loc].channels[channel_loc].messages[i].message;
 
         var n = str.search("@");
         var res = str.split("@", 2);
@@ -1699,8 +1690,6 @@ function renderMessages(){
         var k = str.search(" ");
 
         p = roles.findIndex(i => i.name === result[0]);
-        
-        var users_photo = server_members.findIndex(i => i.uid == userId_message[i])
         //console.log(userId_message[i], users_photo);
 
         var role_called = res[1].split(" ");
@@ -1714,7 +1703,7 @@ function renderMessages(){
         if(p != -1 && roles[p].pingable){
           highlight_color = roles[p].color;
           role_color = roles[p].rgb;
-          end_result = messages[i].replace(`@${role_called[0]}`, `<div class="role_call"><p style="color: ${role_color}; padding-left: 2px; padding-right: 2px">@${role_called[0]}</p></div>`);
+          end_result = servers[server_loc].channels[channel_loc].messages[i].message.replace(`@${role_called[0]}`, `<div class="role_call"><p style="color: ${role_color}; padding-left: 2px; padding-right: 2px">@${role_called[0]}</p></div>`);
         }else{
           highlight_color = "deafult";
         }
@@ -1728,7 +1717,7 @@ function renderMessages(){
         // If it is not a ping
         if(highlight_color !== "deafult"){
           // If it is a continual message (no icon)
-          if(authors[i - 1] === authors[i] && samecount < 10){
+          if(servers[server_loc].channels[channel_loc].messages[i - 1].user_id === servers[server_loc].channels[channel_loc].messages[i].user_id && samecount < 10){
             divider.classList.add("special_message");
             var message2 = document.createElement("p");
                 message2.innerHTML = end_result;
@@ -1747,10 +1736,10 @@ function renderMessages(){
 
             var author = document.createElement("h2");
                 author.classList.add("user_refrence");
-                author.innerHTML = authors[i];
+                author.innerHTML = servers[server_loc].channels[channel_loc].messages[i].sender;
             
             var date = document.createElement("h3");
-                date.innerHTML = dates[i];
+                date.innerHTML = servers[server_loc].channels[channel_loc].messages[i].formatted_date;
             
                 divider.classList.add("special_message");
 
@@ -1769,9 +1758,9 @@ function renderMessages(){
         // If it is not a ping message
         }else{
           // Same as prev.
-          if(authors[i - 1] === authors[i] && samecount < 10){
+          if(servers[server_loc].channels[channel_loc].messages[i - 1].user_id === servers[server_loc].channels[channel_loc].messages[i].user_id && samecount < 10){
             var message2 = document.createElement("p");
-                message2.innerHTML = messages[i];
+                message2.innerHTML = servers[server_loc].channels[channel_loc].messages[i].message;
                 //divider.style.paddingLeft = "33px";
               
             divider.append(message2);
@@ -1788,14 +1777,14 @@ function renderMessages(){
             
             var author = document.createElement("h2");
                 author.classList.add("user_refrence");
-                author.innerHTML = authors[i];
+                author.innerHTML = servers[server_loc].channels[channel_loc].messages[i].sender;
                 //author.style.color = server_members[m].info[location].roles[itterator].rgb;
             
             var date = document.createElement("h3");
-                date.innerHTML = dates[i];
+                date.innerHTML = servers[server_loc].channels[channel_loc].messages[i].formatted_date;
             
             var message2 = document.createElement("p");
-                message2.innerHTML = messages[i];
+                message2.innerHTML = servers[server_loc].channels[channel_loc].messages[i].message;
 
                 //console.log(messages[i]);
             
@@ -1823,13 +1812,13 @@ function renderMessages(){
         
         var author = document.createElement("h2");
             author.classList.add("user_refrence");
-            author.innerHTML = authors[i];
+            author.innerHTML = servers[server_loc].channels[channel_loc].messages[i].sender;
         
         var date = document.createElement("h3");
-            date.innerHTML = dates[i];
+            date.innerHTML = servers[server_loc].channels[channel_loc].messages[i].formatted_date;
         
         var message2 = document.createElement("p");
-            message2.innerHTML = messages[i];
+            message2.innerHTML = servers[server_loc].channels[channel_loc].messages[i].message;
         
         divider.append(author);
         divider.append(date);
@@ -1856,7 +1845,6 @@ function formatDate(input){
     var output = input.toLocaleDateString();
     return output;
 }
-
 
 $('#send-container').submit(function(e){
     e.preventDefault();
@@ -1977,32 +1965,28 @@ var unsubscribe;
 function updateMessages(usersid){
   if(room !== "lobby_link"){
     if(unsubscribe){
-      unsubscribe();   // FUCKING UNSUBSCRIBE GODDAMIT
+      unsubscribe();   
     } 
 
     unsubscribe = db.collection("groups/" + rmid + "/channels/" + channel + "/messages").orderBy("timestamp", "desc").limit(1)
     .onSnapshot(function(querySnapshot) {
-      //console.log("new one down the pipe!");
+      
       querySnapshot.forEach(function(doc) {
-          if(doc.data().timestamp.toDate().toString() == complete_date[0].toString()){ 
-            
-          }else{
-            //console.log(doc.data().message + " | " + messages[leng]);
-            //console.log(doc.data().timestamp + " | " + dates[leng]);
+        var server_loc = servers.findIndex(element => element.sid == room);
+        var channel_loc = servers[server_loc].channels.findIndex(element => element.cid == channel);
 
-            sender = doc.data().sender;
-            authors.push(doc.data().sender);
-            //console.log(sender);
-            senderIdentification = doc.data().senderId;
-            userId_message.push(doc.data().senderId);
-            //console.log(senderIdentification);
-            msge = doc.data().message;
-            messages.push(doc.data().message);
-            //console.log(msge);
-            time = formatDate(doc.data().timestamp.toDate());
-            dates.push(formatDate(doc.data().timestamp.toDate()));
-            complete_date.push(doc.data().timestamp.toDate());
-            console.log(msge);
+          if(doc.data().timestamp.toDate().toString() !== servers[server_loc].channels[channel_loc].messages[servers[server_loc].channels[channel_loc].messages.length - 1].std_date.toString()){ 
+            console.log(doc.data().timestamp.toDate().toString(), " comp ", servers[server_loc].channels[channel_loc].messages[0].std_date.toString());
+
+            var message = {
+              sender: doc.data().sender,
+              user_id: doc.data().senderId,
+              message: doc.data().message,
+              formatted_date: formatDate(doc.data().timestamp.toDate()),
+              std_date: doc.data().timestamp.toDate()
+            }
+
+            servers[server_loc].channels[channel_loc].messages.push(message);
           }
       });
 
@@ -3237,6 +3221,7 @@ function renderMemberList2(){
     if(!category__){
       var new_category = document.createElement("div");
           new_category.id = roles[i].name.replace(/ /g,"_") + "_category";
+          new_category.setAttribute("channel-id", roles[i].name.replace(/ /g,"_"));
       
       var text_child = document.createElement("p");
           text_child.innerHTML = roles[i].name;
@@ -3268,6 +3253,7 @@ function renderMemberList2(){
       });
 
       var category__1 = document.getElementById(high_role.name.replace(/ /g,"_") + "_category");
+      var category__1 = document.querySelector(`[channel-id="${high_role.name.replace(/ /g,"_")}"]`);
 
       var member_user = document.createElement("div");
           member_user.classList.add("member_user");
@@ -3308,16 +3294,14 @@ function renderMemberList2(){
 
   for(var i = 0; i < roles.length; i++){
     var category__ = document.getElementById(roles[i].name + "_category");
-    if($('*[id="' + roles[i].name.replace(/ /g,"_") + '_category"]').find('.member_user').length == 0){
-      document.getElementById("members_2").removeChild(document.getElementById(roles[i].name.replace(/ /g,"_") + "_category"));
+    if($(`*[channel-id="${roles[i].name.replace(/ /g,"_")}"]`).find('.member_user').length == 0){
+      $(`*[channel-id="${roles[i].name.replace(/ /g,"_")}"]`).remove();
     }
   }
 }
 
 function jq( myid ) {
- 
   return "#" + myid.replace( /(:|\.|\[|\]|,|=|@)/g, "\\$1" );
-
 }
 
 function userInfo(users_id) {
